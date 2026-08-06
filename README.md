@@ -31,6 +31,30 @@ import "@boobstrap/boobstrap/dist/boobstrap.css";
 
 You can also copy `dist/boobstrap.css` from the package into your own assets and link it normally.
 
+## Icons (optional)
+
+Boobstrap does not bundle an icon library or JavaScript runtime. Add the sizing utilities to any inline SVG from your preferred library:
+
+```html
+<svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M12 3v18m9-9H3" />
+</svg>
+```
+
+For a ready-made icon set, install [Lucide](https://lucide.dev/), then initialize only the icons your application uses:
+
+```bash
+npm install lucide
+```
+
+```js
+import { createIcons, icons } from "lucide";
+
+createIcons({ icons });
+```
+
+Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and can be used with any SVG icon source.
+
 ## Quick start
 
 ```html
