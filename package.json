@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist/boobstrap.css",
     "src"
@@ -15,7 +18,12 @@
   },
   "scripts": {
     "build": "node scripts/build-framework.mjs",
-    "test": "npm run build && node scripts/verify-framework.mjs",
+    "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package",
+    "test:contract": "node scripts/verify-framework.mjs",
+    "test:css": "csstree-validator dist/boobstrap.css",
+    "test:browser": "node tests/browser.mjs",
+    "test:package": "node scripts/verify-package.mjs",
+    "prepack": "npm run build && npm run test:contract && npm run test:css",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -28,6 +36,18 @@
     "type": "git",
     "url": "git+https://github.com/mikeroq/boobstrap-framework.git"
   },
-  "homepage": "https://boobstrap.mroq.dev",
-  "license": "MIT"
+  "homepage": "https://boobstrap.mroq.dev/docs.html",
+  "bugs": {
+    "url": "https://github.com/mikeroq/boobstrap-framework/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "csstree-validator": "^4.0.1",
+    "playwright": "^1.62.1"
+  }
 }

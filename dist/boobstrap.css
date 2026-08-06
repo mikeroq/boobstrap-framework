@@ -1,4 +1,4 @@
-/* Boobstrap v0.1.0 | MIT License | boobstrap.dev */
+/* Boobstrap v0.1.0 | MIT License | boobstrap.mroq.dev */
 :root,
 [data-bs-theme="dark"] {
   color-scheme: dark;
@@ -382,7 +382,7 @@ samp {
 }
 
 .bs-badge-primary {
-  color: var(--bs-brand-300);
+  color: var(--bs-color-primary-hover);
   background: rgb(216 60 135 / 9%);
   border-color: var(--bs-color-border-strong);
 }

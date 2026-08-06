@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boobstrap browser contract</title>
+    <link rel="stylesheet" href="/dist/boobstrap.css" />
+  </head>
+  <body>
+    <header class="bs-container bs-py-4 bs-flex bs-items-center bs-justify-between">
+      <strong>Boobstrap</strong>
+      <span class="bs-badge bs-badge-primary">v0.1.0</span>
+    </header>
+
+    <main class="bs-container bs-section">
+      <h1 class="bs-display bs-text-gradient bs-mb-4">Browser contract</h1>
+      <p class="bs-lead">A semantic fixture exercising the public component and layout surface.</p>
+
+      <section aria-labelledby="grid-title" class="bs-mt-8">
+        <h2 id="grid-title">Responsive grid</h2>
+        <div class="bs-grid bs-gap-4" data-test-grid>
+          <article class="bs-card bs-col-12 bs-col-lg-4">
+            <div class="bs-card-body">
+              <h3 class="bs-card-title">Card one</h3>
+              <p class="bs-card-text">Full width on mobile and four columns on large screens.</p>
+              <button class="bs-btn bs-btn-primary" type="button">Primary action</button>
+            </div>
+          </article>
+          <article class="bs-card bs-card-raised bs-col-12 bs-col-lg-8">
+            <div class="bs-card-body">
+              <h3 class="bs-card-title">Card two</h3>
+              <p class="bs-card-text">A raised card spanning the remaining columns.</p>
+              <button class="bs-btn bs-btn-secondary" type="button">Secondary action</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="form-title" class="bs-mt-8">
+        <h2 id="form-title">Form controls</h2>
+        <form class="bs-stack bs-gap-4">
+          <div class="bs-form-group">
+            <label class="bs-label" for="email">Email address</label>
+            <input class="bs-input" id="email" name="email" type="email" placeholder="you@example.com" />
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="role">Role</label>
+            <select class="bs-select" id="role" name="role"><option>Developer</option><option>Designer</option></select>
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="message">Message</label>
+            <textarea class="bs-textarea" id="message" name="message"></textarea>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="feedback-title" class="bs-mt-8 bs-stack bs-gap-4">
+        <h2 id="feedback-title">Feedback</h2>
+        <div class="bs-alert bs-alert-primary" role="status"><span><strong class="bs-alert-title">Primary alert</strong>Useful contextual information.</span></div>
+        <div class="bs-alert bs-alert-success" role="status"><span><strong class="bs-alert-title">Success alert</strong>The operation completed successfully.</span></div>
+      </section>
+
+      <section aria-labelledby="code-title" class="bs-mt-8">
+        <h2 id="code-title">Code sample</h2>
+        <div class="bs-code-window">
+          <div class="bs-code-toolbar"><div class="bs-code-dots" aria-hidden="true"><span class="bs-code-dot"></span><span class="bs-code-dot"></span><span class="bs-code-dot"></span></div><span>example.html</span></div>
+          <pre class="bs-code-body bs-m-0"><span class="bs-code-tag">&lt;button</span> <span class="bs-code-attribute">class</span>=<span class="bs-code-string">"bs-btn"</span><span class="bs-code-tag">&gt;</span>Ship<span class="bs-code-tag">&lt;/button&gt;</span></pre>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
