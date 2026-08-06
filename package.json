@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
   "sideEffects": [
@@ -36,7 +36,7 @@
     "type": "git",
     "url": "git+https://github.com/mikeroq/boobstrap-framework.git"
   },
-  "homepage": "https://boobstrap.mroq.dev/docs.html",
+  "homepage": "https://boobstrap.org/docs.html",
   "bugs": {
     "url": "https://github.com/mikeroq/boobstrap-framework/issues"
   },

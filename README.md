@@ -4,7 +4,7 @@
 
 Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a JavaScript runtime. Version 0.1 provides themeable foundations, responsive layout primitives, components, and focused utilities under a predictable `bs-` prefix.
 
-[Documentation](https://boobstrap.mroq.dev/docs.html) · [Live site](https://boobstrap.mroq.dev) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
+[Documentation](https://boobstrap.org/docs.html) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
 ## Install
 
@@ -57,7 +57,7 @@ For plain HTML projects, copy `dist/boobstrap.css` from the package into your as
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
-The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.mroq.dev/docs.html). The reference is derived from the compiled package used by the site.
+The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs.html). The reference is derived from the compiled package used by the site.
 
 ## Themes and customization
 
