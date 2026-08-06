@@ -1,0 +1,33 @@
+{
+  "name": "boobstrap",
+  "version": "0.1.0",
+  "description": "A cheeky CSS framework that still means business.",
+  "type": "module",
+  "files": [
+    "dist/boobstrap.css",
+    "src"
+  ],
+  "style": "dist/boobstrap.css",
+  "exports": {
+    ".": "./dist/boobstrap.css",
+    "./css": "./dist/boobstrap.css",
+    "./dist/boobstrap.css": "./dist/boobstrap.css"
+  },
+  "scripts": {
+    "build": "node scripts/build-framework.mjs",
+    "test": "npm run build && node scripts/verify-framework.mjs",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "css",
+    "framework",
+    "components",
+    "utilities"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeroq/boobstrap-framework.git"
+  },
+  "homepage": "https://boobstrap.mroq.dev",
+  "license": "MIT"
+}
