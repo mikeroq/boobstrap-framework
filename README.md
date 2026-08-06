@@ -8,8 +8,19 @@ Boobstrap is a lightweight, class-based CSS framework for polished interfaces wi
 
 ## Install
 
+Choose your package manager:
+
 ```bash
 npm install @boobstrap/boobstrap
+yarn add @boobstrap/boobstrap
+pnpm add @boobstrap/boobstrap
+bun add @boobstrap/boobstrap
+```
+
+All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.1.3/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -18,7 +29,7 @@ Import the compiled stylesheet once at your application entry point:
 import "@boobstrap/boobstrap/dist/boobstrap.css";
 ```
 
-For plain HTML projects, copy `dist/boobstrap.css` from the package into your assets and link it normally.
+You can also copy `dist/boobstrap.css` from the package into your own assets and link it normally.
 
 ## Quick start
 
