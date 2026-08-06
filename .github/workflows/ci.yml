@@ -72,24 +72,21 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
-      - name: Set up pnpm
-        if: matrix.manager == 'pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - name: Set up Bun
         if: matrix.manager == 'bun'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Set up Yarn
-        if: matrix.manager == 'yarn'
-        run: corepack enable && corepack prepare yarn@stable --activate
+      - name: Set up Corepack manager
+        if: matrix.manager == 'yarn' || matrix.manager == 'pnpm'
+        run: corepack enable && corepack prepare "${{ matrix.manager }}@latest" --activate
+      - name: Install framework dependencies
+        run: npm ci
       - name: Pack framework
         id: pack
         shell: bash
         run: |
-          archive="$(npm pack --json | node -e "let value=''; process.stdin.on('data', chunk => value += chunk); process.stdin.on('end', () => process.stdout.write(JSON.parse(value)[0].filename));")"
+          archive="$(npm pack --silent)"
           echo "archive=${archive}" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
         run: mkdir consumer && cd consumer && npm init -y
