@@ -57,3 +57,53 @@ jobs:
           for browser in chromium firefox webkit; do
             BROWSER="$browser" npm run test:browser
           done
+
+  package-managers:
+    name: Install with ${{ matrix.manager }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        manager: [npm, yarn, pnpm, bun]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Set up pnpm
+        if: matrix.manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Set up Bun
+        if: matrix.manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Set up Yarn
+        if: matrix.manager == 'yarn'
+        run: corepack enable && corepack prepare yarn@stable --activate
+      - name: Pack framework
+        id: pack
+        shell: bash
+        run: |
+          archive="$(npm pack --json | node -e "let value=''; process.stdin.on('data', chunk => value += chunk); process.stdin.on('end', () => process.stdout.write(JSON.parse(value)[0].filename));")"
+          echo "archive=${archive}" >> "$GITHUB_OUTPUT"
+      - name: Create consumer fixture
+        run: mkdir consumer && cd consumer && npm init -y
+      - name: Install packed framework
+        working-directory: consumer
+        shell: bash
+        run: |
+          archive="../${{ steps.pack.outputs.archive }}"
+          case "${{ matrix.manager }}" in
+            npm) npm install "$archive" ;;
+            yarn) yarn add "$archive" ;;
+            pnpm) pnpm add "$archive" ;;
+            bun) bun add "$archive" ;;
+          esac
+      - name: Verify exported stylesheet
+        working-directory: consumer
+        run: node ../scripts/verify-consumer.mjs
