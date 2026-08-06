@@ -90,7 +90,7 @@ jobs:
           version="$(node -p "require('./package.json').version")"
           echo "archive=boobstrap-boobstrap-${version}.tgz" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
-        run: mkdir consumer && cd consumer && npm init -y
+        run: mkdir consumer && cd consumer && npm init -y && touch yarn.lock
       - name: Install packed framework
         working-directory: consumer
         shell: bash
