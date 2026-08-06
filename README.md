@@ -9,13 +9,13 @@ Boobstrap is a lightweight, class-based CSS framework for polished interfaces wi
 ## Install
 
 ```bash
-npm install @mikeroq/boobstrap
+npm install @boobstrap/boobstrap
 ```
 
 Import the compiled stylesheet once at your application entry point:
 
 ```js
-import "@mikeroq/boobstrap/dist/boobstrap.css";
+import "@boobstrap/boobstrap/dist/boobstrap.css";
 ```
 
 For plain HTML projects, copy `dist/boobstrap.css` from the package into your assets and link it normally.
