@@ -1,5 +1,5 @@
 {
-  "name": "boobstrap",
+  "name": "@mikeroq/boobstrap",
   "version": "0.1.0",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
