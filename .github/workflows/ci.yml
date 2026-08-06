@@ -104,4 +104,10 @@ jobs:
           esac
       - name: Verify exported stylesheet
         working-directory: consumer
-        run: node ../scripts/verify-consumer.mjs
+        shell: bash
+        run: |
+          if [[ "${{ matrix.manager }}" == "yarn" ]]; then
+            yarn node ../scripts/verify-consumer.mjs
+          else
+            node ../scripts/verify-consumer.mjs
+          fi
