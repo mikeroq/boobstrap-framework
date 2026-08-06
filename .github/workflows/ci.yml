@@ -86,8 +86,9 @@ jobs:
         id: pack
         shell: bash
         run: |
-          archive="$(npm pack --silent)"
-          echo "archive=${archive}" >> "$GITHUB_OUTPUT"
+          npm pack --silent >/dev/null
+          version="$(node -p "require('./package.json').version")"
+          echo "archive=boobstrap-boobstrap-${version}.tgz" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
         run: mkdir consumer && cd consumer && npm init -y
       - name: Install packed framework
