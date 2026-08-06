@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const entry = join(root, "src", "boobstrap.css");
 const destination = join(root, "dist", "boobstrap.css");
+const packageFile = join(root, "package.json");
 const importPattern = /@import\s+["'](.+?)["'];/g;
 
 async function bundle(file, stack = []) {
@@ -28,7 +29,9 @@ async function bundle(file, stack = []) {
   return output + source.slice(cursor);
 }
 
-const banner = `/* Boobstrap v0.1.0 | MIT License | boobstrap.dev */\n`;
+const packageJson = JSON.parse(await readFile(packageFile, "utf8"));
+const homepage = new URL(packageJson.homepage);
+const banner = `/* Boobstrap v${packageJson.version} | MIT License | ${homepage.hostname} */\n`;
 const css = await bundle(entry);
 
 await mkdir(dirname(destination), { recursive: true });

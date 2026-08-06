@@ -2,6 +2,8 @@
 
 **Version 1.0 — Draft**
 
+This document governs the Boobstrap brand and visual direction. For shipped class names, token values, and usage examples, the [live documentation](https://boobstrap.mroq.dev/docs.html) and files under `src/` are authoritative; conceptual snippets in this draft are not part of the public API unless they appear there.
+
 Boobstrap is a playful but professional CSS framework. Its visual identity combines polished developer-tool aesthetics with rounded forms, confident typography, and subtle tongue-in-cheek details.
 
 The brand should feel:
