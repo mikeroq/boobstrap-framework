@@ -11,9 +11,15 @@ const paths = pack.files.map((file) => file.path);
 const requiredPaths = [
   "LICENSE",
   "README.md",
+  "docs/INTERACTIONS.md",
   "dist/boobstrap.css",
+  "dist/boobstrap.js",
+  "dist/js/collapse.js",
+  "dist/js/dropdown.js",
+  "dist/js/tabs.js",
   "package.json",
   "src/boobstrap.css",
+  "src/boobstrap.js",
 ];
 const forbiddenPrefixes = [".github/", "scripts/", "tests/"];
 

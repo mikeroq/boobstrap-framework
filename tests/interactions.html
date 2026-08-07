@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/dist/boobstrap.css" />
+    <title>Boobstrap interaction contract</title>
+    <style>
+      body { padding: 2rem; }
+      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section aria-labelledby="collapse-heading">
+        <h1 id="collapse-heading">Interaction contract</h1>
+        <button
+          class="bs-btn bs-btn-secondary"
+          id="collapse-toggle"
+          type="button"
+          data-bs-toggle="collapse"
+          aria-controls="collapse-panel"
+        >Toggle details</button>
+        <div class="bs-collapse bs-card bs-mt-4" id="collapse-panel" hidden>
+          <div class="bs-card-body">Collapsible details</div>
+        </div>
+      </section>
+
+      <section aria-label="Dropdown example">
+        <div class="bs-dropdown" data-bs-dropdown>
+          <button class="bs-btn bs-btn-secondary" id="actions-toggle" type="button" data-bs-toggle="dropdown" aria-controls="actions-menu">
+            Actions
+          </button>
+          <div class="bs-dropdown-menu" id="actions-menu" role="menu" aria-labelledby="actions-toggle" data-bs-dropdown-menu hidden>
+            <button class="bs-dropdown-item" type="button" role="menuitem">Edit</button>
+            <button class="bs-dropdown-item" type="button" role="menuitem" disabled>Archive</button>
+            <button class="bs-dropdown-item" type="button" role="menuitem">Duplicate</button>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="account-tabs-label">
+        <h2 id="account-tabs-label">Account</h2>
+        <div class="bs-tabs" role="tablist" aria-labelledby="account-tabs-label" data-bs-tabs>
+          <button class="bs-tab" id="profile-tab" type="button" role="tab" aria-controls="profile-panel" aria-selected="true">Profile</button>
+          <button class="bs-tab" id="billing-tab" type="button" role="tab" aria-controls="billing-panel" aria-disabled="true">Billing</button>
+          <button class="bs-tab" id="security-tab" type="button" role="tab" aria-controls="security-panel">Security</button>
+        </div>
+        <div class="bs-tab-panel" id="profile-panel" role="tabpanel" aria-labelledby="profile-tab">Profile settings</div>
+        <div class="bs-tab-panel" id="billing-panel" role="tabpanel" aria-labelledby="billing-tab" hidden>Billing settings</div>
+        <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" hidden>Security settings</div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initBoobstrap } from "/dist/boobstrap.js";
+
+      window.bsEvents = [];
+      for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+        document.addEventListener(name, () => window.bsEvents.push(name));
+      }
+      window.bs = initBoobstrap();
+    </script>
+  </body>
+</html>

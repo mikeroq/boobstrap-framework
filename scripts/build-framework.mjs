@@ -1,10 +1,12 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const entry = join(root, "src", "boobstrap.css");
 const destination = join(root, "dist", "boobstrap.css");
+const javascriptSource = join(root, "src", "js");
+const javascriptDestination = join(root, "dist", "js");
 const packageFile = join(root, "package.json");
 const importPattern = /@import\s+["'](.+?)["'];/g;
 
@@ -37,4 +39,11 @@ const css = await bundle(entry);
 await mkdir(dirname(destination), { recursive: true });
 await writeFile(destination, `${banner}${css.trim()}\n`);
 
-console.log(`Built ${destination.replace(`${root}/`, "")} (${Buffer.byteLength(css)} bytes)`);
+await mkdir(javascriptDestination, { recursive: true });
+const javascriptFiles = (await readdir(javascriptSource)).filter((file) => file.endsWith(".js"));
+for (const file of javascriptFiles) {
+  await copyFile(join(javascriptSource, file), join(javascriptDestination, file));
+}
+await copyFile(join(root, "src", "boobstrap.js"), join(root, "dist", "boobstrap.js"));
+
+console.log(`Built ${destination.replace(`${root}/`, "")} (${Buffer.byteLength(css)} bytes) and ${javascriptFiles.length} JavaScript modules.`);
