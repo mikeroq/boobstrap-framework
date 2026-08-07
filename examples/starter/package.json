@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@boobstrap/boobstrap": "0.1.4"
+    "@boobstrap/boobstrap": "0.2.0"
   },
   "devDependencies": {
     "vite": "^7.1.1"

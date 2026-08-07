@@ -93,6 +93,7 @@ try {
     if (!await page.locator("#alpine-profile-panel").isHidden() || await page.locator("#alpine-security-panel").isHidden()) failures.push(`${build}: tab panels did not synchronize`);
     await securityTab.press("Home");
     if (await profileTab.getAttribute("aria-selected") !== "true") failures.push(`${build}: tabs did not support Home`);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
     const events = await page.evaluate(() => window.bsEvents);
     for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
