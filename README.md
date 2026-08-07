@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.1.4/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.2.0/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -72,7 +72,21 @@ const boobstrap = initBoobstrap();
 
 Boobstrap JS currently provides collapse, dropdown, and tabs controllers with keyboard behavior, synchronized ARIA state, cancelable lifecycle events, and explicit cleanup. Component-level imports are available at `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
 
-Applications can continue bringing their own behavior. Planned Alpine, React, and Vue adapters will implement the same [interaction contract](docs/INTERACTIONS.md) without requiring Boobstrap JS.
+Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
+
+```bash
+npm install @boobstrap/alpine alpinejs
+```
+
+```js
+import Alpine from "alpinejs";
+import boobstrap from "@boobstrap/alpine";
+
+Alpine.plugin(boobstrap);
+Alpine.start();
+```
+
+React and Vue adapters will follow the same contract with their runtimes supplied as peer dependencies.
 
 ## Quick start
 
@@ -176,7 +190,7 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Expand the vanilla foundation beyond collapse, dropdown, and tabs
 - Toast notifications
 - Modals, tooltips, and popovers
-- Alpine, React, and Vue adapters built against the shared interaction contract
+- React and Vue adapters built against the shared interaction contract
 
 ### Future
 

@@ -1,0 +1,49 @@
+{
+  "name": "@boobstrap/alpine",
+  "version": "0.1.0",
+  "description": "Official Alpine.js behavior adapter for Boobstrap components.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "peerDependencies": {
+    "@alpinejs/csp": "^3.15.0",
+    "@boobstrap/boobstrap": "^0.2.0",
+    "alpinejs": "^3.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@alpinejs/csp": {
+      "optional": true
+    },
+    "@boobstrap/boobstrap": {
+      "optional": true
+    },
+    "alpinejs": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "alpine",
+    "boobstrap",
+    "components",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeroq/boobstrap-framework.git",
+    "directory": "packages/alpine"
+  },
+  "homepage": "https://boobstrap.org/docs#alpine",
+  "bugs": {
+    "url": "https://github.com/mikeroq/boobstrap-framework/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT"
+}

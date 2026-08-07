@@ -10,11 +10,11 @@ The contract in this document is also the compatibility target for official Alpi
 |---|---|---|
 | Boobstrap CSS | None | Static HTML or applications providing their own behavior |
 | Boobstrap JS | Browser DOM APIs | Progressive enhancement and imperative applications |
-| Alpine adapter | Alpine peer dependency | Attribute-driven reactive applications |
+| Alpine adapter | Optional Alpine peer dependency | Attribute-driven reactive applications |
 | React adapter | React peer dependency | Controlled and uncontrolled React components |
 | Vue adapter | Vue peer dependency | Vue components and `v-model` state |
 
-The Alpine, React, and Vue layers are planned adapters. The CSS and Boobstrap JS contracts below are implemented today.
+The CSS, Boobstrap JS, and Alpine layers are implemented today. React and Vue remain planned adapters.
 
 ## Installation and initialization
 
@@ -142,3 +142,84 @@ Official adapters must:
 6. Document any deliberate difference from the base interaction contract.
 
 This keeps examples visually and behaviorally equivalent while allowing each framework to own state in its normal way.
+
+## Alpine adapter
+
+Install Boobstrap with either Alpine's standard build or its CSP-compatible build:
+
+```bash
+npm install @boobstrap/boobstrap @boobstrap/alpine alpinejs
+```
+
+```js
+import "@boobstrap/boobstrap";
+import Alpine from "alpinejs";
+import boobstrap from "@boobstrap/alpine";
+
+Alpine.plugin(boobstrap);
+Alpine.start();
+```
+
+The plugin must be registered before `Alpine.start()`. It provides `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+
+### Alpine collapse
+
+```html
+<div x-data="bsCollapse">
+  <button
+    class="bs-btn bs-btn-secondary"
+    type="button"
+    x-bind="trigger"
+    aria-controls="details"
+  >
+    Show details
+  </button>
+
+  <div class="bs-collapse" id="details" x-bind="panel" hidden>
+    Details
+  </div>
+</div>
+```
+
+### Alpine dropdown
+
+```html
+<div class="bs-dropdown" x-data="bsDropdown" x-bind="root">
+  <button
+    class="bs-btn"
+    type="button"
+    data-bs-toggle="dropdown"
+    x-bind="trigger"
+    aria-controls="actions-menu"
+  >
+    Actions
+  </button>
+
+  <div
+    class="bs-dropdown-menu"
+    id="actions-menu"
+    role="menu"
+    data-bs-dropdown-menu
+    x-bind="menu"
+    hidden
+  >
+    <button class="bs-dropdown-item" type="button" role="menuitem">Edit</button>
+  </div>
+</div>
+```
+
+### Alpine tabs
+
+```html
+<section x-data="bsTabs">
+  <div class="bs-tabs" role="tablist" aria-label="Account" x-bind="tablist">
+    <button class="bs-tab" id="profile-tab" type="button" role="tab" x-bind="tab" aria-controls="profile-panel" aria-selected="true">Profile</button>
+    <button class="bs-tab" id="security-tab" type="button" role="tab" x-bind="tab" aria-controls="security-panel">Security</button>
+  </div>
+
+  <div class="bs-tab-panel" id="profile-panel" role="tabpanel" aria-labelledby="profile-tab" x-bind="panel">Profile settings</div>
+  <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" x-bind="panel" hidden>Security settings</div>
+</section>
+```
+
+Do not initialize Boobstrap JS on the same component subtree. Alpine owns these instances' state and lifecycle while preserving the public Boobstrap events and `data-bs-state` values.

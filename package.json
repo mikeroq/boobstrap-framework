@@ -1,8 +1,11 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
@@ -28,8 +31,8 @@
     "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs",
-    "test:package": "node scripts/verify-package.mjs",
+    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs",
+    "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs",
     "test:starter": "npm --prefix examples/starter ci && npm --prefix examples/starter run validate",
     "prepack": "npm run build && npm run test:contract && npm run test:css",
     "prepare": "npm run build"
@@ -54,7 +57,9 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@alpinejs/csp": "^3.15.12",
     "@axe-core/playwright": "^4.12.1",
+    "alpinejs": "^3.15.12",
     "csstree-validator": "^4.0.1",
     "playwright": "^1.62.1"
   }
