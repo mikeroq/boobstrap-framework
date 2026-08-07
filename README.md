@@ -6,6 +6,10 @@ Boobstrap is a lightweight, class-based CSS framework for polished interfaces wi
 
 [Documentation](https://boobstrap.org/docs.html) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
+## Starter template
+
+Start from the responsive [Vite starter](examples/starter), which imports Boobstrap from npm and includes theme customization, components, forms, inline SVG icons, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs.html#starter).
+
 ## Install
 
 Choose your package manager:
@@ -20,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.1.3/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.1.4/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -160,8 +164,7 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 
 ### Future
 
-- Theme playground and token export
-- Starter page templates
+- Token export tooling
 - Component-level distribution if bundle growth makes partial imports worthwhile
 - Migration guides before the first stable major release
 
@@ -176,6 +179,7 @@ src/
 └── boobstrap.css # ordered source entry point
 
 dist/             # published compiled CSS
+examples/starter/ # downloadable Vite consumer project
 scripts/          # build and release validation
 tests/            # API contract and browser fixture
 ```
