@@ -14,7 +14,7 @@ The contract in this document is also the compatibility target for official Alpi
 | React adapter | React peer dependency | Controlled and uncontrolled React components |
 | Vue adapter | Vue peer dependency | Vue components and `v-model` state |
 
-The CSS, Boobstrap JS, and Alpine layers are implemented today. React and Vue remain planned adapters.
+The CSS, Boobstrap JS, Alpine, and React layers are implemented today. Vue remains a planned adapter.
 
 ## Installation and initialization
 
@@ -223,3 +223,75 @@ The plugin must be registered before `Alpine.start()`. It provides `bsCollapse`,
 ```
 
 Do not initialize Boobstrap JS on the same component subtree. Alpine owns these instances' state and lifecycle while preserving the public Boobstrap events and `data-bs-state` values.
+
+## React adapter
+
+Install the headless React hooks alongside React and the Boobstrap stylesheet:
+
+```bash
+npm install @boobstrap/boobstrap @boobstrap/react react
+```
+
+```js
+import "@boobstrap/boobstrap";
+import { useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+```
+
+The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `open` / `onOpenChange` or `selectedId` / `onSelectedChange` for controlled state; use `defaultOpen` or `defaultSelectedId` for uncontrolled state.
+
+### React collapse
+
+```jsx
+function Details() {
+  const collapse = useCollapse({ id: "details" });
+
+  return (
+    <>
+      <button className="bs-btn bs-btn-secondary" {...collapse.getTriggerProps()}>
+        Show details
+      </button>
+      <div className="bs-collapse" {...collapse.getPanelProps()}>
+        Details
+      </div>
+    </>
+  );
+}
+```
+
+### React dropdown
+
+```jsx
+function Actions() {
+  const dropdown = useDropdown({ id: "actions-menu" });
+
+  return (
+    <div className="bs-dropdown" {...dropdown.getRootProps()}>
+      <button className="bs-btn" {...dropdown.getTriggerProps()}>Actions</button>
+      <div className="bs-dropdown-menu" {...dropdown.getMenuProps()}>
+        <button className="bs-dropdown-item" type="button" role="menuitem">Edit</button>
+      </div>
+    </div>
+  );
+}
+```
+
+### React tabs
+
+```jsx
+function Account() {
+  const tabs = useTabs({ defaultSelectedId: "profile-tab" });
+
+  return (
+    <>
+      <div className="bs-tabs" aria-label="Account" {...tabs.getTablistProps()}>
+        <button className="bs-tab" {...tabs.getTabProps({ id: "profile-tab", controls: "profile-panel" })}>Profile</button>
+        <button className="bs-tab" {...tabs.getTabProps({ id: "security-tab", controls: "security-panel" })}>Security</button>
+      </div>
+      <div className="bs-tab-panel" id="profile-panel" {...tabs.getPanelProps({ tabId: "profile-tab" })}>Profile settings</div>
+      <div className="bs-tab-panel" id="security-panel" {...tabs.getPanelProps({ tabId: "security-tab" })}>Security settings</div>
+    </>
+  );
+}
+```
+
+Do not initialize Boobstrap JS or an Alpine provider on a React-owned component subtree. React controls the DOM state while preserving Boobstrap lifecycle events and `data-bs-state` values.

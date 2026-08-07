@@ -1,0 +1,49 @@
+{
+  "name": "@boobstrap/react",
+  "version": "0.1.0",
+  "description": "Official React behavior adapter for Boobstrap components.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "LICENSE",
+    "README.md",
+    "src"
+  ],
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@boobstrap/boobstrap": "^0.2.0",
+    "react": ">=18.0.0 <20.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@boobstrap/boobstrap": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "react",
+    "boobstrap",
+    "components",
+    "hooks",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeroq/boobstrap-framework.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://boobstrap.org/docs#react",
+  "bugs": {
+    "url": "https://github.com/mikeroq/boobstrap-framework/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT"
+}

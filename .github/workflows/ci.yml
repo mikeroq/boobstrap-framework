@@ -88,12 +88,16 @@ jobs:
         run: |
           npm pack --silent >/dev/null
           npm pack --silent --workspace @boobstrap/alpine >/dev/null
+          npm pack --silent --workspace @boobstrap/react >/dev/null
           core_version="$(node -p "require('./package.json').version")"
           alpine_version="$(node -p "require('./packages/alpine/package.json').version")"
+          react_version="$(node -p "require('./packages/react/package.json').version")"
           core_archive="boobstrap-boobstrap-${core_version}.tgz"
           alpine_archive="boobstrap-alpine-${alpine_version}.tgz"
+          react_archive="boobstrap-react-${react_version}.tgz"
           echo "core_archive=${core_archive}" >> "$GITHUB_OUTPUT"
           echo "alpine_archive=${alpine_archive}" >> "$GITHUB_OUTPUT"
+          echo "react_archive=${react_archive}" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
         run: mkdir consumer && cd consumer && npm init -y && touch yarn.lock
       - name: Install packed framework
@@ -102,11 +106,12 @@ jobs:
         run: |
           core_archive="../${{ steps.pack.outputs.core_archive }}"
           alpine_archive="../${{ steps.pack.outputs.alpine_archive }}"
+          react_archive="../${{ steps.pack.outputs.react_archive }}"
           case "${{ matrix.manager }}" in
-            npm) npm install "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
-            yarn) yarn add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
-            pnpm) pnpm add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
-            bun) bun add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
+            npm) npm install "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
+            yarn) yarn add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
+            pnpm) pnpm add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
+            bun) bun add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
           esac
       - name: Verify exported stylesheet
         working-directory: consumer

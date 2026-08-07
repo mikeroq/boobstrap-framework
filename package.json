@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
   "workspaces": [
@@ -31,8 +31,9 @@
     "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs",
-    "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs",
+    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs",
+    "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs && node scripts/verify-react-package.mjs && npm run test:types",
+    "test:types": "tsc --noEmit --strict --jsx react-jsx --module NodeNext --moduleResolution NodeNext --target ES2022 --lib ES2022,DOM --skipLibCheck tests/react-types.tsx",
     "test:starter": "npm --prefix examples/starter ci && npm --prefix examples/starter run validate",
     "prepack": "npm run build && npm run test:contract && npm run test:css",
     "prepare": "npm run build"
@@ -59,8 +60,14 @@
   "devDependencies": {
     "@alpinejs/csp": "^3.15.12",
     "@axe-core/playwright": "^4.12.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "alpinejs": "^3.15.12",
     "csstree-validator": "^4.0.1",
-    "playwright": "^1.62.1"
+    "esbuild": "^0.28.1",
+    "playwright": "^1.62.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2"
   }
 }
