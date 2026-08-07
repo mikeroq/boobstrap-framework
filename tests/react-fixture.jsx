@@ -27,8 +27,8 @@ function ControlledCollapseExample() {
   const collapse = useCollapse({ id: "react-controlled-panel", open, onOpenChange: setOpen });
   return (
     <section aria-label="Controlled collapse">
-      <button id="react-controlled-toggle" className="bs-btn" {...collapse.getTriggerProps()}>Controlled details</button>
-      <button id="react-controlled-external" className="bs-btn" type="button" onClick={() => setOpen((current) => !current)}>External state</button>
+      <button id="react-controlled-toggle" className="bs-btn bs-btn-secondary" {...collapse.getTriggerProps()}>Controlled details</button>
+      <button id="react-controlled-external" className="bs-btn bs-btn-secondary" type="button" onClick={() => setOpen((current) => !current)}>External state</button>
       <div className="bs-collapse" {...collapse.getPanelProps()}>Controlled content</div>
     </section>
   );
