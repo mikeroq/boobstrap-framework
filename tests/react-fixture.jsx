@@ -69,12 +69,12 @@ function TabsExample() {
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
-    <main>
+    <>
       <CollapseExample />
       <ControlledCollapseExample />
       <DropdownExample />
       <TabsExample />
-    </main>
+    </>
   );
 }
 
