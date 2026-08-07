@@ -2,7 +2,7 @@
 
 **A cheeky CSS framework that still means business.**
 
-Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a JavaScript runtime. Version 0.1 provides themeable foundations, responsive layout primitives, components, and focused utilities under a predictable `bs-` prefix.
+Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. Version 0.1 provides themeable foundations, responsive layout primitives, components, and focused utilities under a predictable `bs-` prefix.
 
 [Documentation](https://boobstrap.org/docs) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
@@ -59,6 +59,21 @@ createIcons({ icons });
 
 Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and can be used with any SVG icon source.
 
+## Optional JavaScript
+
+The default Boobstrap import remains CSS-only. For progressive enhancement, initialize the dependency-free interaction layer explicitly:
+
+```js
+import "@boobstrap/boobstrap";
+import { initBoobstrap } from "@boobstrap/boobstrap/js";
+
+const boobstrap = initBoobstrap();
+```
+
+Boobstrap JS currently provides collapse, dropdown, and tabs controllers with keyboard behavior, synchronized ARIA state, cancelable lifecycle events, and explicit cleanup. Component-level imports are available at `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
+
+Applications can continue bringing their own behavior. Planned Alpine, React, and Vue adapters will implement the same [interaction contract](docs/INTERACTIONS.md) without requiring Boobstrap JS.
+
 ## Quick start
 
 ```html
@@ -93,6 +108,7 @@ Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and ca
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
 - Buttons, cards, badges, forms, alerts, and code windows
+- Optional collapse, dropdown, and tabs styles and dependency-free controllers
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
@@ -118,7 +134,7 @@ Override semantic tokens after importing Boobstrap:
 
 ## Browser support
 
-The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, and automated Axe accessibility checks.
+The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, optional controller interactions, keyboard navigation, and automated Axe accessibility checks.
 
 Legacy browsers are not a target. Boobstrap uses modern CSS features including custom properties, Grid, `clamp()`, and modern color syntax.
 
@@ -139,7 +155,7 @@ Useful commands:
 | `npm run build` | Compile source imports into `dist/boobstrap.css` |
 | `npm run test:contract` | Verify the exact public class/token contract and bundle metadata |
 | `npm run test:css` | Validate compiled CSS syntax |
-| `npm run test:browser` | Test themes, layout, focus, motion, and accessibility in a browser |
+| `npm run test:browser` | Test themes, layout, interactions, keyboard behavior, focus, motion, and accessibility |
 | `npm run test:package` | Inspect the npm tarball contents without publishing |
 | `npm test` | Run the complete local release gate |
 
@@ -155,12 +171,12 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Progress indicators
 - Expanded responsive utilities
 
-### v0.3 — Optional interaction layer
+### v0.3 — Interaction adapters
 
-- Dropdowns and tabs
+- Expand the vanilla foundation beyond collapse, dropdown, and tabs
 - Toast notifications
 - Modals, tooltips, and popovers
-- A framework-agnostic JavaScript package with no dependency on a UI framework
+- Alpine, React, and Vue adapters built against the shared interaction contract
 
 ### Future
 
@@ -174,12 +190,14 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 src/
 ├── base/         # reset, tokens, and typography
 ├── components/   # reusable component classes
+├── js/           # optional dependency-free controllers
 ├── layout/       # containers and the 12-column grid
 ├── utilities/    # focused composition helpers
 └── boobstrap.css # ordered source entry point
 
 dist/             # published compiled CSS
 examples/starter/ # downloadable Vite consumer project
+docs/             # public behavior and adapter contracts
 scripts/          # build and release validation
 tests/            # API contract and browser fixture
 ```

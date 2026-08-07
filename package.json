@@ -8,20 +8,27 @@
   ],
   "files": [
     "dist/boobstrap.css",
+    "dist/boobstrap.js",
+    "dist/js",
+    "docs/INTERACTIONS.md",
     "src"
   ],
   "style": "dist/boobstrap.css",
   "exports": {
     ".": "./dist/boobstrap.css",
     "./css": "./dist/boobstrap.css",
-    "./dist/boobstrap.css": "./dist/boobstrap.css"
+    "./dist/boobstrap.css": "./dist/boobstrap.css",
+    "./js": "./dist/boobstrap.js",
+    "./js/collapse": "./dist/js/collapse.js",
+    "./js/dropdown": "./dist/js/dropdown.js",
+    "./js/tabs": "./dist/js/tabs.js"
   },
   "scripts": {
     "build": "node scripts/build-framework.mjs",
     "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs",
+    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs",
     "test:package": "node scripts/verify-package.mjs",
     "test:starter": "npm --prefix examples/starter ci && npm --prefix examples/starter run validate",
     "prepack": "npm run build && npm run test:contract && npm run test:css",
