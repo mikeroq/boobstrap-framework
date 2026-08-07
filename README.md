@@ -2,7 +2,7 @@
 
 **A cheeky CSS framework that still means business.**
 
-Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. Version 0.1 provides themeable foundations, responsive layout primitives, components, and focused utilities under a predictable `bs-` prefix.
+Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. Version 0.2 provides themeable foundations, responsive layout primitives, components, focused utilities, and optional behavior layers under a predictable `bs-` prefix.
 
 [Documentation](https://boobstrap.org/docs) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.2.0/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.2.1/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -86,7 +86,25 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-React and Vue adapters will follow the same contract with their runtimes supplied as peer dependencies.
+The official React adapter exposes controlled and uncontrolled headless hooks without attaching Boobstrap JS:
+
+```bash
+npm install @boobstrap/react react
+```
+
+```jsx
+import { useCollapse } from "@boobstrap/react";
+
+function Details() {
+  const collapse = useCollapse({ id: "details" });
+  return <>
+    <button className="bs-btn" {...collapse.getTriggerProps()}>Details</button>
+    <div className="bs-collapse" {...collapse.getPanelProps()}>Content</div>
+  </>;
+}
+```
+
+Vue will follow the same contract with its runtime supplied as a peer dependency.
 
 ## Quick start
 
@@ -116,13 +134,14 @@ React and Vue adapters will follow the same contract with their runtimes supplie
 </html>
 ```
 
-## What ships in v0.1
+## What ships in v0.2
 
 - Dark and light semantic theme tokens
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
 - Buttons, cards, badges, forms, alerts, and code windows
 - Optional collapse, dropdown, and tabs styles and dependency-free controllers
+- Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
@@ -177,20 +196,22 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 
 ## Roadmap
 
-### v0.2 — CSS component breadth
+### v0.2 — Interaction foundation (shipped)
+
+- Dependency-free collapse, dropdown, and tabs controllers
+- Shared state, event, keyboard, and accessibility contract
+- Official Alpine and React adapters
+
+### v0.3 — Component breadth and adapter parity
 
 - Navigation
 - Breadcrumbs and pagination
 - Tables
 - Progress indicators
 - Expanded responsive utilities
-
-### v0.3 — Interaction adapters
-
-- Expand the vanilla foundation beyond collapse, dropdown, and tabs
+- Official Vue adapter
 - Toast notifications
 - Modals, tooltips, and popovers
-- React and Vue adapters built against the shared interaction contract
 
 ### Future
 

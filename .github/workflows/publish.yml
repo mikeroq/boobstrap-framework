@@ -41,10 +41,35 @@ jobs:
       - name: Run release gate
         run: npm test
       - name: Publish framework with provenance
-        run: npm publish --access public --provenance --tag "${{ inputs.npm_tag }}"
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./package.json').version")"
+          if npm view "@boobstrap/boobstrap@${package_version}" version >/dev/null 2>&1; then
+            echo "@boobstrap/boobstrap@${package_version} is already published; skipping."
+          else
+            npm publish --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish Alpine adapter with provenance
-        run: npm publish --workspace @boobstrap/alpine --access public --provenance --tag "${{ inputs.npm_tag }}"
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./packages/alpine/package.json').version")"
+          if npm view "@boobstrap/alpine@${package_version}" version >/dev/null 2>&1; then
+            echo "@boobstrap/alpine@${package_version} is already published; skipping."
+          else
+            npm publish --workspace @boobstrap/alpine --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish React adapter with provenance
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./packages/react/package.json').version")"
+          if npm view "@boobstrap/react@${package_version}" version >/dev/null 2>&1; then
+            echo "@boobstrap/react@${package_version} is already published; skipping."
+          else
+            npm publish --workspace @boobstrap/react --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
