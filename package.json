@@ -18,11 +18,12 @@
   },
   "scripts": {
     "build": "node scripts/build-framework.mjs",
-    "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package",
+    "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
     "test:browser": "node tests/browser.mjs",
     "test:package": "node scripts/verify-package.mjs",
+    "test:starter": "npm --prefix examples/starter ci && npm --prefix examples/starter run validate",
     "prepack": "npm run build && npm run test:contract && npm run test:css",
     "prepare": "npm run build"
   },
