@@ -40,7 +40,11 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run release gate
         run: npm test
-      - name: Publish with provenance
+      - name: Publish framework with provenance
         run: npm publish --access public --provenance --tag "${{ inputs.npm_tag }}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish Alpine adapter with provenance
+        run: npm publish --workspace @boobstrap/alpine --access public --provenance --tag "${{ inputs.npm_tag }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -87,20 +87,26 @@ jobs:
         shell: bash
         run: |
           npm pack --silent >/dev/null
-          version="$(node -p "require('./package.json').version")"
-          echo "archive=boobstrap-boobstrap-${version}.tgz" >> "$GITHUB_OUTPUT"
+          npm pack --silent --workspace @boobstrap/alpine >/dev/null
+          core_version="$(node -p "require('./package.json').version")"
+          alpine_version="$(node -p "require('./packages/alpine/package.json').version")"
+          core_archive="boobstrap-boobstrap-${core_version}.tgz"
+          alpine_archive="boobstrap-alpine-${alpine_version}.tgz"
+          echo "core_archive=${core_archive}" >> "$GITHUB_OUTPUT"
+          echo "alpine_archive=${alpine_archive}" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
         run: mkdir consumer && cd consumer && npm init -y && touch yarn.lock
       - name: Install packed framework
         working-directory: consumer
         shell: bash
         run: |
-          archive="../${{ steps.pack.outputs.archive }}"
+          core_archive="../${{ steps.pack.outputs.core_archive }}"
+          alpine_archive="../${{ steps.pack.outputs.alpine_archive }}"
           case "${{ matrix.manager }}" in
-            npm) npm install "$archive" ;;
-            yarn) yarn add "$archive" ;;
-            pnpm) pnpm add "$archive" ;;
-            bun) bun add "$archive" ;;
+            npm) npm install "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
+            yarn) yarn add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
+            pnpm) pnpm add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
+            bun) bun add "$core_archive" "$alpine_archive" alpinejs@3.15.12 ;;
           esac
       - name: Verify exported stylesheet
         working-directory: consumer

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light" data-alpine-build="standard">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/dist/boobstrap.css" />
+    <title>Boobstrap Alpine contract</title>
+    <style>
+      body { padding: 2rem; }
+      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; }
+    </style>
+    <script type="module" src="/tests/alpine-fixture.js"></script>
+  </head>
+  <body>
+    <main>
+      <section x-data="bsCollapse" aria-labelledby="alpine-heading">
+        <h1 id="alpine-heading">Alpine interaction contract</h1>
+        <button
+          class="bs-btn bs-btn-secondary"
+          id="alpine-collapse-toggle"
+          type="button"
+          x-bind="trigger"
+          aria-controls="alpine-collapse-panel"
+        >Toggle details</button>
+        <div class="bs-collapse bs-card bs-mt-4" id="alpine-collapse-panel" x-bind="panel" hidden>
+          <div class="bs-card-body">Alpine collapsible details</div>
+        </div>
+      </section>
+
+      <section aria-label="Alpine dropdown example">
+        <div class="bs-dropdown" x-data="bsDropdown" x-bind="root" data-test-dropdown>
+          <button
+            class="bs-btn bs-btn-secondary"
+            id="alpine-actions-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            x-bind="trigger"
+            aria-controls="alpine-actions-menu"
+          >Actions</button>
+          <div
+            class="bs-dropdown-menu"
+            id="alpine-actions-menu"
+            role="menu"
+            aria-labelledby="alpine-actions-toggle"
+            data-bs-dropdown-menu
+            x-bind="menu"
+            hidden
+          >
+            <button class="bs-dropdown-item" type="button" role="menuitem">Edit</button>
+            <button class="bs-dropdown-item" type="button" role="menuitem" disabled>Archive</button>
+            <button class="bs-dropdown-item" type="button" role="menuitem">Duplicate</button>
+          </div>
+        </div>
+      </section>
+
+      <section x-data="bsTabs" aria-labelledby="alpine-tabs-label">
+        <h2 id="alpine-tabs-label">Account</h2>
+        <div class="bs-tabs" role="tablist" aria-labelledby="alpine-tabs-label" x-bind="tablist">
+          <button class="bs-tab" id="alpine-profile-tab" type="button" role="tab" x-bind="tab" aria-controls="alpine-profile-panel" aria-selected="true">Profile</button>
+          <button class="bs-tab" id="alpine-billing-tab" type="button" role="tab" x-bind="tab" aria-controls="alpine-billing-panel" aria-disabled="true">Billing</button>
+          <button class="bs-tab" id="alpine-security-tab" type="button" role="tab" x-bind="tab" aria-controls="alpine-security-panel">Security</button>
+        </div>
+        <div class="bs-tab-panel" id="alpine-profile-panel" role="tabpanel" aria-labelledby="alpine-profile-tab" x-bind="panel">Profile settings</div>
+        <div class="bs-tab-panel" id="alpine-billing-panel" role="tabpanel" aria-labelledby="alpine-billing-tab" x-bind="panel" hidden>Billing settings</div>
+        <div class="bs-tab-panel" id="alpine-security-panel" role="tabpanel" aria-labelledby="alpine-security-tab" x-bind="panel" hidden>Security settings</div>
+      </section>
+    </main>
+  </body>
+</html>
