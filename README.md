@@ -4,11 +4,11 @@
 
 Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a JavaScript runtime. Version 0.1 provides themeable foundations, responsive layout primitives, components, and focused utilities under a predictable `bs-` prefix.
 
-[Documentation](https://boobstrap.org/docs.html) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
+[Documentation](https://boobstrap.org/docs) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
 ## Starter template
 
-Start from the responsive [Vite starter](examples/starter), which imports Boobstrap from npm and includes theme customization, components, forms, inline SVG icons, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs.html#starter).
+Start from the responsive [Vite starter](examples/starter), which imports Boobstrap from npm and includes theme customization, components, forms, inline SVG icons, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs#starter).
 
 ## Install
 
@@ -96,7 +96,7 @@ Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and ca
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
-The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs.html). The reference is derived from the compiled package used by the site.
+The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs). The reference is derived from the compiled package used by the site.
 
 ## Themes and customization
 

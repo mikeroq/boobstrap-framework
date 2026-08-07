@@ -37,7 +37,7 @@
     "type": "git",
     "url": "git+https://github.com/mikeroq/boobstrap-framework.git"
   },
-  "homepage": "https://boobstrap.org/docs.html",
+  "homepage": "https://boobstrap.org/docs",
   "bugs": {
     "url": "https://github.com/mikeroq/boobstrap-framework/issues"
   },
