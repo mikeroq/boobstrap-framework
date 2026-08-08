@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
   "workspaces": [
