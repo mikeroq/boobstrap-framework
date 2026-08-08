@@ -174,6 +174,8 @@ Legacy browsers are not a target. Boobstrap uses modern CSS features including c
 
 ## Development
 
+Feature work targets the `dev` branch and is exercised by the website's hosted dev environment without publishing interim npm versions. See [DEVELOPMENT.md](DEVELOPMENT.md) for the cross-repository integration and release flow.
+
 ```bash
 git clone https://github.com/mikeroq/boobstrap-framework.git
 cd boobstrap-framework
