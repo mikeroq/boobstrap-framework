@@ -55,6 +55,25 @@ try {
     failures.push("Loading button did not synchronize disabled and accessible state");
   }
   if (!await loadingButton.locator(".bs-btn-spinner").isVisible()) failures.push("Loading button spinner is not visible");
+  const spinnerCenters = [];
+  for (let sample = 0; sample < 3; sample += 1) {
+    const [buttonBox, spinnerBox] = await Promise.all([
+      loadingButton.boundingBox(),
+      loadingButton.locator(".bs-btn-spinner").boundingBox(),
+    ]);
+    if (buttonBox && spinnerBox) {
+      spinnerCenters.push({
+        x: spinnerBox.x + spinnerBox.width / 2,
+        y: spinnerBox.y + spinnerBox.height / 2,
+        buttonX: buttonBox.x + buttonBox.width / 2,
+        buttonY: buttonBox.y + buttonBox.height / 2,
+      });
+    }
+    await page.waitForTimeout(90);
+  }
+  if (spinnerCenters.some(({ x, y, buttonX, buttonY }) => Math.abs(x - buttonX) > 1 || Math.abs(y - buttonY) > 1)) {
+    failures.push(`Loading spinner moved away from the button center (${JSON.stringify(spinnerCenters)})`);
+  }
   await page.evaluate(() => window.bs.controllers.find((controller) => controller.element.id === "loading-button").stop({ reason: "test" }));
   if (await loadingButton.isDisabled() || await loadingButton.getAttribute("data-bs-state") !== "idle" || await loadingButton.getAttribute("aria-busy") !== null) {
     failures.push("Loading button did not restore its original state");

@@ -1,4 +1,4 @@
-/* Boobstrap v0.3.0 | MIT License | boobstrap.org */
+/* Boobstrap v0.3.1 | MIT License | boobstrap.org */
 :root,
 [data-bs-theme="dark"] {
   color-scheme: dark;
@@ -470,12 +470,12 @@ samp {
 .bs-btn[data-bs-state="loading"] .bs-btn-spinner {
   position: absolute;
   display: inline-block;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
 }
 
 @keyframes bs-spinner {
-  to { rotate: 1turn; }
+  to { transform: rotate(360deg); }
 }
 
 .bs-card {
