@@ -1,7 +1,16 @@
 import { useState } from "react";
-import { useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
+  const [saving, setSaving] = useState(false);
+  const button = useButton({
+    loading: saving,
+    loadingLabel: "Saving changes",
+    onLoadingChange: (loading, detail) => {
+      detail.adapter satisfies "react";
+      setSaving(loading);
+    },
+  });
   const [detailsOpen, setDetailsOpen] = useState(false);
   const collapse = useCollapse({
     id: "typed-details",
@@ -18,11 +27,13 @@ export function ReactAdapterTypeFixture() {
   });
 
   collapse.show();
+  button.stop("type-test");
   dropdown.hide({ restoreFocus: true, reason: "type-test" });
   tabs.activate("typed-profile-tab");
 
   return (
     <main>
+      <button className="bs-btn" {...button.getButtonProps()}><span className="bs-btn-label">Save</span></button>
       <button className="bs-btn" {...collapse.getTriggerProps()}>Details</button>
       <div className="bs-collapse" {...collapse.getPanelProps()}>Typed details</div>
 

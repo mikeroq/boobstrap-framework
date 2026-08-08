@@ -56,6 +56,37 @@ Imports have no DOM side effects. Initialization is explicit, accepts a `Documen
 - Event names use `bs:<component>:<action>`.
 - Removing a controller with `destroy()` removes listeners but does not rewrite application content.
 
+## Loading button
+
+```html
+<button
+  class="bs-btn bs-btn-primary"
+  type="button"
+  data-bs-button
+  data-bs-loading
+  data-bs-loading-label="Saving changes"
+>
+  <span class="bs-btn-label">Save changes</span>
+  <span class="bs-spinner bs-btn-spinner" aria-hidden="true"></span>
+</button>
+```
+
+`data-bs-loading` starts loading after a click. The controller applies native `disabled`, `aria-busy="true"`, a specific accessible loading label, and `data-bs-state="loading"`. It preserves the original attributes and restores them when `stop()` runs. The application owns the asynchronous operation and decides when it has settled.
+
+Public API:
+
+```js
+import { Button } from "@boobstrap/boobstrap/js/button";
+
+const save = Button.getOrCreateInstance(document.querySelector("[data-bs-button]"));
+save.start();
+save.stop();
+save.toggle();
+save.destroy();
+```
+
+Events: `bs:button:start`, `bs:button:started`, `bs:button:stop`, and `bs:button:stopped`. The before-events are cancelable.
+
 ## Collapse
 
 ```html
@@ -107,6 +138,25 @@ The controller supports pointer activation, outside-pointer dismissal, `Escape`,
 Public API: `show()`, `hide({ restoreFocus })`, `toggle()`, and `destroy()`.
 
 Events: `bs:dropdown:show`, `bs:dropdown:shown`, `bs:dropdown:hide`, and `bs:dropdown:hidden`.
+
+A split dropdown combines the same controller with a button group. The first button keeps the default action; the compact trigger owns only the alternatives:
+
+```html
+<div class="bs-dropdown bs-btn-group" data-bs-dropdown>
+  <button class="bs-btn bs-btn-primary" type="button">Save changes</button>
+  <button
+    class="bs-btn bs-btn-primary bs-btn-split bs-btn-caret"
+    id="save-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-controls="save-menu"
+    aria-label="More save options"
+  ></button>
+  <div class="bs-dropdown-menu" id="save-menu" role="menu" aria-labelledby="save-toggle" data-bs-dropdown-menu hidden>
+    <button class="bs-dropdown-item" type="button" role="menuitem">Save and publish</button>
+  </div>
+</div>
+```
 
 ## Tabs
 
@@ -160,7 +210,24 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+
+### Alpine loading button
+
+```html
+<button
+  class="bs-btn bs-btn-primary"
+  type="button"
+  x-data="bsButton"
+  x-bind="root"
+  data-bs-loading
+  data-bs-loading-label="Saving changes"
+  @click="persistChanges().finally(() => stop())"
+>
+  <span class="bs-btn-label">Save changes</span>
+  <span class="bs-spinner bs-btn-spinner" aria-hidden="true"></span>
+</button>
+```
 
 ### Alpine collapse
 
@@ -234,10 +301,26 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
-The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `open` / `onOpenChange` or `selectedId` / `onSelectedChange` for controlled state; use `defaultOpen` or `defaultSelectedId` for uncontrolled state.
+The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.
+
+### React loading button
+
+```jsx
+function SaveButton() {
+  const save = useButton({ loadingLabel: "Saving changes" });
+  const persist = () => persistChanges().finally(() => save.stop());
+
+  return (
+    <button className="bs-btn bs-btn-primary" {...save.getButtonProps({ onClick: persist })}>
+      <span className="bs-btn-label">Save changes</span>
+      <span className="bs-spinner bs-btn-spinner" aria-hidden="true" />
+    </button>
+  );
+}
+```
 
 ### React collapse
 

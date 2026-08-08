@@ -11,6 +11,7 @@ const fixture = (await readFile(new URL("alpine.html", import.meta.url), "utf8")
 const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/tests/alpine-fixture.js", await readFile(new URL("alpine-fixture.js", import.meta.url))],
+  ["/adapter/button.js", await readFile(new URL("../packages/alpine/src/button.js", import.meta.url))],
   ["/adapter/index.js", await readFile(new URL("../packages/alpine/src/index.js", import.meta.url))],
   ["/adapter/collapse.js", await readFile(new URL("../packages/alpine/src/collapse.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
@@ -52,6 +53,16 @@ try {
     page.on("pageerror", (error) => consoleErrors.push(error.message));
     await page.goto(`${baseUrl}/${build}`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => window.alpineReady === true);
+
+    const loadingButton = page.locator("#alpine-loading-button");
+    await loadingButton.click();
+    await page.waitForFunction(() => document.querySelector("#alpine-loading-button").dataset.bsState === "loading");
+    if (!await loadingButton.isDisabled() || await loadingButton.getAttribute("aria-busy") !== "true" || await loadingButton.getAttribute("aria-label") !== "Saving changes") {
+      failures.push(`${build}: loading button state did not synchronize`);
+    }
+    await page.evaluate(() => window.Alpine.$data(document.querySelector("#alpine-loading-button")).stop("test"));
+    await page.waitForFunction(() => document.querySelector("#alpine-loading-button").dataset.bsState === "idle");
+    if (await loadingButton.isDisabled() || await loadingButton.getAttribute("aria-busy") !== null) failures.push(`${build}: loading button did not reset`);
 
     const collapseToggle = page.locator("#alpine-collapse-toggle");
     const collapsePanel = page.locator("#alpine-collapse-panel");
@@ -96,7 +107,7 @@ try {
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
     const events = await page.evaluate(() => window.bsEvents);
-    for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
       if (!events.some((event) => event.name === name && event.adapter === "alpine")) failures.push(`${build}: missing ${name}`);
     }
 
@@ -116,5 +127,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, interactions, keyboard behavior, events, and Axe.`);
+  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, loading, interactions, keyboard behavior, events, and Axe.`);
 }

@@ -10,6 +10,28 @@ export interface OpenChangeDetail extends TransitionDetail {
   open: boolean;
 }
 
+export interface LoadingChangeDetail extends TransitionDetail {
+  loading: boolean;
+}
+
+export interface ButtonOptions {
+  loading?: boolean;
+  defaultLoading?: boolean;
+  loadingLabel?: string;
+  autoStart?: boolean;
+  onLoadingChange?: (loading: boolean, detail: LoadingChangeDetail) => void;
+}
+
+export interface ButtonResult {
+  loading: boolean;
+  start: (reason?: string, sourceEvent?: Event) => boolean;
+  stop: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  getButtonProps: (props?: ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>;
+}
+
+export function useButton(options?: ButtonOptions): ButtonResult;
+
 export interface CollapseOptions {
   id?: string;
   open?: boolean;

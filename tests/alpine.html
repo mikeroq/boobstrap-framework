@@ -13,6 +13,21 @@
   </head>
   <body>
     <main>
+      <section aria-label="Alpine loading button example">
+        <button
+          class="bs-btn bs-btn-primary"
+          id="alpine-loading-button"
+          type="button"
+          x-data="bsButton"
+          x-bind="root"
+          data-bs-loading
+          data-bs-loading-label="Saving changes"
+        >
+          <span class="bs-btn-label">Save changes</span>
+          <span class="bs-spinner bs-btn-spinner" aria-hidden="true"></span>
+        </button>
+      </section>
+
       <section x-data="bsCollapse" aria-labelledby="alpine-heading">
         <h1 id="alpine-heading">Alpine interaction contract</h1>
         <button
