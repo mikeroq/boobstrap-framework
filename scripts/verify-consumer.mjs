@@ -18,14 +18,17 @@ assert.match(stylesheet, /^\/\* Boobstrap v\d+\.\d+\.\d+ \| MIT License \| boobs
 assert.match(stylesheet, /\.bs-btn-primary\s*\{/);
 assert.match(stylesheet, /--bs-color-primary\s*:/);
 assert.equal(typeof javascript.initBoobstrap, "function");
+assert.equal(typeof javascript.Button, "function");
 assert.equal(typeof javascript.Collapse, "function");
 assert.equal(typeof javascript.Dropdown, "function");
 assert.equal(typeof javascript.Tabs, "function");
 assert.equal(typeof alpineAdapter.default, "function");
+assert.equal(typeof alpineAdapter.button, "function");
 assert.equal(typeof alpineAdapter.collapse, "function");
 assert.equal(typeof alpineAdapter.dropdown, "function");
 assert.equal(typeof alpineAdapter.tabs, "function");
 assert.equal(typeof reactAdapter.useCollapse, "function");
+assert.equal(typeof reactAdapter.useButton, "function");
 assert.equal(typeof reactAdapter.useDropdown, "function");
 assert.equal(typeof reactAdapter.useTabs, "function");
 

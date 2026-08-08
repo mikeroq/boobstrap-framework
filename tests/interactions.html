@@ -12,6 +12,20 @@
   </head>
   <body>
     <main>
+      <section aria-label="Loading button example">
+        <button
+          class="bs-btn bs-btn-primary"
+          id="loading-button"
+          type="button"
+          data-bs-button
+          data-bs-loading
+          data-bs-loading-label="Saving changes"
+        >
+          <span class="bs-btn-label">Save changes</span>
+          <span class="bs-spinner bs-btn-spinner" aria-hidden="true"></span>
+        </button>
+      </section>
+
       <section aria-labelledby="collapse-heading">
         <h1 id="collapse-heading">Interaction contract</h1>
         <button
@@ -39,6 +53,16 @@
         </div>
       </section>
 
+      <section aria-label="Split dropdown example">
+        <div class="bs-dropdown bs-btn-group" data-bs-dropdown>
+          <button class="bs-btn bs-btn-primary" type="button">Create</button>
+          <button class="bs-btn bs-btn-primary bs-btn-split bs-btn-caret" id="create-toggle" type="button" data-bs-toggle="dropdown" aria-controls="create-menu" aria-label="More create options"></button>
+          <div class="bs-dropdown-menu bs-dropdown-menu-end" id="create-menu" role="menu" aria-labelledby="create-toggle" data-bs-dropdown-menu hidden>
+            <button class="bs-dropdown-item" type="button" role="menuitem">Create draft</button>
+          </div>
+        </div>
+      </section>
+
       <section aria-labelledby="account-tabs-label">
         <h2 id="account-tabs-label">Account</h2>
         <div class="bs-tabs" role="tablist" aria-labelledby="account-tabs-label" data-bs-tabs>
@@ -56,7 +80,7 @@
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+      for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

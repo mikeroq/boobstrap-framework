@@ -14,6 +14,7 @@ const requiredPaths = [
   "docs/INTERACTIONS.md",
   "dist/boobstrap.css",
   "dist/boobstrap.js",
+  "dist/js/button.js",
   "dist/js/collapse.js",
   "dist/js/dropdown.js",
   "dist/js/tabs.js",

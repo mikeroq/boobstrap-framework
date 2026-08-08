@@ -9,6 +9,8 @@
   display: inline-block;
 }
 
+.bs-dropdown.bs-btn-group { display: inline-flex; }
+
 .bs-dropdown-menu {
   position: absolute;
   z-index: 50;

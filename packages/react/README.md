@@ -10,10 +10,30 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
 React remains a peer dependency. The adapter does not import or initialize Boobstrap JS.
+
+## Loading button
+
+```jsx
+function SaveButton() {
+  const save = useButton({ loadingLabel: "Saving" });
+
+  return (
+    <button
+      className="bs-btn bs-btn-primary"
+      {...save.getButtonProps({ onClick: () => setTimeout(save.stop, 1500) })}
+    >
+      <span className="bs-btn-label">Save changes</span>
+      <span className="bs-spinner bs-btn-spinner" aria-hidden="true" />
+    </button>
+  );
+}
+```
+
+Pass `loading` and `onLoadingChange` for controlled state, or `defaultLoading` for uncontrolled state. Set `autoStart: false` when the application calls `start()` itself.
 
 ## Collapse
 

@@ -49,6 +49,15 @@ try {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.reactReady === true);
 
+  const loadingButton = page.locator("#react-loading-button");
+  await loadingButton.click();
+  await page.waitForFunction(() => document.querySelector("#react-loading-button").dataset.bsState === "loading");
+  if (!await loadingButton.isDisabled() || await loadingButton.getAttribute("aria-busy") !== "true" || await loadingButton.getAttribute("aria-label") !== "Saving changes") {
+    failures.push("loading button state did not synchronize");
+  }
+  await page.waitForFunction(() => document.querySelector("#react-loading-button").dataset.bsState === "idle");
+  if (await loadingButton.isDisabled() || await loadingButton.getAttribute("aria-busy") !== null) failures.push("loading button did not reset");
+
   const collapseToggle = page.locator("#react-collapse-toggle");
   const collapsePanel = page.locator("#react-collapse-panel");
   if (await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("collapse did not initialize closed");
@@ -93,7 +102,7 @@ try {
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
@@ -112,5 +121,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`React adapter passed in ${browserName}: controlled and uncontrolled state, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
+  console.log(`React adapter passed in ${browserName}: controlled and uncontrolled loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
 }

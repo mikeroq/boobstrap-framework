@@ -31,6 +31,24 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+
+## Loading button
+
+```html
+<button
+  class="bs-btn bs-btn-primary"
+  type="button"
+  x-data="bsButton"
+  x-bind="root"
+  data-bs-loading
+  data-bs-loading-label="Saving"
+>
+  <span class="bs-btn-label">Save changes</span>
+  <span class="bs-spinner bs-btn-spinner" aria-hidden="true"></span>
+</button>
+```
+
+The button enters loading state on click. Call `stop()` when the asynchronous action settles.
 
 See the [Boobstrap interaction contract](https://boobstrap.org/docs#alpine) for complete markup and behavior guidance.

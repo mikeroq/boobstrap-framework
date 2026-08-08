@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.2.1/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.3.0/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS currently provides collapse, dropdown, and tabs controllers with keyboard behavior, synchronized ARIA state, cancelable lifecycle events, and explicit cleanup. Component-level imports are available at `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
+Boobstrap JS currently provides loading button, collapse, dropdown, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Component-level imports are available at `/js/button`, `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -93,7 +93,7 @@ npm install @boobstrap/react react
 ```
 
 ```jsx
-import { useCollapse } from "@boobstrap/react";
+import { useButton, useCollapse } from "@boobstrap/react";
 
 function Details() {
   const collapse = useCollapse({ id: "details" });
@@ -140,7 +140,8 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
 - Buttons, cards, badges, forms, alerts, and code windows
-- Optional collapse, dropdown, and tabs styles and dependency-free controllers
+- Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
+- Optional loading button, collapse, dropdown, and tabs styles and dependency-free controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
@@ -202,7 +203,15 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Shared state, event, keyboard, and accessibility contract
 - Official Alpine and React adapters
 
-### v0.3 — Component breadth and adapter parity
+### v0.3 — Button system (shipped)
+
+- Button groups, wrapping toolbars, and split dropdown actions
+- Icon-only buttons with size-aware dimensions
+- Active, pressed, disabled, block, and loading states
+- Generic current-color spinners
+- Loading controllers for Boobstrap JS, Alpine, and React
+
+### v0.4 — Component breadth and adapter parity
 
 - Navigation
 - Breadcrumbs and pagination

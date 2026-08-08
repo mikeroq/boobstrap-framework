@@ -11,6 +11,7 @@ const fixture = await readFile(new URL("interactions.html", import.meta.url));
 const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/dist/boobstrap.js", await readFile(new URL("../dist/boobstrap.js", import.meta.url))],
+  ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/dropdown.js", await readFile(new URL("../dist/js/dropdown.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
@@ -44,6 +45,21 @@ try {
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(baseUrl, { waitUntil: "networkidle" });
 
+  const loadingButton = page.locator("#loading-button");
+  await page.evaluate(() => document.querySelector("#loading-button").addEventListener("bs:button:start", (event) => event.preventDefault(), { once: true }));
+  await loadingButton.click();
+  if (await loadingButton.getAttribute("data-bs-state") !== "idle") failures.push("Loading button ignored a canceled start event");
+  await loadingButton.click();
+  await page.waitForFunction(() => document.querySelector("#loading-button").dataset.bsState === "loading");
+  if (!await loadingButton.isDisabled() || await loadingButton.getAttribute("aria-busy") !== "true" || await loadingButton.getAttribute("aria-label") !== "Saving changes") {
+    failures.push("Loading button did not synchronize disabled and accessible state");
+  }
+  if (!await loadingButton.locator(".bs-btn-spinner").isVisible()) failures.push("Loading button spinner is not visible");
+  await page.evaluate(() => window.bs.controllers.find((controller) => controller.element.id === "loading-button").stop({ reason: "test" }));
+  if (await loadingButton.isDisabled() || await loadingButton.getAttribute("data-bs-state") !== "idle" || await loadingButton.getAttribute("aria-busy") !== null) {
+    failures.push("Loading button did not restore its original state");
+  }
+
   const collapseToggle = page.locator("#collapse-toggle");
   const collapsePanel = page.locator("#collapse-panel");
   if (await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not initialize closed");
@@ -56,7 +72,7 @@ try {
   if (!await collapsePanel.isHidden() || await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not close");
 
   const dropdownToggle = page.locator("#actions-toggle");
-  const dropdownMenu = page.locator("[data-bs-dropdown-menu]");
+  const dropdownMenu = page.locator("#actions-menu");
   await dropdownToggle.focus();
   await dropdownToggle.press("ArrowDown");
   if (await dropdownMenu.isHidden() || await dropdownToggle.getAttribute("aria-expanded") !== "true") failures.push("Dropdown did not open from the keyboard");
@@ -72,6 +88,16 @@ try {
   await page.locator("h1").click();
   if (!await dropdownMenu.isHidden()) failures.push("Dropdown did not close after an outside pointer interaction");
 
+  const splitToggle = page.locator("#create-toggle");
+  await splitToggle.click();
+  if (await page.locator("#create-menu").isHidden()) failures.push("Split dropdown did not open");
+  const splitMetrics = await page.locator(".bs-dropdown.bs-btn-group").evaluate((element) => ({
+    display: getComputedStyle(element).display,
+    firstEnd: element.children[0].getBoundingClientRect().right,
+    secondStart: element.children[1].getBoundingClientRect().left,
+  }));
+  if (splitMetrics.display !== "inline-flex" || Math.abs(splitMetrics.firstEnd - splitMetrics.secondStart) > 2) failures.push("Split dropdown buttons are not attached");
+
   const profileTab = page.locator("#profile-tab");
   const securityTab = page.locator("#security-tab");
   await profileTab.focus();
@@ -82,7 +108,7 @@ try {
   if (await profileTab.getAttribute("aria-selected") !== "true") failures.push("Tabs did not support the Home key");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -96,7 +122,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => violation.id).join(", ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 3) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 5) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await collapseToggle.click();
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
@@ -111,5 +137,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Interaction contract passed in ${browserName}: collapse, dropdown, tabs, keyboard behavior, events, and Axe.`);
+  console.log(`Interaction contract passed in ${browserName}: loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
 }

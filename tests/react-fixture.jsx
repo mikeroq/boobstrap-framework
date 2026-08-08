@@ -1,10 +1,22 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
 
 window.bsEvents = [];
-for (const name of ["bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
   document.addEventListener(name, (event) => window.bsEvents.push({ name, adapter: event.detail.adapter }));
+}
+
+function LoadingButtonExample() {
+  const save = useButton({ loadingLabel: "Saving changes" });
+  return (
+    <section aria-label="React loading button example">
+      <button id="react-loading-button" className="bs-btn bs-btn-primary" {...save.getButtonProps({ onClick: () => setTimeout(() => save.stop("async-test"), 250) })}>
+        <span className="bs-btn-label">Save changes</span>
+        <span className="bs-spinner bs-btn-spinner" aria-hidden="true" />
+      </button>
+    </section>
+  );
 }
 
 function CollapseExample() {
@@ -70,6 +82,7 @@ function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
     <>
+      <LoadingButtonExample />
       <CollapseExample />
       <ControlledCollapseExample />
       <DropdownExample />

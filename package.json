@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
   "workspaces": [
@@ -22,6 +22,7 @@
     "./css": "./dist/boobstrap.css",
     "./dist/boobstrap.css": "./dist/boobstrap.css",
     "./js": "./dist/boobstrap.js",
+    "./js/button": "./dist/js/button.js",
     "./js/collapse": "./dist/js/collapse.js",
     "./js/dropdown": "./dist/js/dropdown.js",
     "./js/tabs": "./dist/js/tabs.js"
