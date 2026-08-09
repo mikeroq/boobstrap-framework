@@ -470,8 +470,10 @@ samp {
 .bs-btn[data-bs-state="loading"] .bs-btn-spinner {
   position: absolute;
   display: inline-block;
-  inset: 0;
-  margin: auto;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  margin: 0;
+  translate: -50% -50%;
 }
 
 @keyframes bs-spinner {
@@ -526,7 +528,7 @@ samp {
   display: inline-flex;
   align-items: baseline;
   gap: var(--bs-space-1);
-  color: var(--bs-color-text-muted);
+  color: var(--bs-color-text);
   font-size: var(--bs-font-size-sm);
   font-weight: 650;
 }
@@ -688,7 +690,7 @@ samp {
   min-width: 2rem;
   min-height: 2rem;
   padding: var(--bs-space-1) var(--bs-space-2);
-  color: var(--bs-color-text-muted);
+  color: var(--bs-color-text);
   font: inherit;
   font-size: var(--bs-font-size-xs);
   font-weight: 650;

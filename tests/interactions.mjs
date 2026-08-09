@@ -169,7 +169,7 @@ try {
 
   const accessibility = await new AxeBuilder({ page }).analyze();
   if (accessibility.violations.length) {
-    failures.push(`Axe violations: ${accessibility.violations.map((violation) => violation.id).join(", ")}`);
+    failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
   if (await page.evaluate(() => window.bs.controllers.length) !== 9) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());

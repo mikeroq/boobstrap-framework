@@ -12,7 +12,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: var(--bs-space-1);
-  color: var(--bs-color-text-muted);
+  color: var(--bs-color-text);
   font-size: var(--bs-font-size-sm);
   font-weight: 650;
 }
@@ -174,7 +174,7 @@
   min-width: 2rem;
   min-height: 2rem;
   padding: var(--bs-space-1) var(--bs-space-2);
-  color: var(--bs-color-text-muted);
+  color: var(--bs-color-text);
   font: inherit;
   font-size: var(--bs-font-size-xs);
   font-weight: 650;
