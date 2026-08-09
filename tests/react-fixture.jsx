@@ -1,9 +1,9 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
 
 window.bsEvents = [];
-for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
   document.addEventListener(name, (event) => window.bsEvents.push({ name, adapter: event.detail.adapter }));
 }
 
@@ -62,6 +62,32 @@ function DropdownExample() {
   );
 }
 
+const roles = [
+  { value: "designer", label: "Designer" },
+  { value: "engineer", label: "Engineer" },
+  { value: "founder", label: "Founder", disabled: true },
+];
+
+function ComboboxExample() {
+  const combobox = useCombobox({ options: roles });
+  return (
+    <section aria-label="React combobox example">
+      <label className="bs-label" htmlFor="react-role-input">Role</label>
+      <div className="bs-combobox" {...combobox.getRootProps()}>
+        <input id="react-role-input" className="bs-combobox-input" placeholder="Search roles" {...combobox.getInputProps()} />
+        <button className="bs-combobox-toggle" {...combobox.getToggleProps()} />
+        <input id="react-role-value" type="hidden" name="role" value={combobox.value} readOnly />
+        <div className="bs-combobox-listbox" {...combobox.getListboxProps()}>
+          {combobox.filteredOptions.map((option, index) => (
+            <div className="bs-combobox-option" key={option.value} {...combobox.getOptionProps(option, index)}>{option.label}</div>
+          ))}
+          {!combobox.filteredOptions.length && <div className="bs-combobox-empty">No roles found</div>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TabsExample() {
   const tabs = useTabs({ defaultSelectedId: "react-profile-tab" });
   return (
@@ -86,6 +112,7 @@ function App() {
       <CollapseExample />
       <ControlledCollapseExample />
       <DropdownExample />
+      <ComboboxExample />
       <TabsExample />
     </>
   );

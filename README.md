@@ -2,7 +2,7 @@
 
 **A cheeky CSS framework that still means business.**
 
-Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. Version 0.2 provides themeable foundations, responsive layout primitives, components, focused utilities, and optional behavior layers under a predictable `bs-` prefix.
+Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. It provides themeable foundations, responsive layout primitives, components, focused utilities, and optional behavior layers under a predictable `bs-` prefix.
 
 [Documentation](https://boobstrap.org/docs) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS currently provides loading button, collapse, dropdown, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Component-level imports are available at `/js/button`, `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
+Boobstrap JS provides loading button, collapse, searchable combobox, dropdown, input-mask, OTP, password, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -134,14 +134,15 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 </html>
 ```
 
-## What ships in v0.2
+## What ships
 
 - Dark and light semantic theme tokens
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
-- Buttons, cards, badges, forms, alerts, and code windows
+- Buttons, cards, badges, comprehensive form controls, alerts, and code windows
+- Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
-- Optional loading button, collapse, dropdown, and tabs styles and dependency-free controllers
+- Optional loading button, collapse, searchable combobox, dropdown, form-helper, and tabs controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies

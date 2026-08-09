@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import boobstrap, { button, collapse, dropdown, tabs } from "@boobstrap/alpine";
+import boobstrap, { button, collapse, combobox, dropdown, tabs } from "@boobstrap/alpine";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/alpine", "--dry-run", "--json", "--ignore-scripts"]);
@@ -15,6 +15,7 @@ const requiredPaths = [
   "package.json",
   "src/button.js",
   "src/collapse.js",
+  "src/combobox.js",
   "src/dropdown.js",
   "src/index.js",
   "src/shared.js",
@@ -24,15 +25,17 @@ const requiredPaths = [
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "Alpine package is missing required files");
 assert.equal(typeof button, "function");
 assert.equal(typeof collapse, "function");
+assert.equal(typeof combobox, "function");
 assert.equal(typeof dropdown, "function");
 assert.equal(typeof tabs, "function");
 
 const providers = new Map();
 boobstrap({ data: (name, provider) => providers.set(name, provider) });
-assert.deepEqual([...providers.keys()], ["bsButton", "bsCollapse", "bsDropdown", "bsTabs"]);
+assert.deepEqual([...providers.keys()], ["bsButton", "bsCollapse", "bsCombobox", "bsDropdown", "bsTabs"]);
 assert.equal(providers.get("bsButton"), button);
 assert.equal(providers.get("bsCollapse"), collapse);
+assert.equal(providers.get("bsCombobox"), combobox);
 assert.equal(providers.get("bsDropdown"), dropdown);
 assert.equal(providers.get("bsTabs"), tabs);
 
-console.log(`Verified @boobstrap/alpine package contents and four registered data providers (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/alpine package contents and five registered data providers (${pack.size} byte tarball).`);

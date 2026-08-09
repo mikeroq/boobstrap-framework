@@ -68,6 +68,21 @@
         </div>
       </section>
 
+      <section aria-label="Alpine combobox example">
+        <label class="bs-label" for="alpine-role-input">Role</label>
+        <div class="bs-combobox" x-data="bsCombobox" x-bind="root">
+          <input class="bs-combobox-input" id="alpine-role-input" x-bind="input" data-bs-combobox-input placeholder="Search roles" />
+          <button class="bs-combobox-toggle" x-bind="toggleButton" data-bs-combobox-toggle aria-label="Toggle roles"></button>
+          <input type="hidden" name="role" data-bs-combobox-value />
+          <div class="bs-combobox-listbox" x-bind="listbox" data-bs-combobox-listbox hidden>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="designer">Designer</div>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="founder" aria-disabled="true">Founder</div>
+            <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
+          </div>
+        </div>
+      </section>
+
       <section x-data="bsTabs" aria-labelledby="alpine-tabs-label">
         <h2 id="alpine-tabs-label">Account</h2>
         <div class="bs-tabs" role="tablist" aria-labelledby="alpine-tabs-label" x-bind="tablist">

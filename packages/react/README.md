@@ -10,7 +10,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
 React remains a peer dependency. The adapter does not import or initialize Boobstrap JS.
@@ -87,5 +87,9 @@ function Settings() {
   );
 }
 ```
+
+## Searchable combobox
+
+Call `useCombobox({ options })` and spread its root, input, toggle, listbox, and option prop getters onto semantic consumer-owned markup. The hook exposes `filteredOptions`, `value`, `query`, and `selectedOption`. It supports controlled `value` / `open` state or uncontrolled `defaultValue` / `defaultOpen` state without importing Boobstrap JS.
 
 See the [Boobstrap interaction contract](https://boobstrap.org/docs#react) for complete behavior and accessibility guidance.

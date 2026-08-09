@@ -13,8 +13,12 @@ const assets = new Map([
   ["/dist/boobstrap.js", await readFile(new URL("../dist/boobstrap.js", import.meta.url))],
   ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
+  ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
   ["/dist/js/dropdown.js", await readFile(new URL("../dist/js/dropdown.js", import.meta.url))],
+  ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
+  ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
+  ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
   ["/dist/js/shared.js", await readFile(new URL("../dist/js/shared.js", import.meta.url))],
   ["/dist/js/tabs.js", await readFile(new URL("../dist/js/tabs.js", import.meta.url))],
 ]);
@@ -126,8 +130,34 @@ try {
   await securityTab.press("Home");
   if (await profileTab.getAttribute("aria-selected") !== "true") failures.push("Tabs did not support the Home key");
 
+  const comboboxInput = page.locator("#framework-combobox-input");
+  const comboboxListbox = page.locator("[data-bs-combobox-listbox]");
+  await comboboxInput.fill("eng");
+  const comboboxState = await page.evaluate(() => ({
+    hidden: document.querySelector("[data-bs-combobox-listbox]").hidden,
+    options: [...document.querySelectorAll("[data-bs-combobox-option]")].map((option) => ({ label: option.textContent.trim(), hidden: option.hidden })),
+  }));
+  if (comboboxState.hidden || comboboxState.options.filter((option) => !option.hidden).length !== 1) failures.push(`Combobox did not filter its options (${JSON.stringify(comboboxState)})`);
+  await comboboxInput.press("Enter");
+  if (!await comboboxListbox.isHidden() || await page.locator("[data-bs-combobox-value]").inputValue() !== "engineer") failures.push("Combobox did not commit its active option");
+  await comboboxInput.click();
+  await page.locator("h1").click();
+  if (!await comboboxListbox.isHidden()) failures.push("Combobox did not dismiss outside");
+
+  const passwordInput = page.locator("#framework-password");
+  await page.locator("[data-bs-password-toggle]").click();
+  if (await passwordInput.getAttribute("type") !== "text" || await page.locator("[data-bs-password]").getAttribute("data-bs-state") !== "visible") failures.push("Password toggle did not reveal the value");
+
+  const phoneInput = page.locator("#framework-phone");
+  await phoneInput.fill("4155550123");
+  if (await phoneInput.inputValue() !== "(415) 555-0123") failures.push(`Input mask produced ${await phoneInput.inputValue()}`);
+
+  const otpInputs = page.locator("[data-bs-otp-input]");
+  for (let index = 0; index < 6; index += 1) await otpInputs.nth(index).fill(String(index + 1));
+  if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
+
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -141,7 +171,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => violation.id).join(", ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 5) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 9) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await collapseToggle.click();
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
@@ -156,5 +186,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Interaction contract passed in ${browserName}: loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
+  console.log(`Interaction contract passed in ${browserName}: forms, combobox, loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
 }

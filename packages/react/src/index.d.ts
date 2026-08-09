@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, RefAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, RefAttributes } from "react";
 
 export interface TransitionDetail {
   adapter: "react";
@@ -50,6 +50,54 @@ export interface CollapseResult {
 }
 
 export function useCollapse(options?: CollapseOptions): CollapseResult;
+
+export interface ComboboxOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface ComboboxChangeDetail extends TransitionDetail {
+  value: string;
+  label: string;
+  option: ComboboxOption | null;
+}
+
+export interface ComboboxOptions {
+  id?: string;
+  options: ComboboxOption[];
+  open?: boolean;
+  defaultOpen?: boolean;
+  value?: string;
+  defaultValue?: string;
+  onOpenChange?: (open: boolean, detail: OpenChangeDetail) => void;
+  onValueChange?: (value: string, detail: ComboboxChangeDetail) => void;
+}
+
+export interface ComboboxTransitionOptions {
+  reason?: string;
+  sourceEvent?: Event;
+}
+
+export interface ComboboxResult {
+  open: boolean;
+  value: string;
+  query: string;
+  activeIndex: number;
+  filteredOptions: ComboboxOption[];
+  selectedOption: ComboboxOption | null;
+  show: (options?: ComboboxTransitionOptions) => boolean;
+  hide: (options?: ComboboxTransitionOptions) => boolean;
+  toggle: (options?: ComboboxTransitionOptions) => boolean;
+  selectOption: (option: ComboboxOption, options?: ComboboxTransitionOptions) => boolean;
+  getRootProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getInputProps: (props?: InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>) => InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>;
+  getToggleProps: (props?: ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>;
+  getListboxProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getOptionProps: (option: ComboboxOption, index: number, props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+}
+
+export function useCombobox(options: ComboboxOptions): ComboboxResult;
 
 export interface DropdownTransitionOptions {
   reason?: string;
