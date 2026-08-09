@@ -22,6 +22,7 @@
     "./css": "./dist/boobstrap.css",
     "./dist/boobstrap.css": "./dist/boobstrap.css",
     "./js": "./dist/boobstrap.js",
+    "./js/banner": "./dist/js/banner.js",
     "./js/button": "./dist/js/button.js",
     "./js/collapse": "./dist/js/collapse.js",
     "./js/combobox": "./dist/js/combobox.js",
