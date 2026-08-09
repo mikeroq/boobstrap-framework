@@ -74,13 +74,54 @@
         <div class="bs-tab-panel" id="billing-panel" role="tabpanel" aria-labelledby="billing-tab" hidden>Billing settings</div>
         <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" hidden>Security settings</div>
       </section>
+
+      <section aria-labelledby="combobox-label">
+        <label class="bs-label" id="combobox-label" for="framework-combobox-input">Role</label>
+        <div class="bs-combobox" data-bs-combobox>
+          <input class="bs-combobox-input" id="framework-combobox-input" data-bs-combobox-input placeholder="Search roles" />
+          <button class="bs-combobox-toggle" type="button" data-bs-combobox-toggle aria-label="Toggle roles"></button>
+          <input type="hidden" name="role" data-bs-combobox-value />
+          <div class="bs-combobox-listbox" data-bs-combobox-listbox hidden>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="designer">Designer</div>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="founder" aria-disabled="true">Founder</div>
+            <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bs-form-group" data-bs-password>
+        <label class="bs-label" for="framework-password">Password</label>
+        <div class="bs-input-wrap">
+          <input class="bs-input bs-input-has-icon-end" id="framework-password" type="password" data-bs-password-input />
+          <button class="bs-input-action" type="button" data-bs-password-toggle><span data-bs-password-label>Show password</span></button>
+        </div>
+      </section>
+
+      <section class="bs-form-group">
+        <label class="bs-label" for="framework-phone">Phone</label>
+        <input class="bs-input" id="framework-phone" type="tel" data-bs-mask="(999) 999-9999" />
+      </section>
+
+      <section class="bs-form-group">
+        <span class="bs-label" id="otp-label">Verification code</span>
+        <div class="bs-otp" data-bs-otp aria-labelledby="otp-label">
+          <input class="bs-otp-input" aria-label="Digit 1" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 2" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 3" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 4" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 5" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 6" data-bs-otp-input />
+          <input type="hidden" name="verification_code" data-bs-otp-value />
+        </div>
+      </section>
     </main>
 
     <script type="module">
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+      for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

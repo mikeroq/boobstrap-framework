@@ -31,7 +31,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
 
 ## Loading button
 
@@ -50,5 +50,9 @@ The plugin registers `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data p
 ```
 
 The button enters loading state on click. Call `stop()` when the asynchronous action settles.
+
+## Searchable combobox
+
+Initialize the component with `x-data="bsCombobox" x-bind="root"`. Apply `x-bind="input"`, `x-bind="toggleButton"`, `x-bind="listbox"`, and `x-bind="option"` to the matching Boobstrap combobox elements. Filtering, active-option navigation, selection, dismissal, hidden-input synchronization, and lifecycle events work in both standard Alpine and strict-CSP builds.
 
 See the [Boobstrap interaction contract](https://boobstrap.org/docs#alpine) for complete markup and behavior guidance.

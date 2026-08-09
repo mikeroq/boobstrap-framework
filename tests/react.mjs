@@ -91,6 +91,14 @@ try {
   await dropdownMenu.getByRole("menuitem", { name: "Edit" }).click();
   if (!await dropdownMenu.isHidden()) failures.push("dropdown did not close after selection");
 
+  const comboboxInput = page.locator("#react-role-input");
+  const comboboxListbox = page.getByRole("listbox");
+  await comboboxInput.fill("eng");
+  if (await comboboxListbox.isHidden() || await comboboxListbox.getByRole("option").count() !== 1) failures.push("combobox did not filter");
+  await comboboxInput.press("ArrowDown");
+  await comboboxInput.press("Enter");
+  if (!await comboboxListbox.isHidden() || await page.locator("#react-role-value").inputValue() !== "engineer") failures.push("combobox did not select its active option");
+
   const profileTab = page.locator("#react-profile-tab");
   const securityTab = page.locator("#react-security-tab");
   await profileTab.focus();
@@ -102,7 +110,7 @@ try {
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
@@ -121,5 +129,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`React adapter passed in ${browserName}: controlled and uncontrolled loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
+  console.log(`React adapter passed in ${browserName}: controlled and uncontrolled combobox, loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const [saving, setSaving] = useState(false);
@@ -21,6 +21,11 @@ export function ReactAdapterTypeFixture() {
     },
   });
   const dropdown = useDropdown({ defaultOpen: false });
+  const combobox = useCombobox({
+    options: [{ value: "engineer", label: "Engineer" }],
+    defaultValue: "engineer",
+    onValueChange: (_value, detail) => detail.option?.label.toLocaleLowerCase(),
+  });
   const tabs = useTabs({
     defaultSelectedId: "typed-profile-tab",
     onSelectedChange: (_selectedId, detail) => detail.panel?.focus(),
@@ -41,6 +46,14 @@ export function ReactAdapterTypeFixture() {
         <button className="bs-btn" {...dropdown.getTriggerProps()}>Actions</button>
         <div className="bs-dropdown-menu" {...dropdown.getMenuProps()}>
           <button className="bs-dropdown-item" type="button" role="menuitem">Edit</button>
+        </div>
+      </div>
+
+      <div className="bs-combobox" {...combobox.getRootProps()}>
+        <input className="bs-combobox-input" {...combobox.getInputProps()} />
+        <button className="bs-combobox-toggle" {...combobox.getToggleProps()} />
+        <div className="bs-combobox-listbox" {...combobox.getListboxProps()}>
+          {combobox.filteredOptions.map((option, index) => <div className="bs-combobox-option" key={option.value} {...combobox.getOptionProps(option, index)}>{option.label}</div>)}
         </div>
       </div>
 

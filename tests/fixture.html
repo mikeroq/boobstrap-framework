@@ -52,6 +52,49 @@
             <label class="bs-label" for="message">Message</label>
             <textarea class="bs-textarea" id="message" name="message"></textarea>
           </div>
+          <div class="bs-form-row">
+            <div class="bs-form-group">
+              <label class="bs-label" for="small-input">Small input</label>
+              <input class="bs-input bs-input-sm" id="small-input" name="small" />
+            </div>
+            <div class="bs-form-group">
+              <label class="bs-label" for="large-input">Large input</label>
+              <input class="bs-input bs-input-lg" id="large-input" name="large" />
+            </div>
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="website">Website <span class="bs-label-optional">Optional</span></label>
+            <div class="bs-input-group" data-test-input-group>
+              <span class="bs-input-group-text">https://</span>
+              <input class="bs-input" id="website" name="website" placeholder="example.com" />
+              <button class="bs-btn bs-btn-secondary" type="button">Check</button>
+            </div>
+            <span class="bs-form-text">Use a public hostname.</span>
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="search-input">Search</label>
+            <div class="bs-input-wrap">
+              <svg class="bs-input-icon bs-input-icon-start" data-test-input-icon viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle><path d="m21 21-4.35-4.35" fill="none" stroke="currentColor"></path></svg>
+              <input class="bs-input bs-input-has-icon-start" id="search-input" name="search" type="search" />
+            </div>
+          </div>
+          <div class="bs-form-row">
+            <div class="bs-form-group">
+              <label class="bs-label" for="event-date">Date</label>
+              <input class="bs-input" id="event-date" name="date" type="date" />
+            </div>
+            <div class="bs-form-group">
+              <label class="bs-label" for="event-time">Time</label>
+              <input class="bs-input" id="event-time" name="time" type="time" />
+            </div>
+          </div>
+          <fieldset class="bs-check-group">
+            <legend class="bs-label">Preferences</legend>
+            <label class="bs-check"><input class="bs-check-input" type="checkbox" name="updates" checked /><span class="bs-check-label">Product updates</span><span class="bs-check-description">Occasional release notes.</span></label>
+            <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" checked /><span class="bs-check-label">Monthly</span></label>
+            <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" /><span class="bs-check-label">Yearly</span></label>
+            <label class="bs-check bs-switch"><input class="bs-check-input" type="checkbox" name="alerts" /><span class="bs-check-label">Security alerts</span></label>
+          </fieldset>
         </form>
       </section>
 

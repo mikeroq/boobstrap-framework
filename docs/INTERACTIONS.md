@@ -158,6 +158,38 @@ A split dropdown combines the same controller with a button group. The first but
 </div>
 ```
 
+## Searchable combobox
+
+```html
+<label class="bs-label" for="role-search">Role</label>
+<div class="bs-combobox" data-bs-combobox>
+  <input class="bs-combobox-input" id="role-search" data-bs-combobox-input placeholder="Search roles" />
+  <button class="bs-combobox-toggle" type="button" data-bs-combobox-toggle aria-label="Toggle roles"></button>
+  <input type="hidden" name="role" data-bs-combobox-value />
+  <div class="bs-combobox-listbox" data-bs-combobox-listbox hidden>
+    <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="designer">Designer</div>
+    <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
+    <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
+  </div>
+</div>
+```
+
+The controller implements the editable ARIA combobox pattern, filters options case-insensitively, maintains `aria-activedescendant`, skips disabled options, and supports arrows, `Enter`, `Escape`, `Tab`, outside-pointer dismissal, and form reset. The hidden input carries the submitted value while the visible input carries the option label.
+
+Public API: `show()`, `hide()`, `toggle()`, `select(option)`, `reset()`, and `destroy()`.
+
+Events: cancelable `bs:combobox:show`, `bs:combobox:hide`, and `bs:combobox:select`; completed `bs:combobox:shown`, `bs:combobox:hidden`, and `bs:combobox:change`.
+
+## Form helpers
+
+The optional JS bundle also initializes three small progressive-enhancement helpers:
+
+- `data-bs-password` coordinates a password input and `data-bs-password-toggle`, preserving focus and selection while reflecting `data-bs-state="visible|hidden"`.
+- `data-bs-mask="(999) 999-9999"` formats input as the user types. Mask tokens are `9` for a digit, `A` for a letter, and `*` for either.
+- `data-bs-otp` coordinates `.bs-otp-input` controls, distributes pasted codes, supports arrow and Backspace movement, and synchronizes `data-bs-otp-value`.
+
+Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, and `/otp`. Their completed events are `bs:password:toggled`, `bs:mask:change`, `bs:otp:change`, and `bs:otp:complete`.
+
 ## Tabs
 
 ```html
@@ -210,7 +242,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
 
 ### Alpine loading button
 
@@ -275,6 +307,10 @@ The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `
 </div>
 ```
 
+### Alpine combobox
+
+Use the same option markup as Boobstrap JS, replace `data-bs-combobox` with `x-data="bsCombobox" x-bind="root"`, then apply `x-bind="input"`, `x-bind="toggleButton"`, `x-bind="listbox"`, and `x-bind="option"` to their matching elements. The provider works with both Alpine builds, including strict CSP.
+
 ### Alpine tabs
 
 ```html
@@ -301,7 +337,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
 The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.
@@ -357,6 +393,10 @@ function Actions() {
   );
 }
 ```
+
+### React combobox
+
+`useCombobox({ options })` returns controlled or uncontrolled value/open state, `filteredOptions`, and prop getters for the root, input, toggle, listbox, and each option. Pass `value` / `onValueChange` and `open` / `onOpenChange` for controlled state, or `defaultValue` / `defaultOpen` otherwise. The consumer renders the filtered options and a hidden form input when native submission is required.
 
 ### React tabs
 

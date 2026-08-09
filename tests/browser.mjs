@@ -79,6 +79,25 @@ try {
       });
       if (inputFocus.boxShadow === "none") failures.push(`${theme}/${viewport.name}: focused input has no visible focus ring`);
 
+      const formMetrics = await page.evaluate(() => {
+        const small = document.querySelector("#small-input").getBoundingClientRect();
+        const large = document.querySelector("#large-input").getBoundingClientRect();
+        const group = document.querySelector("[data-test-input-group]");
+        const icon = document.querySelector("[data-test-input-icon]").getBoundingClientRect();
+        return {
+          smallHeight: small.height,
+          largeHeight: large.height,
+          groupDisplay: getComputedStyle(group).display,
+          groupGap: group.children[1].getBoundingClientRect().left - group.children[0].getBoundingClientRect().right,
+          iconWidth: icon.width,
+          checkboxAppearance: getComputedStyle(document.querySelector('.bs-check-input[type="checkbox"]')).appearance,
+        };
+      });
+      if (formMetrics.smallHeight >= formMetrics.largeHeight) failures.push(`${theme}/${viewport.name}: form size modifiers are not ordered`);
+      if (formMetrics.groupDisplay !== "flex" || Math.abs(formMetrics.groupGap) > 2) failures.push(`${theme}/${viewport.name}: input group controls are not attached`);
+      if (formMetrics.iconWidth <= 0) failures.push(`${theme}/${viewport.name}: input icon did not render`);
+      if (formMetrics.checkboxAppearance !== "none") failures.push(`${theme}/${viewport.name}: checkbox styling did not apply`);
+
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {
         failures.push(`${theme}/${viewport.name}: Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
