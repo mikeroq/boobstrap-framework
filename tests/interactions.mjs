@@ -11,6 +11,7 @@ const fixture = await readFile(new URL("interactions.html", import.meta.url));
 const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/dist/boobstrap.js", await readFile(new URL("../dist/boobstrap.js", import.meta.url))],
+  ["/dist/js/banner.js", await readFile(new URL("../dist/js/banner.js", import.meta.url))],
   ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
@@ -48,6 +49,24 @@ try {
   });
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(baseUrl, { waitUntil: "networkidle" });
+
+  const banner = page.locator("#framework-banner");
+  const bannerMetrics = await banner.evaluate((element) => ({
+    width: element.getBoundingClientRect().width,
+    viewportWidth: document.documentElement.clientWidth,
+    innerDisplay: getComputedStyle(element.querySelector(".bs-banner-inner")).display,
+    iconWidth: element.querySelector(".bs-banner-icon").getBoundingClientRect().width,
+  }));
+  if (Math.abs(bannerMetrics.width - bannerMetrics.viewportWidth) > 1 || bannerMetrics.innerDisplay !== "grid" || bannerMetrics.iconWidth <= 0) {
+    failures.push(`Banner layout is incomplete (${JSON.stringify(bannerMetrics)})`);
+  }
+  await page.evaluate(() => document.querySelector("#framework-banner").addEventListener("bs:banner:dismiss", (event) => event.preventDefault(), { once: true }));
+  await banner.locator("[data-bs-banner-dismiss]").click();
+  if (await banner.isHidden()) failures.push("Banner ignored a canceled dismiss event");
+  await banner.locator("[data-bs-banner-dismiss]").click();
+  if (!await banner.isHidden() || await banner.getAttribute("data-bs-state") !== "dismissed") failures.push("Banner did not dismiss");
+  await page.evaluate(() => window.bs.controllers.find((controller) => controller.element.id === "framework-banner").show());
+  if (await banner.isHidden() || await banner.getAttribute("data-bs-state") !== "visible") failures.push("Banner did not show through its public API");
 
   const loadingButton = page.locator("#loading-button");
   await page.evaluate(() => document.querySelector("#loading-button").addEventListener("bs:button:start", (event) => event.preventDefault(), { once: true }));
@@ -157,7 +176,7 @@ try {
   if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -171,8 +190,10 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 9) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 10) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
+  await banner.locator("[data-bs-banner-dismiss]").click();
+  if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
   await collapseToggle.click();
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
   if (consoleErrors.length) failures.push(`Console errors: ${consoleErrors.join("; ")}`);

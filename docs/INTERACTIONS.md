@@ -87,6 +87,37 @@ save.destroy();
 
 Events: `bs:button:start`, `bs:button:started`, `bs:button:stop`, and `bs:button:stopped`. The before-events are cancelable.
 
+## Dismissible banner
+
+```html
+<div class="bs-banner bs-banner-info" role="status" data-bs-banner>
+  <div class="bs-banner-inner">
+    <svg class="bs-banner-icon" viewBox="0 0 24 24" aria-hidden="true">…</svg>
+    <div class="bs-banner-content">
+      <strong class="bs-banner-title">Preview environment</strong>
+      <span class="bs-banner-message">Features may change before release.</span>
+    </div>
+    <a class="bs-banner-action" href="/">View live site</a>
+    <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss preview banner">×</button>
+  </div>
+</div>
+```
+
+The banner is CSS-only unless `data-bs-banner` is present. The controller enhances `data-bs-banner-dismiss`, reflects `data-bs-state="visible|dismissed"`, and preserves the element so an application can show it again.
+
+Public API:
+
+```js
+import { Banner } from "@boobstrap/boobstrap/js/banner";
+
+const banner = Banner.getOrCreateInstance(document.querySelector("[data-bs-banner]"));
+banner.dismiss();
+banner.show();
+banner.destroy();
+```
+
+Events: cancelable `bs:banner:dismiss` and `bs:banner:show`; completed `bs:banner:dismissed` and `bs:banner:shown`.
+
 ## Collapse
 
 ```html

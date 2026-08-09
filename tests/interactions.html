@@ -6,11 +6,21 @@
     <link rel="stylesheet" href="/dist/boobstrap.css" />
     <title>Boobstrap interaction contract</title>
     <style>
-      body { padding: 2rem; }
-      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; }
+      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; padding: 2rem; }
     </style>
   </head>
   <body>
+    <div class="bs-banner bs-banner-warning" id="framework-banner" role="status" data-bs-banner>
+      <div class="bs-banner-inner">
+        <svg class="bs-banner-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"></path><path d="M12 9v5M12 18h.01"></path></svg>
+        <div class="bs-banner-content">
+          <strong class="bs-banner-title">Development environment</strong>
+          <span class="bs-banner-message">Changes here may be incomplete.</span>
+        </div>
+        <a class="bs-banner-action" href="#live">View live site</a>
+        <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss development banner">×</button>
+      </div>
+    </div>
     <main>
       <section aria-label="Loading button example">
         <button
@@ -121,7 +131,7 @@
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();
