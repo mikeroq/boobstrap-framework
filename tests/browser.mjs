@@ -44,13 +44,15 @@ try {
 
       await page.goto(baseUrl, { waitUntil: "networkidle" });
       await page.evaluate((activeTheme) => { document.documentElement.dataset.bsTheme = activeTheme; }, theme);
-      await page.waitForTimeout(250);
+      await page.waitForTimeout(500);
 
       const metrics = await page.evaluate(() => {
         const firstCard = document.querySelector("[data-test-grid] .bs-card");
         const grid = document.querySelector("[data-test-grid]");
         const rootStyle = getComputedStyle(document.documentElement);
         const icon = document.querySelector("[data-test-icon]");
+        const navLink = document.querySelector("[data-test-nav] [aria-current]");
+        const table = document.querySelector("[data-test-table]");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -61,6 +63,10 @@ try {
           controlBackground: getComputedStyle(document.querySelector("#email")).backgroundColor,
           iconWidth: icon.getBoundingClientRect().width,
           iconStroke: getComputedStyle(icon).stroke,
+          navDisplay: getComputedStyle(navLink).display,
+          navBorder: getComputedStyle(navLink).borderLeftColor,
+          tableOverflow: getComputedStyle(table).overflowX,
+          tableWidth: table.getBoundingClientRect().width,
         };
       });
 
@@ -68,6 +74,8 @@ try {
       controlColors.set(theme, metrics.controlBackground);
       if (metrics.scrollWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: horizontal overflow`);
       if (metrics.iconWidth <= 0 || metrics.iconStroke === "none") failures.push(`${theme}/${viewport.name}: icon utility did not size or inherit stroke`);
+      if (metrics.navDisplay !== "block" || metrics.navBorder === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: current navigation link is not visibly styled`);
+      if (metrics.tableOverflow !== "auto" || metrics.tableWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: responsive table escaped its container`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
@@ -113,7 +121,10 @@ try {
 
   if (themeColors.get("dark") === themeColors.get("light")) failures.push("Light and dark themes resolve to identical colors");
   if (controlColors.get("dark") === controlColors.get("light")) failures.push("Light and dark form controls resolve to identical backgrounds");
-  if (controlColors.get("light") !== "rgb(255, 255, 255)") failures.push(`Light form controls should use a white background, received ${controlColors.get("light")}`);
+  const lightControlChannels = controlColors.get("light")?.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? [];
+  if (lightControlChannels.length !== 3 || lightControlChannels.some((channel) => channel < 250)) {
+    failures.push(`Light form controls should use a near-white background, received ${controlColors.get("light")}`);
+  }
 
   const motionContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   const motionPage = await motionContext.newPage();

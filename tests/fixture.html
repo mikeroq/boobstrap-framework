@@ -7,15 +7,26 @@
     <link rel="stylesheet" href="/dist/boobstrap.css" />
   </head>
   <body>
-    <header class="bs-container bs-py-4 bs-flex bs-items-center bs-justify-between">
-      <strong>Boobstrap</strong>
-      <span class="bs-badge bs-badge-primary">v0.3.1</span>
-      <svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true" data-test-icon><path d="M12 3v18m9-9H3" /></svg>
+    <header class="bs-navbar bs-container">
+      <a class="bs-navbar-brand" href="#main">Boobstrap</a>
+      <nav aria-label="Primary"><a class="bs-navbar-link" href="#components">Components</a></nav>
+      <button class="bs-navbar-toggle" type="button" aria-label="Open menu"><svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true" data-test-icon><path d="M12 3v18m9-9H3" /></svg></button>
     </header>
 
-    <main class="bs-container bs-section">
+    <main class="bs-container bs-section" id="main">
       <h1 class="bs-display bs-text-gradient bs-mb-4">Browser contract</h1>
       <p class="bs-lead">A semantic fixture exercising the public component and layout surface.</p>
+
+      <nav class="bs-breadcrumb bs-mt-4" aria-label="Breadcrumb"><a href="#main">Docs</a><span aria-hidden="true">/</span><span>Components</span></nav>
+
+      <section aria-labelledby="navigation-title" class="bs-mt-8" id="components">
+        <h2 id="navigation-title">Navigation</h2>
+        <nav class="bs-nav" aria-label="Component navigation" data-test-nav>
+          <span class="bs-nav-heading">Components</span>
+          <a class="bs-nav-link" href="#grid-title" aria-current="page">Cards</a>
+          <a class="bs-nav-link bs-nav-link-subitem" href="#code-title">Code</a>
+        </nav>
+      </section>
 
       <section aria-labelledby="grid-title" class="bs-mt-8">
         <h2 id="grid-title">Responsive grid</h2>
@@ -107,10 +118,31 @@
       <section aria-labelledby="code-title" class="bs-mt-8">
         <h2 id="code-title">Code sample</h2>
         <div class="bs-code-window">
-          <div class="bs-code-toolbar"><div class="bs-code-dots" aria-hidden="true"><span class="bs-code-dot"></span><span class="bs-code-dot"></span><span class="bs-code-dot"></span></div><span>example.html</span></div>
+          <div class="bs-code-header"><span>example.html</span><button class="bs-code-action" type="button">Copy</button></div>
+          <div class="bs-code-tabs" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
           <pre class="bs-code-body bs-m-0"><span class="bs-code-tag">&lt;button</span> <span class="bs-code-attribute">class</span>=<span class="bs-code-string">"bs-btn"</span><span class="bs-code-tag">&gt;</span>Ship<span class="bs-code-tag">&lt;/button&gt;</span></pre>
         </div>
       </section>
+
+      <section aria-labelledby="tabs-title" class="bs-mt-8">
+        <h2 id="tabs-title">Tab variants</h2>
+        <div class="bs-tabs bs-tabs-pills" role="tablist" aria-label="Package manager"><button class="bs-tab" role="tab" type="button" aria-selected="true">npm</button><button class="bs-tab" role="tab" type="button" aria-selected="false">pnpm</button></div>
+        <div class="bs-tabs bs-tabs-contained bs-mt-4" role="tablist" aria-label="Framework"><button class="bs-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-tab" role="tab" type="button" aria-selected="false">React</button></div>
+        <div class="bs-tab-panel bs-tab-panel-contained"><code class="bs-code-inline">npm install @boobstrap/boobstrap</code></div>
+      </section>
+
+      <section aria-labelledby="table-title" class="bs-mt-8">
+        <h2 id="table-title">Reference table</h2>
+        <div class="bs-table-responsive" data-test-table><table class="bs-table"><thead><tr><th>Class</th><th>Purpose</th></tr></thead><tbody><tr><td><code>.bs-btn</code></td><td>Base button styles</td></tr><tr><td><code>.bs-card</code></td><td>Surface container</td></tr></tbody></table></div>
+      </section>
+
+      <section aria-labelledby="reference-title" class="bs-mt-8">
+        <h2 id="reference-title">Reference list</h2>
+        <div class="bs-reference-list"><div class="bs-reference-row"><code class="bs-reference-name">--bs-color-primary</code><span class="bs-reference-value">#d83c87</span></div><div class="bs-reference-row"><code class="bs-reference-name">--bs-space-4</code><span class="bs-reference-value">1rem</span></div></div>
+        <ul class="bs-checklist bs-mt-4"><li>Keyboard accessible</li><li>Theme aware</li></ul>
+      </section>
+
+      <nav class="bs-page-nav bs-mt-8" aria-label="Adjacent pages"><a class="bs-page-nav-link" href="#navigation-title"><span class="bs-page-nav-context">Previous</span><strong class="bs-page-nav-title">Navigation</strong></a><a class="bs-page-nav-link" href="#table-title"><span class="bs-page-nav-context">Next</span><strong class="bs-page-nav-title">Tables</strong></a></nav>
     </main>
   </body>
 </html>
