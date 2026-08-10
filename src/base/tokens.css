@@ -29,6 +29,7 @@
   --bs-color-info: #618ee8;
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(216 60 135 / 38%);
+  --bs-color-control-background: rgb(12 5 14 / 42%);
 
   --bs-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --bs-font-display: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, sans-serif;
@@ -102,6 +103,7 @@
   --bs-color-text-subtle: #93828d;
   --bs-color-border: #eadce4;
   --bs-color-border-strong: #dcb7ca;
+  --bs-color-control-background: #ffffff;
   --bs-color-primary: #c93179;
   --bs-color-primary-hover: #ae2868;
   --bs-color-primary-active: #8f2057;
