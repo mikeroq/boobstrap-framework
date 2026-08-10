@@ -30,6 +30,7 @@
     "./js/input-mask": "./dist/js/input-mask.js",
     "./js/otp": "./dist/js/otp.js",
     "./js/password": "./dist/js/password.js",
+    "./js/sidebar": "./dist/js/sidebar.js",
     "./js/tabs": "./dist/js/tabs.js"
   },
   "scripts": {

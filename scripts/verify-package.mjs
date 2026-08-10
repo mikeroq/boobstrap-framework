@@ -22,6 +22,7 @@ const requiredPaths = [
   "dist/js/input-mask.js",
   "dist/js/otp.js",
   "dist/js/password.js",
+  "dist/js/sidebar.js",
   "dist/js/tabs.js",
   "package.json",
   "src/boobstrap.css",
