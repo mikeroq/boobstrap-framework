@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS provides loading button, collapse, searchable combobox, dropdown, input-mask, OTP, password, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
+Boobstrap JS provides loading button, collapse, searchable combobox, dropdown, input-mask, OTP, password, responsive sidebar, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -142,7 +142,7 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - Buttons, cards, badges, comprehensive form controls, alerts, and code windows
 - Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
-- Optional loading button, collapse, searchable combobox, dropdown, form-helper, and tabs controllers
+- Optional loading button, collapse, searchable combobox, dropdown, form-helper, responsive-sidebar, and tabs controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
@@ -202,7 +202,7 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 
 ### v0.2 — Interaction foundation (shipped)
 
-- Dependency-free collapse, dropdown, and tabs controllers
+- Dependency-free collapse, dropdown, responsive-sidebar, and tabs controllers
 - Shared state, event, keyboard, and accessibility contract
 - Official Alpine and React adapters
 

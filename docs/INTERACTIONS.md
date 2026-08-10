@@ -149,6 +149,55 @@ collapse.destroy();
 
 Events: `bs:collapse:show`, `bs:collapse:shown`, `bs:collapse:hide`, and `bs:collapse:hidden`.
 
+## Responsive sidebar
+
+The sidebar component separates persistent navigation presentation from optional mobile-drawer behavior. Use <code>.bs-sidebar</code> with the start or end placement class for a sticky rail. Add <code>.bs-sidebar-drawer</code> and <code>data-bs-sidebar</code> when the start rail should become an off-canvas drawer below the large breakpoint.
+
+```html
+<button type="button" data-bs-toggle="sidebar" aria-controls="docs-sidebar">
+  Open navigation
+</button>
+
+<aside
+  class="bs-sidebar bs-sidebar-start bs-sidebar-drawer"
+  id="docs-sidebar"
+  data-bs-sidebar
+  data-bs-state="closed"
+  aria-label="Documentation navigation"
+>
+  <button type="button" data-bs-sidebar-dismiss>Close navigation</button>
+  <nav class="bs-nav" aria-label="Documentation sections">
+    <a class="bs-nav-link" href="/docs" data-bs-sidebar-close>Introduction</a>
+  </nav>
+</aside>
+
+<button
+  class="bs-sidebar-backdrop"
+  type="button"
+  data-bs-sidebar-dismiss
+  aria-controls="docs-sidebar"
+  aria-label="Close navigation"
+></button>
+```
+
+At large widths the sidebar remains a normal sticky complementary region. Below 64rem the controller synchronizes the drawer and backdrop, traps focus while open, closes on `Escape`, restores focus to the trigger, marks the closed drawer inert, and applies `.bs-sidebar-open` to the document body to prevent background scrolling. Set `--bs-sidebar-offset`, `--bs-sidebar-height`, and `--bs-sidebar-width` at the component boundary when the application has a fixed header or a different rail width.
+
+Use `.bs-sidebar-end.bs-sidebar-toc` for a static right-hand table of contents. It reuses `.bs-nav` and `.bs-nav-link`; responsive visibility remains a page-layout decision because the available reading width differs by application.
+
+Public API:
+
+```js
+import { Sidebar } from "@boobstrap/boobstrap/js/sidebar";
+
+const sidebar = Sidebar.getOrCreateInstance(document.querySelector("[data-bs-sidebar]"));
+sidebar.show();
+sidebar.hide();
+sidebar.toggle();
+sidebar.destroy();
+```
+
+Events: `bs:sidebar:show`, `bs:sidebar:shown`, `bs:sidebar:hide`, and `bs:sidebar:hidden`. Before-events are cancelable.
+
 ## Dropdown
 
 ```html

@@ -20,6 +20,7 @@ const assets = new Map([
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
+  ["/dist/js/sidebar.js", await readFile(new URL("../dist/js/sidebar.js", import.meta.url))],
   ["/dist/js/shared.js", await readFile(new URL("../dist/js/shared.js", import.meta.url))],
   ["/dist/js/tabs.js", await readFile(new URL("../dist/js/tabs.js", import.meta.url))],
 ]);
@@ -113,6 +114,20 @@ try {
   await collapseToggle.click();
   if (!await collapsePanel.isHidden() || await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not close");
 
+  const sidebarToggle = page.locator("#sidebar-toggle");
+  const sidebar = page.locator("#navigation-sidebar");
+  const sidebarBackdrop = page.locator(".bs-sidebar-backdrop");
+  if (await sidebar.getAttribute("data-bs-state") !== "closed" || await sidebar.getAttribute("aria-hidden") !== "true") failures.push("Sidebar did not initialize as a closed mobile drawer");
+  await sidebarToggle.click();
+  if (await sidebar.getAttribute("data-bs-state") !== "open" || await sidebarToggle.getAttribute("aria-expanded") !== "true" || !await sidebarBackdrop.isVisible()) failures.push("Sidebar did not open with its backdrop");
+  if (!await page.locator("body").evaluate((element) => element.classList.contains("bs-sidebar-open"))) failures.push("Sidebar did not lock document scrolling");
+  if (!await sidebar.getByRole("button", { name: "Close navigation" }).evaluate((element) => element === document.activeElement)) failures.push("Sidebar did not move focus inside the drawer");
+  await page.keyboard.press("Escape");
+  if (await sidebar.getAttribute("data-bs-state") !== "closed" || !await sidebarToggle.evaluate((element) => element === document.activeElement)) failures.push("Sidebar Escape behavior did not close and restore focus");
+  await sidebarToggle.click();
+  await sidebarBackdrop.click({ position: { x: 380, y: 100 } });
+  if (await sidebar.getAttribute("data-bs-state") !== "closed") failures.push("Sidebar backdrop did not dismiss the drawer");
+
   const dropdownToggle = page.locator("#actions-toggle");
   const dropdownMenu = page.locator("#actions-menu");
   await dropdownToggle.focus();
@@ -176,7 +191,7 @@ try {
   if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -190,7 +205,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 10) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 11) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");

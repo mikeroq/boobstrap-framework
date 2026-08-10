@@ -21,6 +21,15 @@
         <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss development banner">×</button>
       </div>
     </div>
+    <button class="bs-btn bs-btn-secondary" id="sidebar-toggle" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar">Open navigation</button>
+    <aside class="bs-sidebar bs-sidebar-start bs-sidebar-drawer" id="navigation-sidebar" data-bs-sidebar data-bs-state="closed" aria-label="Documentation navigation">
+      <button class="bs-btn bs-btn-secondary" type="button" data-bs-sidebar-dismiss>Close navigation</button>
+      <nav class="bs-nav" aria-label="Documentation sections">
+        <a class="bs-nav-link" href="#collapse-heading" data-bs-sidebar-close>Interaction contract</a>
+        <a class="bs-nav-link" href="#account-tabs-label">Account tabs</a>
+      </nav>
+    </aside>
+    <button class="bs-sidebar-backdrop" type="button" data-bs-sidebar-dismiss aria-controls="navigation-sidebar" aria-label="Close navigation"></button>
     <main>
       <section aria-label="Loading button example">
         <button
@@ -131,7 +140,7 @@
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();
