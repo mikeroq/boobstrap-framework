@@ -26,6 +26,7 @@ const baseUrl = `http://127.0.0.1:${address.port}`;
 const browser = await browserType.launch({ headless: true });
 const failures = [];
 const themeColors = new Map();
+const controlColors = new Map();
 
 try {
   for (const theme of ["dark", "light"]) {
@@ -43,6 +44,7 @@ try {
 
       await page.goto(baseUrl, { waitUntil: "networkidle" });
       await page.evaluate((activeTheme) => { document.documentElement.dataset.bsTheme = activeTheme; }, theme);
+      await page.waitForTimeout(250);
 
       const metrics = await page.evaluate(() => {
         const firstCard = document.querySelector("[data-test-grid] .bs-card");
@@ -56,12 +58,14 @@ try {
           primary: rootStyle.getPropertyValue("--bs-color-primary").trim(),
           scrollWidth: document.documentElement.scrollWidth,
           clientWidth: document.documentElement.clientWidth,
+          controlBackground: getComputedStyle(document.querySelector("#email")).backgroundColor,
           iconWidth: icon.getBoundingClientRect().width,
           iconStroke: getComputedStyle(icon).stroke,
         };
       });
 
       themeColors.set(theme, `${metrics.background}|${metrics.primary}`);
+      controlColors.set(theme, metrics.controlBackground);
       if (metrics.scrollWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: horizontal overflow`);
       if (metrics.iconWidth <= 0 || metrics.iconStroke === "none") failures.push(`${theme}/${viewport.name}: icon utility did not size or inherit stroke`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
@@ -108,6 +112,8 @@ try {
   }
 
   if (themeColors.get("dark") === themeColors.get("light")) failures.push("Light and dark themes resolve to identical colors");
+  if (controlColors.get("dark") === controlColors.get("light")) failures.push("Light and dark form controls resolve to identical backgrounds");
+  if (controlColors.get("light") !== "rgb(255, 255, 255)") failures.push(`Light form controls should use a white background, received ${controlColors.get("light")}`);
 
   const motionContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   const motionPage = await motionContext.newPage();

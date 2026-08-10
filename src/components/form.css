@@ -49,7 +49,7 @@
   color: var(--bs-color-text);
   font: inherit;
   line-height: 1.35;
-  background-color: rgb(12 5 14 / 42%);
+  background-color: var(--bs-color-control-background);
   border: 1px solid var(--bs-color-border);
   border-radius: var(--bs-radius-md);
   transition: border-color var(--bs-duration-normal), box-shadow var(--bs-duration-normal), background var(--bs-duration-normal);
@@ -263,7 +263,7 @@
   height: 1.125rem;
   margin: 0.18rem 0 0;
   appearance: none;
-  background: rgb(12 5 14 / 42%);
+  background: var(--bs-color-control-background);
   border: 1px solid var(--bs-color-border-strong);
   border-radius: var(--bs-radius-xs);
   cursor: pointer;
@@ -342,7 +342,7 @@
   font: 700 var(--bs-font-size-xl) / 1 var(--bs-font-mono);
   text-align: center;
   caret-color: var(--bs-color-primary);
-  background: rgb(12 5 14 / 42%);
+  background: var(--bs-color-control-background);
   border: 1px solid var(--bs-color-border);
   border-radius: var(--bs-radius-md);
 }

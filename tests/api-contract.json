@@ -237,6 +237,7 @@
     "--bs-color-background",
     "--bs-color-border",
     "--bs-color-border-strong",
+    "--bs-color-control-background",
     "--bs-color-danger",
     "--bs-color-info",
     "--bs-color-primary",
