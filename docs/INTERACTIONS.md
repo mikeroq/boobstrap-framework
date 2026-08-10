@@ -149,40 +149,92 @@ collapse.destroy();
 
 Events: `bs:collapse:show`, `bs:collapse:shown`, `bs:collapse:hide`, and `bs:collapse:hidden`.
 
-## Responsive sidebar
+## Sidebar
 
-The sidebar component separates persistent navigation presentation from optional mobile-drawer behavior. Use <code>.bs-sidebar</code> with the start or end placement class for a sticky rail. Add <code>.bs-sidebar-drawer</code> and <code>data-bs-sidebar</code> when the start rail should become an off-canvas drawer below the large breakpoint.
+Sidebar is a composable application shell and navigation component. The CSS API owns layout, visual variants, menu anatomy, and responsive states; the optional controller owns mobile dialog behavior and desktop collapse state. Start with `.bs-sidebar-layout`, place `.bs-sidebar` and `.bs-sidebar-main` inside it, then compose only the regions your product needs.
 
 ```html
-<button type="button" data-bs-toggle="sidebar" aria-controls="docs-sidebar">
-  Open navigation
-</button>
+<button
+  class="bs-sidebar-trigger"
+  type="button"
+  data-bs-toggle="sidebar"
+  aria-controls="app-sidebar"
+  aria-label="Toggle navigation"
+>☰</button>
 
-<aside
-  class="bs-sidebar bs-sidebar-start bs-sidebar-drawer"
-  id="docs-sidebar"
-  data-bs-sidebar
-  data-bs-state="closed"
-  aria-label="Documentation navigation"
->
-  <button type="button" data-bs-sidebar-dismiss>Close navigation</button>
-  <nav class="bs-nav" aria-label="Documentation sections">
-    <a class="bs-nav-link" href="/docs" data-bs-sidebar-close>Introduction</a>
-  </nav>
-</aside>
+<div class="bs-sidebar-layout">
+  <aside
+    class="bs-sidebar bs-sidebar-start bs-sidebar-drawer bs-sidebar-collapsible"
+    id="app-sidebar"
+    data-bs-sidebar
+    data-bs-sidebar-collapse="icon"
+    data-bs-sidebar-shortcut="b"
+    data-bs-state="closed"
+    aria-label="Application navigation"
+  >
+    <div class="bs-sidebar-header">
+      <strong class="bs-sidebar-label">Acme</strong>
+    </div>
+
+    <div class="bs-sidebar-content">
+      <section class="bs-sidebar-group" aria-labelledby="workspace-label">
+        <div class="bs-sidebar-group-label" id="workspace-label">Workspace</div>
+        <div class="bs-sidebar-group-content">
+          <ul class="bs-sidebar-menu">
+            <li class="bs-sidebar-menu-item">
+              <a class="bs-sidebar-menu-button" href="/dashboard" aria-current="page" data-bs-sidebar-close>
+                <svg aria-hidden="true"><!-- icon --></svg>
+                <span class="bs-sidebar-label">Dashboard</span>
+                <span class="bs-sidebar-menu-badge">12</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div class="bs-sidebar-footer">
+      <button class="bs-sidebar-menu-button" type="button">
+        <span class="bs-sidebar-label">Account</span>
+      </button>
+    </div>
+
+    <button
+      class="bs-sidebar-rail"
+      type="button"
+      data-bs-toggle="sidebar"
+      aria-controls="app-sidebar"
+      aria-label="Toggle navigation width"
+    ></button>
+  </aside>
+
+  <main class="bs-sidebar-main">...</main>
+</div>
 
 <button
   class="bs-sidebar-backdrop"
   type="button"
   data-bs-sidebar-dismiss
-  aria-controls="docs-sidebar"
+  aria-controls="app-sidebar"
   aria-label="Close navigation"
 ></button>
 ```
 
-At large widths the sidebar remains a normal sticky complementary region. Below 64rem the controller synchronizes the drawer and backdrop, traps focus while open, closes on `Escape`, restores focus to the trigger, marks the closed drawer inert, and applies `.bs-sidebar-open` to the document body to prevent background scrolling. Set `--bs-sidebar-offset`, `--bs-sidebar-height`, and `--bs-sidebar-width` at the component boundary when the application has a fixed header or a different rail width.
+### Placement, variants, and collapse modes
 
-Use `.bs-sidebar-end.bs-sidebar-toc` for a static right-hand table of contents. It reuses `.bs-nav` and `.bs-nav-link`; responsive visibility remains a page-layout decision because the available reading width differs by application.
+- Use `.bs-sidebar-start` or `.bs-sidebar-end` for logical placement. Both follow document direction in RTL layouts.
+- Add `.bs-sidebar-floating` for an elevated rail or `.bs-sidebar-inset` when the main surface should appear inset beside it.
+- Add `.bs-sidebar-drawer` to turn the sidebar into an accessible off-canvas dialog below the breakpoint in `data-bs-sidebar-media` (default: `64rem`).
+- Add `.bs-sidebar-collapsible` and set `data-bs-sidebar-collapse="icon"` to retain an icon rail, `"offcanvas"` to remove the desktop rail, or `"none"` to keep it persistent.
+- Set `data-bs-sidebar-shortcut="b"` to enable `Control+B` and `Command+B`. The value may be any single key suitable for the application.
+
+The menu primitives accept links or buttons. Use `aria-current="page"` for navigation and `data-active="true"` when application state—not the URL—owns selection. `.bs-sidebar-menu-action` is positioned beside its sibling button, `.bs-sidebar-menu-badge` aligns a count at the inline end, and `.bs-sidebar-menu-sub` provides the indented nested level. `.bs-sidebar-skeleton` renders a reduced-motion-aware loading placeholder; customize its text width with `--bs-sidebar-skeleton-width`.
+
+### Responsive and accessibility behavior
+
+Below the configured breakpoint, the controller synchronizes the drawer and backdrop, traps focus while open, closes on `Escape`, restores focus to the trigger, marks the closed drawer inert, and applies `.bs-sidebar-open` to the document body to prevent background scrolling. `data-bs-sidebar-close` closes the mobile drawer after a navigation selection without stealing focus from the destination.
+
+At larger widths, triggers call `expand()` and `collapse()` when a collapse mode is enabled. Header and footer remain fixed while `.bs-sidebar-content` scrolls. Use semantic `<aside>` and `<nav>` elements with accessible labels; icon-only controls require an `aria-label` or visually hidden label.
 
 Public API:
 
@@ -190,13 +242,17 @@ Public API:
 import { Sidebar } from "@boobstrap/boobstrap/js/sidebar";
 
 const sidebar = Sidebar.getOrCreateInstance(document.querySelector("[data-bs-sidebar]"));
-sidebar.show();
-sidebar.hide();
-sidebar.toggle();
+sidebar.show();       // mobile drawer
+sidebar.hide();       // mobile drawer
+sidebar.expand();     // desktop rail
+sidebar.collapse();   // desktop rail
+sidebar.toggle();     // current responsive mode
 sidebar.destroy();
 ```
 
-Events: `bs:sidebar:show`, `bs:sidebar:shown`, `bs:sidebar:hide`, and `bs:sidebar:hidden`. Before-events are cancelable.
+Mobile events are `bs:sidebar:show`, `bs:sidebar:shown`, `bs:sidebar:hide`, and `bs:sidebar:hidden`. Desktop events are `bs:sidebar:expand`, `bs:sidebar:expanded`, `bs:sidebar:collapse`, and `bs:sidebar:collapsed`. All before-events are cancelable.
+
+Set `--bs-sidebar-offset`, `--bs-sidebar-height`, `--bs-sidebar-width`, `--bs-sidebar-width-mobile`, and `--bs-sidebar-width-collapsed` at the component boundary. Use `.bs-sidebar-end.bs-sidebar-toc` for a right-hand table of contents; responsive visibility remains a page-layout decision because available reading width differs by application.
 
 ## Dropdown
 

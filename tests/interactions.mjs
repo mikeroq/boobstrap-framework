@@ -213,6 +213,34 @@ try {
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
   if (consoleErrors.length) failures.push(`Console errors: ${consoleErrors.join("; ")}`);
   await context.close();
+
+  const desktopContext = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const desktopPage = await desktopContext.newPage();
+  await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
+  const desktopSidebar = desktopPage.locator("#navigation-sidebar");
+  const desktopToggle = desktopPage.locator("#sidebar-toggle");
+  if (await desktopSidebar.getAttribute("data-bs-state") !== "expanded" || await desktopToggle.getAttribute("aria-expanded") !== "true") {
+    failures.push("Sidebar did not initialize expanded on desktop");
+  }
+  await desktopToggle.click();
+  await desktopPage.waitForTimeout(300);
+  const collapsedMetrics = await desktopSidebar.evaluate((element) => ({
+    state: element.dataset.bsState,
+    width: element.getBoundingClientRect().width,
+    rootFontSize: parseFloat(getComputedStyle(document.documentElement).fontSize),
+    collapsedRem: parseFloat(getComputedStyle(element).getPropertyValue("--bs-sidebar-width-collapsed")),
+    labelDisplay: getComputedStyle(element.querySelector(".bs-sidebar-label")).display,
+  }));
+  if (collapsedMetrics.state !== "collapsed" || Math.abs(collapsedMetrics.width - (collapsedMetrics.collapsedRem * collapsedMetrics.rootFontSize)) > 1 || collapsedMetrics.labelDisplay !== "none") {
+    failures.push(`Sidebar icon collapse is incomplete (${JSON.stringify(collapsedMetrics)})`);
+  }
+  await desktopPage.keyboard.press("Control+b");
+  if (await desktopSidebar.getAttribute("data-bs-state") !== "expanded") failures.push("Sidebar shortcut did not expand the desktop rail");
+  const desktopEvents = await desktopPage.evaluate(() => window.bsEvents);
+  for (const eventName of ["bs:sidebar:collapsed", "bs:sidebar:expanded"]) {
+    if (!desktopEvents.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
+  }
+  await desktopContext.close();
 } finally {
   await browser.close();
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
