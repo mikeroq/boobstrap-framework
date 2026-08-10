@@ -11,3 +11,28 @@
 .bs-card-body { padding: clamp(1.25rem, 3vw, 2rem); }
 .bs-card-title { margin-bottom: var(--bs-space-2); }
 .bs-card-text { color: var(--bs-color-text-muted); }
+
+.bs-card-subtle {
+  background: color-mix(in srgb, var(--bs-color-surface) 72%, transparent);
+  border-radius: var(--bs-radius-lg);
+  box-shadow: none;
+}
+
+.bs-card-compact { padding: var(--bs-space-4); }
+
+.bs-card-link {
+  display: grid;
+  gap: var(--bs-space-1);
+  color: var(--bs-color-text);
+  text-decoration: none;
+  transition:
+    background var(--bs-duration-normal),
+    border-color var(--bs-duration-normal),
+    transform var(--bs-duration-normal);
+}
+
+.bs-card-link:hover {
+  background: var(--bs-color-surface);
+  border-color: var(--bs-color-border-strong);
+  transform: translateY(-2px);
+}

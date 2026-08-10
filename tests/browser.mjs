@@ -51,6 +51,8 @@ try {
         const grid = document.querySelector("[data-test-grid]");
         const rootStyle = getComputedStyle(document.documentElement);
         const icon = document.querySelector("[data-test-icon]");
+        const navLink = document.querySelector("[data-test-nav] [aria-current]");
+        const table = document.querySelector("[data-test-table]");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -61,6 +63,10 @@ try {
           controlBackground: getComputedStyle(document.querySelector("#email")).backgroundColor,
           iconWidth: icon.getBoundingClientRect().width,
           iconStroke: getComputedStyle(icon).stroke,
+          navDisplay: getComputedStyle(navLink).display,
+          navBorder: getComputedStyle(navLink).borderLeftColor,
+          tableOverflow: getComputedStyle(table).overflowX,
+          tableWidth: table.getBoundingClientRect().width,
         };
       });
 
@@ -68,6 +74,8 @@ try {
       controlColors.set(theme, metrics.controlBackground);
       if (metrics.scrollWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: horizontal overflow`);
       if (metrics.iconWidth <= 0 || metrics.iconStroke === "none") failures.push(`${theme}/${viewport.name}: icon utility did not size or inherit stroke`);
+      if (metrics.navDisplay !== "block" || metrics.navBorder === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: current navigation link is not visibly styled`);
+      if (metrics.tableOverflow !== "auto" || metrics.tableWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: responsive table escaped its container`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
