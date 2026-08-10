@@ -39,6 +39,16 @@
   white-space: pre;
 }
 
+.bs-code-inline {
+  padding: 0.12rem 0.38rem;
+  color: var(--bs-color-primary-hover);
+  background: rgb(216 60 135 / 9%);
+  border: 1px solid rgb(216 60 135 / 14%);
+  border-radius: var(--bs-radius-xs);
+  font-size: 0.88em;
+  white-space: normal;
+}
+
 .bs-code-action {
   padding: 0.3rem 0.5rem;
   color: #c6b7c0;
