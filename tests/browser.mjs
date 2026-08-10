@@ -44,7 +44,7 @@ try {
 
       await page.goto(baseUrl, { waitUntil: "networkidle" });
       await page.evaluate((activeTheme) => { document.documentElement.dataset.bsTheme = activeTheme; }, theme);
-      await page.waitForTimeout(250);
+      await page.waitForTimeout(500);
 
       const metrics = await page.evaluate(() => {
         const firstCard = document.querySelector("[data-test-grid] .bs-card");
