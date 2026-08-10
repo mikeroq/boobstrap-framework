@@ -13,6 +13,9 @@ export class Sidebar {
     this.document = element.ownerDocument;
     this.media = matchMedia(element.dataset.bsSidebarMedia || "(max-width: 64rem)");
     this.open = element.dataset.bsState === "open";
+    this.expanded = element.dataset.bsState !== "collapsed";
+    this.collapseMode = element.dataset.bsSidebarCollapse || "none";
+    this.shortcut = element.dataset.bsSidebarShortcut?.toLowerCase() || null;
     this.triggers = [...this.document.querySelectorAll(controlledSelector("data-bs-toggle=\"sidebar\"", element.id))];
     this.dismissers = [
       ...element.querySelectorAll("[data-bs-sidebar-dismiss]"),
@@ -29,10 +32,13 @@ export class Sidebar {
     };
     this.onDismiss = (event) => {
       event.preventDefault();
-      this.hide({ reason: "dismiss", sourceEvent: event });
+      if (this.overlay) this.hide({ reason: "dismiss", sourceEvent: event });
+      else this.collapse({ reason: "dismiss", sourceEvent: event });
     };
     this.onElementClick = (event) => {
-      if (event.target.closest("[data-bs-sidebar-close]")) this.hide({ reason: "selection", sourceEvent: event, restoreFocus: false });
+      if (this.overlay && event.target.closest("[data-bs-sidebar-close]")) {
+        this.hide({ reason: "selection", sourceEvent: event, restoreFocus: false });
+      }
     };
     this.onKeydown = (event) => this.handleKeydown(event);
     this.onMediaChange = () => this.sync();
@@ -66,8 +72,9 @@ export class Sidebar {
   }
 
   sync() {
-    const displayedOpen = !this.overlay || this.open;
-    setState(this.element, displayedOpen ? "open" : "closed");
+    if (this.collapseMode === "none") this.expanded = true;
+    const displayedOpen = this.overlay ? this.open : this.expanded;
+    setState(this.element, this.overlay ? (this.open ? "open" : "closed") : (this.expanded ? "expanded" : "collapsed"));
     this.element.dataset.bsOverlay = this.overlay && this.open ? "open" : "closed";
     this.triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", String(displayedOpen)));
     this.backdrops.forEach((backdrop) => setState(backdrop, this.overlay && this.open ? "open" : "closed"));
@@ -91,6 +98,7 @@ export class Sidebar {
   }
 
   show(options = {}) {
+    if (!this.overlay) return this.expand(options);
     if (this.open) return false;
     const detail = { controller: this, reason: options.reason ?? "api", sourceEvent: options.sourceEvent };
     if (!emit(this.element, "bs:sidebar:show", detail, true)) return false;
@@ -103,6 +111,7 @@ export class Sidebar {
   }
 
   hide(options = {}) {
+    if (!this.overlay) return this.collapse(options);
     if (!this.open) return false;
     const detail = { controller: this, reason: options.reason ?? "api", sourceEvent: options.sourceEvent };
     if (!emit(this.element, "bs:sidebar:hide", detail, true)) return false;
@@ -114,10 +123,39 @@ export class Sidebar {
   }
 
   toggle(options = {}) {
-    return this.open ? this.hide(options) : this.show(options);
+    return this.overlay
+      ? (this.open ? this.hide(options) : this.show(options))
+      : (this.expanded ? this.collapse(options) : this.expand(options));
+  }
+
+  expand(options = {}) {
+    if (this.overlay) return this.show(options);
+    if (this.collapseMode === "none" || this.expanded) return false;
+    const detail = { controller: this, reason: options.reason ?? "api", sourceEvent: options.sourceEvent };
+    if (!emit(this.element, "bs:sidebar:expand", detail, true)) return false;
+    this.expanded = true;
+    this.sync();
+    emit(this.element, "bs:sidebar:expanded", detail);
+    return true;
+  }
+
+  collapse(options = {}) {
+    if (this.overlay) return this.hide(options);
+    if (this.collapseMode === "none" || !this.expanded) return false;
+    const detail = { controller: this, reason: options.reason ?? "api", sourceEvent: options.sourceEvent };
+    if (!emit(this.element, "bs:sidebar:collapse", detail, true)) return false;
+    this.expanded = false;
+    this.sync();
+    emit(this.element, "bs:sidebar:collapsed", detail);
+    return true;
   }
 
   handleKeydown(event) {
+    if (this.shortcut && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === this.shortcut) {
+      event.preventDefault();
+      this.toggle({ reason: "shortcut", sourceEvent: event, restoreTarget: this.document.activeElement });
+      return;
+    }
     if (!this.overlay || !this.open) return;
     if (event.key === "Escape") {
       event.preventDefault();

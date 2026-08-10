@@ -21,16 +21,29 @@
         <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss development banner">×</button>
       </div>
     </div>
-    <button class="bs-btn bs-btn-secondary" id="sidebar-toggle" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar">Open navigation</button>
-    <aside class="bs-sidebar bs-sidebar-start bs-sidebar-drawer" id="navigation-sidebar" data-bs-sidebar data-bs-state="closed" aria-label="Documentation navigation">
-      <button class="bs-btn bs-btn-secondary" type="button" data-bs-sidebar-dismiss>Close navigation</button>
-      <nav class="bs-nav" aria-label="Documentation sections">
-        <a class="bs-nav-link" href="#collapse-heading" data-bs-sidebar-close>Interaction contract</a>
-        <a class="bs-nav-link" href="#account-tabs-label">Account tabs</a>
-      </nav>
+    <button class="bs-sidebar-trigger" id="sidebar-toggle" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar" aria-label="Toggle navigation">☰</button>
+    <div class="bs-sidebar-layout">
+    <aside class="bs-sidebar bs-sidebar-start bs-sidebar-drawer bs-sidebar-collapsible" id="navigation-sidebar" data-bs-sidebar data-bs-sidebar-collapse="icon" data-bs-sidebar-shortcut="b" data-bs-state="closed" aria-label="Documentation navigation">
+      <div class="bs-sidebar-header">
+        <strong class="bs-sidebar-label">Boobstrap</strong>
+        <button class="bs-btn bs-btn-secondary" type="button" data-bs-sidebar-dismiss>Close navigation</button>
+      </div>
+      <div class="bs-sidebar-content">
+        <nav class="bs-sidebar-group" aria-label="Documentation sections">
+          <div class="bs-sidebar-group-label">Documentation</div>
+          <div class="bs-sidebar-group-content">
+            <ul class="bs-sidebar-menu">
+              <li class="bs-sidebar-menu-item"><a class="bs-sidebar-menu-button" href="#collapse-heading" data-bs-sidebar-close><span aria-hidden="true">◆</span><span class="bs-sidebar-label">Interaction contract</span></a></li>
+              <li class="bs-sidebar-menu-item"><a class="bs-sidebar-menu-button" href="#account-tabs-label"><span aria-hidden="true">◆</span><span class="bs-sidebar-label">Account tabs</span><span class="bs-sidebar-menu-badge">2</span></a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div class="bs-sidebar-footer"><span class="bs-sidebar-label">Signed in</span></div>
+      <button class="bs-sidebar-rail" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar" aria-label="Toggle navigation width"></button>
     </aside>
     <button class="bs-sidebar-backdrop" type="button" data-bs-sidebar-dismiss aria-controls="navigation-sidebar" aria-label="Close navigation"></button>
-    <main>
+    <main class="bs-sidebar-main">
       <section aria-label="Loading button example">
         <button
           class="bs-btn bs-btn-primary"
@@ -135,12 +148,13 @@
         </div>
       </section>
     </main>
+    </div>
 
     <script type="module">
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();
