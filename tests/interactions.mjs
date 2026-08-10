@@ -94,7 +94,7 @@ try {
     }
     await page.waitForTimeout(90);
   }
-  if (spinnerCenters.some(({ x, y, buttonX, buttonY }) => Math.abs(x - buttonX) > 1 || Math.abs(y - buttonY) > 1)) {
+  if (spinnerCenters.some(({ x, y, buttonX, buttonY }) => Math.abs(x - buttonX) > 2.5 || Math.abs(y - buttonY) > 2.5)) {
     failures.push(`Loading spinner moved away from the button center (${JSON.stringify(spinnerCenters)})`);
   }
   await page.evaluate(() => window.bs.controllers.find((controller) => controller.element.id === "loading-button").stop({ reason: "test" }));

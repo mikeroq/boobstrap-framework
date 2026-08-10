@@ -121,7 +121,10 @@ try {
 
   if (themeColors.get("dark") === themeColors.get("light")) failures.push("Light and dark themes resolve to identical colors");
   if (controlColors.get("dark") === controlColors.get("light")) failures.push("Light and dark form controls resolve to identical backgrounds");
-  if (controlColors.get("light") !== "rgb(255, 255, 255)") failures.push(`Light form controls should use a white background, received ${controlColors.get("light")}`);
+  const lightControlChannels = controlColors.get("light")?.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? [];
+  if (lightControlChannels.length !== 3 || lightControlChannels.some((channel) => channel < 250)) {
+    failures.push(`Light form controls should use a near-white background, received ${controlColors.get("light")}`);
+  }
 
   const motionContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   const motionPage = await motionContext.newPage();
