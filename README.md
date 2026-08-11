@@ -145,6 +145,7 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - A composable sidebar shell with groups, nested menus, badges, loading states, mobile drawers, and desktop collapse modes
 - Semantic data tables with striped, hover, bordered, borderless, compact, sticky-header, sortable-header, footer, numeric, action, and empty-state treatments
 - Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
+- A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
 - Optional loading button, collapse, searchable combobox, dropdown, form-helper, sidebar, and tabs controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities

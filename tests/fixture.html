@@ -162,6 +162,29 @@
         <ul class="bs-checklist bs-mt-4"><li>Keyboard accessible</li><li>Theme aware</li></ul>
       </section>
 
+      <section aria-labelledby="datatable-title" class="bs-mt-8">
+        <h2 id="datatable-title">DataTables integration</h2>
+        <div class="bs-datatable" data-test-datatable>
+          <div class="dt-container">
+            <div class="dt-layout-row">
+              <div class="dt-layout-cell dt-layout-start"><div class="dt-length"><label for="dt-length-test">Rows</label><select class="dt-input" id="dt-length-test"><option>5</option><option>10</option></select></div></div>
+              <div class="dt-layout-cell dt-layout-end"><div class="dt-search"><label for="dt-search-test">Search</label><input class="dt-input" id="dt-search-test" type="search" /></div></div>
+            </div>
+            <div class="dt-layout-row dt-layout-table"><div class="dt-layout-cell dt-layout-full" role="region" tabindex="0" aria-label="Customer records">
+              <table class="dataTable bs-table bs-table-striped bs-table-hover">
+                <caption>Customer records</caption>
+                <thead><tr><th class="dt-orderable-asc dt-orderable-desc dt-ordering-asc" scope="col" aria-sort="ascending"><div class="dt-column-header"><span class="dt-column-title">Name</span><span class="dt-column-order" role="button" tabindex="0" aria-label="Name: activate to invert sorting"></span></div></th><th class="dt-type-numeric" scope="col"><div class="dt-column-header"><span class="dt-column-title">Seats</span><span class="dt-column-order"></span></div></th></tr></thead>
+                <tbody><tr><th scope="row">Avery Morgan</th><td class="dt-type-numeric">12</td></tr><tr><th scope="row">Kai Patel</th><td class="dt-type-numeric">8</td></tr></tbody>
+              </table>
+            </div></div>
+            <div class="dt-layout-row">
+              <div class="dt-layout-cell dt-layout-start"><div class="dt-info" role="status">Showing 1 to 2 of 12 customers</div></div>
+              <div class="dt-layout-cell dt-layout-end"><nav class="dt-paging" aria-label="pagination"><button class="dt-paging-button disabled" type="button" aria-disabled="true">Previous</button><button class="dt-paging-button current" type="button" aria-current="page">1</button><button class="dt-paging-button" type="button">2</button><button class="dt-paging-button" type="button">Next</button></nav></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <nav class="bs-page-nav bs-mt-8" aria-label="Adjacent pages"><a class="bs-page-nav-link" href="#navigation-title"><span class="bs-page-nav-context">Previous</span><strong class="bs-page-nav-title">Navigation</strong></a><a class="bs-page-nav-link" href="#table-title"><span class="bs-page-nav-context">Next</span><strong class="bs-page-nav-title">Tables</strong></a></nav>
     </main>
   </body>

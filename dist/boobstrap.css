@@ -2539,6 +2539,266 @@ samp {
 
 .bs-tab-panel-contained { padding: var(--bs-space-5); }
 
+/* DataTables 3 presentation adapter. Apply .bs-datatable around the table before initialising DataTables. */
+.bs-datatable {
+  color: var(--bs-color-text);
+  font-family: var(--bs-font-sans);
+}
+
+.bs-datatable .dt-container {
+  position: relative;
+  display: grid;
+  gap: var(--bs-space-3);
+  min-width: 0;
+  color: var(--bs-color-text-muted);
+  font-size: var(--bs-font-size-sm);
+}
+
+.bs-datatable .dt-layout-row {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bs-space-4);
+}
+
+.bs-datatable .dt-layout-cell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--bs-space-3);
+}
+
+.bs-datatable .dt-layout-cell:empty { display: none; }
+.bs-datatable .dt-layout-start { justify-content: flex-start; }
+.bs-datatable .dt-layout-end { justify-content: flex-end; margin-inline-start: auto; }
+.bs-datatable .dt-layout-full { width: 100%; }
+
+.bs-datatable .dt-layout-table > .dt-layout-cell {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bs-color-surface);
+  border: 1px solid var(--bs-color-border);
+  border-radius: var(--bs-radius-md);
+  scrollbar-width: thin;
+}
+
+.bs-datatable .dt-layout-table > .dt-layout-cell:focus-visible {
+  outline-offset: 2px;
+}
+
+.bs-datatable table.dataTable {
+  width: 100%;
+  margin: 0;
+  border-spacing: 0;
+}
+
+.bs-datatable .dt-length,
+.bs-datatable .dt-search {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-2);
+}
+
+.bs-datatable .dt-length label,
+.bs-datatable .dt-search label {
+  color: var(--bs-color-text-muted);
+  font-size: var(--bs-font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bs-datatable .dt-input {
+  min-height: 2.5rem;
+  padding: var(--bs-space-2) var(--bs-space-3);
+  color: var(--bs-color-text);
+  background: var(--bs-color-control-background);
+  border: 1px solid var(--bs-color-border);
+  border-radius: var(--bs-radius-sm);
+  font: inherit;
+}
+
+.bs-datatable .dt-search .dt-input { min-width: min(16rem, 42vw); }
+
+.bs-datatable .dt-input:hover { border-color: var(--bs-color-border-strong); }
+
+.bs-datatable .dt-input:focus-visible {
+  border-color: var(--bs-color-primary);
+  outline: 3px solid var(--bs-color-focus-ring);
+  outline-offset: 1px;
+}
+
+.bs-datatable .dt-info {
+  color: var(--bs-color-text-muted);
+  font-size: var(--bs-font-size-sm);
+}
+
+.bs-datatable .dt-paging {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bs-space-1);
+}
+
+.bs-datatable .dt-paging-button {
+  display: inline-grid;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: var(--bs-space-2) var(--bs-space-3);
+  place-items: center;
+  color: var(--bs-color-text-muted);
+  background: color-mix(in srgb, var(--bs-color-surface) 72%, transparent);
+  border: 1px solid var(--bs-color-border);
+  border-radius: var(--bs-radius-sm);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    color var(--bs-duration-fast) var(--bs-ease-standard),
+    background var(--bs-duration-fast) var(--bs-ease-standard),
+    border-color var(--bs-duration-fast) var(--bs-ease-standard);
+}
+
+.bs-datatable .dt-paging-button:hover:not(.disabled, [aria-disabled="true"], .current, [aria-current="page"]) {
+  color: var(--bs-color-text);
+  background: var(--bs-color-surface-hover);
+  border-color: var(--bs-color-border-strong);
+}
+
+.bs-datatable .dt-paging-button:is(.current, [aria-current="page"]) {
+  color: var(--bs-color-primary-contrast);
+  background: var(--bs-color-primary);
+  border-color: var(--bs-color-primary);
+}
+
+.bs-datatable .dt-paging-button:is(.disabled, [aria-disabled="true"], :disabled) {
+  color: var(--bs-color-text-subtle);
+  background: transparent;
+  border-color: var(--bs-color-border);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bs-datatable .dt-paging .ellipsis {
+  padding-inline: var(--bs-space-2);
+  color: var(--bs-color-text-subtle);
+}
+
+.bs-datatable table.dataTable .dt-column-header,
+.bs-datatable table.dataTable .dt-column-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bs-space-2);
+}
+
+.bs-datatable table.dataTable .dt-column-title { flex: 1 1 auto; }
+
+.bs-datatable table.dataTable .dt-column-order {
+  position: relative;
+  width: 0.6rem;
+  min-height: 1rem;
+  flex: 0 0 0.6rem;
+  border-radius: var(--bs-radius-xs);
+}
+
+.bs-datatable table.dataTable .dt-column-order::before,
+.bs-datatable table.dataTable .dt-column-order::after {
+  position: absolute;
+  inset-inline-start: 0;
+  width: 0;
+  height: 0;
+  border-inline: 0.3rem solid transparent;
+  content: "";
+  opacity: 0.28;
+}
+
+.bs-datatable table.dataTable .dt-column-order::before {
+  inset-block-start: 0;
+  border-bottom: 0.35rem solid var(--bs-color-text-muted);
+}
+
+.bs-datatable table.dataTable .dt-column-order::after {
+  inset-block-end: 0;
+  border-top: 0.35rem solid var(--bs-color-text-muted);
+}
+
+.bs-datatable table.dataTable :is(.dt-ordering-asc, [aria-sort="ascending"]) .dt-column-order::before,
+.bs-datatable table.dataTable :is(.dt-ordering-desc, [aria-sort="descending"]) .dt-column-order::after {
+  border-block-color: var(--bs-color-primary-hover);
+  opacity: 1;
+}
+
+.bs-datatable table.dataTable :is(.dt-orderable-asc, .dt-orderable-desc) { cursor: pointer; }
+
+.bs-datatable table.dataTable .dt-orderable-none .dt-column-order::before,
+.bs-datatable table.dataTable .dt-orderable-none .dt-column-order::after {
+  display: none;
+}
+
+.bs-datatable table.dataTable .dt-column-order:focus-visible {
+  outline: 2px solid var(--bs-color-primary);
+  outline-offset: 3px;
+}
+
+.bs-datatable table.dataTable :is(.dt-type-numeric, .dt-type-date) {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.bs-datatable .dt-empty {
+  padding-block: var(--bs-space-12) !important;
+  color: var(--bs-color-text-muted) !important;
+  text-align: center;
+}
+
+.bs-datatable .dt-processing {
+  position: absolute;
+  z-index: 2;
+  inset: 50% auto auto 50%;
+  min-width: 12rem;
+  padding: var(--bs-space-4);
+  color: var(--bs-color-text);
+  background: var(--bs-color-surface-raised);
+  border: 1px solid var(--bs-color-border-strong);
+  border-radius: var(--bs-radius-md);
+  box-shadow: var(--bs-shadow-md);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 48rem) {
+  .bs-datatable .dt-layout-row:not(.dt-layout-table) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--bs-space-3);
+  }
+
+  .bs-datatable .dt-layout-row:not(.dt-layout-table) .dt-layout-cell {
+    width: 100%;
+    justify-content: flex-start;
+    margin-inline: 0;
+  }
+
+  .bs-datatable .dt-search {
+    display: grid;
+    width: 100%;
+  }
+
+  .bs-datatable .dt-search .dt-input { width: 100%; min-width: 0; }
+  .bs-datatable .dt-paging { justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-datatable .dt-paging-button { transition: none; }
+}
+
 .bs-block { display: block; }
 .bs-inline-block { display: inline-block; }
 .bs-flex { display: flex; }
