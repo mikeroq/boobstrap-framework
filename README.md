@@ -143,6 +143,8 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
 - A composable sidebar shell with groups, nested menus, badges, loading states, mobile drawers, and desktop collapse modes
+- Semantic data tables with striped, hover, bordered, borderless, compact, sticky-header, sortable-header, footer, numeric, action, and empty-state treatments
+- Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
 - Optional loading button, collapse, searchable combobox, dropdown, form-helper, sidebar, and tabs controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities

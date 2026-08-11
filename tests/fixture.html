@@ -133,7 +133,27 @@
 
       <section aria-labelledby="table-title" class="bs-mt-8">
         <h2 id="table-title">Reference table</h2>
-        <div class="bs-table-responsive" data-test-table><table class="bs-table"><thead><tr><th>Class</th><th>Purpose</th></tr></thead><tbody><tr><td><code>.bs-btn</code></td><td>Base button styles</td></tr><tr><td><code>.bs-card</code></td><td>Surface container</td></tr></tbody></table></div>
+        <div class="bs-table-responsive bs-table-sticky-header" tabindex="0" role="region" aria-label="Component reference" data-test-table>
+          <table class="bs-table bs-table-striped bs-table-hover bs-table-bordered bs-table-compact">
+            <caption>Public component classes</caption>
+            <thead><tr><th scope="col" aria-sort="ascending"><button class="bs-table-sort" type="button">Class</button></th><th scope="col">Purpose</th><th class="bs-table-cell-numeric" scope="col">Selectors</th><th class="bs-table-cell-actions" scope="col">Action</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>.bs-btn</code></th><td>Base button styles</td><td class="bs-table-cell-numeric">18</td><td class="bs-table-cell-actions"><a href="#navigation-title">Review</a></td></tr>
+              <tr><th scope="row"><code>.bs-card</code></th><td>Surface container</td><td class="bs-table-cell-numeric">8</td><td class="bs-table-cell-actions"><a href="#grid-title">Review</a></td></tr>
+            </tbody>
+            <tfoot><tr><th scope="row" colspan="2">Total selectors</th><td class="bs-table-cell-numeric">26</td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <div class="bs-table-responsive bs-mt-4" tabindex="0" role="region" aria-label="Archived components"><table class="bs-table bs-table-borderless bs-table-caption-bottom"><caption>Borderless table with a bottom caption</caption><tbody><tr><td class="bs-table-empty">No archived components</td></tr></tbody></table></div>
+        <nav class="bs-mt-4" aria-label="Component reference pages">
+          <ul class="bs-pagination" data-test-pagination>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title" aria-disabled="true" tabindex="-1">Previous</a></li>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title" aria-current="page">1</a></li>
+            <li class="bs-pagination-item bs-pagination-optional"><a class="bs-pagination-link" href="#table-title">2</a></li>
+            <li class="bs-pagination-item"><span class="bs-pagination-ellipsis" aria-hidden="true">…</span></li>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title">Next</a></li>
+          </ul>
+        </nav>
       </section>
 
       <section aria-labelledby="reference-title" class="bs-mt-8">

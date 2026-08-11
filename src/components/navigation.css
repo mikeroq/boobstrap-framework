@@ -138,6 +138,83 @@
 
 .bs-page-nav-title { font-size: var(--bs-font-size-sm); }
 
+.bs-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--bs-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bs-pagination-item { display: block; }
+
+.bs-pagination-link,
+.bs-pagination-ellipsis {
+  display: inline-grid;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: var(--bs-space-2) var(--bs-space-3);
+  place-items: center;
+  border-radius: var(--bs-radius-sm);
+  font-size: var(--bs-font-size-sm);
+  line-height: 1;
+}
+
+.bs-pagination-link {
+  color: var(--bs-color-text-muted);
+  background: color-mix(in srgb, var(--bs-color-surface) 72%, transparent);
+  border: 1px solid var(--bs-color-border);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    color var(--bs-duration-fast) var(--bs-ease-standard),
+    background var(--bs-duration-fast) var(--bs-ease-standard),
+    border-color var(--bs-duration-fast) var(--bs-ease-standard);
+}
+
+.bs-pagination-link:hover {
+  color: var(--bs-color-text);
+  background: var(--bs-color-surface-hover);
+  border-color: var(--bs-color-border-strong);
+}
+
+.bs-pagination-link[aria-current="page"] {
+  color: var(--bs-color-primary-contrast);
+  background: var(--bs-color-primary);
+  border-color: var(--bs-color-primary);
+}
+
+.bs-pagination-link:is([aria-disabled="true"], :disabled) {
+  color: var(--bs-color-text-subtle);
+  background: transparent;
+  border-color: var(--bs-color-border);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bs-pagination-ellipsis {
+  min-width: 2rem;
+  padding-inline: var(--bs-space-1);
+  color: var(--bs-color-text-subtle);
+}
+
+.bs-pagination-sm :is(.bs-pagination-link, .bs-pagination-ellipsis) {
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: var(--bs-space-1) var(--bs-space-2);
+  font-size: var(--bs-font-size-xs);
+}
+
+.bs-pagination-lg :is(.bs-pagination-link, .bs-pagination-ellipsis) {
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: var(--bs-space-3) var(--bs-space-4);
+  font-size: var(--bs-font-size-md);
+}
+
 .bs-sidebar {
   --bs-sidebar-offset: 0px;
   --bs-sidebar-height: calc(100vh - var(--bs-sidebar-offset));
@@ -559,6 +636,7 @@
 @media (max-width: 36rem) {
   .bs-page-nav { grid-template-columns: 1fr; }
   .bs-page-nav-link:last-child { text-align: start; }
+  .bs-pagination-optional { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

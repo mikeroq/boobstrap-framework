@@ -54,6 +54,12 @@ try {
         const icon = document.querySelector("[data-test-icon]");
         const navLink = document.querySelector("[data-test-nav] [aria-current]");
         const table = document.querySelector("[data-test-table]");
+        const tableElement = table.querySelector(".bs-table");
+        const tableHeader = tableElement.querySelector("thead th");
+        const tableFooter = tableElement.querySelector("tfoot td");
+        const pagination = document.querySelector("[data-test-pagination]");
+        const currentPage = pagination.querySelector('[aria-current="page"]');
+        const optionalPage = pagination.querySelector(".bs-pagination-optional");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -68,6 +74,13 @@ try {
           navBorder: getComputedStyle(navLink).borderLeftColor,
           tableOverflow: getComputedStyle(table).overflowX,
           tableWidth: table.getBoundingClientRect().width,
+          tableMaxHeight: getComputedStyle(table).maxHeight,
+          tableHeaderPosition: getComputedStyle(tableHeader).position,
+          tableFooterWeight: getComputedStyle(tableFooter).fontWeight,
+          tableCellPadding: getComputedStyle(tableElement.querySelector("tbody td")).paddingTop,
+          paginationDisplay: getComputedStyle(pagination).display,
+          paginationCurrentBackground: getComputedStyle(currentPage).backgroundColor,
+          paginationOptionalDisplay: getComputedStyle(optionalPage).display,
         };
       });
 
@@ -77,6 +90,11 @@ try {
       if (metrics.iconWidth <= 0 || metrics.iconStroke === "none") failures.push(`${theme}/${viewport.name}: icon utility did not size or inherit stroke`);
       if (metrics.navDisplay !== "block" || metrics.navBorder === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: current navigation link is not visibly styled`);
       if (metrics.tableOverflow !== "auto" || metrics.tableWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: responsive table escaped its container`);
+      if (metrics.tableHeaderPosition !== "sticky" || Number.parseFloat(metrics.tableMaxHeight) <= 0) failures.push(`${theme}/${viewport.name}: sticky table header contract did not apply`);
+      if (Number.parseFloat(metrics.tableFooterWeight) < 600 || Number.parseFloat(metrics.tableCellPadding) > 9) failures.push(`${theme}/${viewport.name}: table footer or compact density did not apply`);
+      if (metrics.paginationDisplay !== "flex" || metrics.paginationCurrentBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: pagination layout or current-page state did not apply`);
+      if (viewport.name === "mobile" && metrics.paginationOptionalDisplay !== "none") failures.push(`${theme}/${viewport.name}: optional pagination item remained visible`);
+      if (viewport.name === "desktop" && metrics.paginationOptionalDisplay === "none") failures.push(`${theme}/${viewport.name}: optional pagination item was hidden`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
