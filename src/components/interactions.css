@@ -131,13 +131,9 @@
 }
 
 .bs-tabs-pills .bs-tab[aria-selected="true"] {
-  color: #fff;
+  color: var(--bs-color-primary-contrast);
   background: var(--bs-color-primary);
   box-shadow: var(--bs-shadow-sm);
-}
-
-[data-bs-theme="dark"] .bs-tabs-pills .bs-tab[aria-selected="true"] {
-  color: #050205;
 }
 
 .bs-tabs-pills .bs-tab::after,

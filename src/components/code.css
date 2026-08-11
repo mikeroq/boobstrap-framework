@@ -42,8 +42,8 @@
 .bs-code-inline {
   padding: 0.12rem 0.38rem;
   color: var(--bs-color-primary-hover);
-  background: rgb(216 60 135 / 9%);
-  border: 1px solid rgb(216 60 135 / 14%);
+  background: color-mix(in srgb, var(--bs-color-primary) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bs-color-primary) 14%, transparent);
   border-radius: var(--bs-radius-xs);
   font-size: 0.88em;
   white-space: normal;
@@ -66,7 +66,7 @@
 }
 
 .bs-code-action:focus-visible {
-  outline: 2px solid var(--bs-brand-400);
+  outline: 2px solid var(--bs-color-focus-ring);
   outline-offset: 1px;
 }
 
@@ -99,12 +99,12 @@
 
 .bs-code-tab[aria-selected="true"] {
   color: #fff;
-  background: rgb(216 60 135 / 14%);
-  border-color: rgb(216 60 135 / 28%);
+  background: color-mix(in srgb, var(--bs-color-primary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--bs-color-primary) 28%, transparent);
 }
 
 .bs-code-tab:focus-visible {
-  outline: 3px solid var(--bs-brand-400);
+  outline: 3px solid var(--bs-color-focus-ring);
   outline-offset: 1px;
 }
 

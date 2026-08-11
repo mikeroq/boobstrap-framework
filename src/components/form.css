@@ -71,7 +71,7 @@
   outline: none;
   background-color: var(--bs-color-surface-raised);
   border-color: var(--bs-color-primary);
-  box-shadow: 0 0 0 3px rgb(216 60 135 / 22%);
+  box-shadow: 0 0 0 3px var(--bs-color-focus-ring);
 }
 
 .bs-input:disabled,
@@ -351,7 +351,7 @@
   outline: none;
   background: var(--bs-color-surface-raised);
   border-color: var(--bs-color-primary);
-  box-shadow: 0 0 0 3px rgb(216 60 135 / 22%);
+  box-shadow: 0 0 0 3px var(--bs-color-focus-ring);
 }
 
 .bs-combobox { position: relative; width: 100%; }

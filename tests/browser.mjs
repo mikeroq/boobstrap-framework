@@ -27,6 +27,7 @@ const browser = await browserType.launch({ headless: true });
 const failures = [];
 const themeColors = new Map();
 const controlColors = new Map();
+const palettes = ["rose", "violet", "blue", "teal", "amber"];
 
 try {
   for (const theme of ["dark", "light"]) {
@@ -126,6 +127,58 @@ try {
     failures.push(`Light form controls should use a near-white background, received ${controlColors.get("light")}`);
   }
 
+  for (const theme of ["dark", "light"]) {
+    const resolvedPalettes = new Set();
+
+    for (const palette of palettes) {
+      const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+      const page = await context.newPage();
+      await page.goto(baseUrl, { waitUntil: "networkidle" });
+      await page.evaluate(({ activePalette, activeTheme }) => {
+        document.documentElement.dataset.bsPalette = activePalette;
+        document.documentElement.dataset.bsTheme = activeTheme;
+      }, { activePalette: palette, activeTheme: theme });
+
+      const paletteMetrics = await page.evaluate(() => {
+        const rootStyle = getComputedStyle(document.documentElement);
+        const primaryButton = getComputedStyle(document.querySelector(".bs-btn-primary"));
+        return {
+          background: rootStyle.getPropertyValue("--bs-color-background").trim(),
+          primary: rootStyle.getPropertyValue("--bs-color-primary").trim(),
+          focusRing: rootStyle.getPropertyValue("--bs-color-focus-ring").trim(),
+          buttonColor: primaryButton.color,
+          buttonBackground: primaryButton.backgroundImage,
+        };
+      });
+
+      resolvedPalettes.add(`${paletteMetrics.background}|${paletteMetrics.primary}`);
+      if (!paletteMetrics.focusRing || paletteMetrics.buttonBackground === "none") failures.push(`${theme}/${palette}: palette tokens did not resolve through components`);
+      if (paletteMetrics.buttonColor === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${palette}: primary contrast color did not resolve`);
+
+      const accessibility = await new AxeBuilder({ page }).analyze();
+      if (accessibility.violations.length) {
+        failures.push(`${theme}/${palette}: Axe violations: ${accessibility.violations.map((violation) => violation.id).join(", ")}`);
+      }
+      await context.close();
+    }
+
+    if (resolvedPalettes.size !== palettes.length) failures.push(`${theme}: palette presets do not resolve to five distinct color systems`);
+  }
+
+  const radiusContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const radiusPage = await radiusContext.newPage();
+  await radiusPage.goto(baseUrl, { waitUntil: "networkidle" });
+  const radiusMetrics = {};
+  for (const radius of ["rounded", "square"]) {
+    radiusMetrics[radius] = await radiusPage.evaluate((activeRadius) => {
+      document.documentElement.dataset.bsRadius = activeRadius;
+      return [".bs-card", ".bs-btn", ".bs-input", ".bs-tabs-pills"].map((selector) => getComputedStyle(document.querySelector(selector)).borderRadius);
+    }, radius);
+  }
+  if (radiusMetrics.rounded.some((value) => Number.parseFloat(value) <= 0)) failures.push("Rounded radius preset did not retain component corners");
+  if (radiusMetrics.square.some((value) => Number.parseFloat(value) !== 0)) failures.push("Square radius preset did not remove component corners");
+  await radiusContext.close();
+
   const motionContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   const motionPage = await motionContext.newPage();
   await motionPage.goto(baseUrl, { waitUntil: "networkidle" });
@@ -143,5 +196,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Browser contract passed in ${browserName}: dark/light themes, responsive grid, focus, reduced motion, and Axe.`);
+  console.log(`Browser contract passed in ${browserName}: themes, palettes, radius presets, responsive grid, focus, reduced motion, and Axe.`);
 }
