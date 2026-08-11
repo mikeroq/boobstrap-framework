@@ -60,6 +60,10 @@ try {
         const pagination = document.querySelector("[data-test-pagination]");
         const currentPage = pagination.querySelector('[aria-current="page"]');
         const optionalPage = pagination.querySelector(".bs-pagination-optional");
+        const dataTable = document.querySelector("[data-test-datatable]");
+        const dataTableLayout = dataTable.querySelector(".dt-layout-row");
+        const dataTableSearch = dataTable.querySelector('.dt-search input');
+        const dataTableCurrentPage = dataTable.querySelector('[aria-current="page"]');
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -81,6 +85,10 @@ try {
           paginationDisplay: getComputedStyle(pagination).display,
           paginationCurrentBackground: getComputedStyle(currentPage).backgroundColor,
           paginationOptionalDisplay: getComputedStyle(optionalPage).display,
+          dataTableLayoutDisplay: getComputedStyle(dataTableLayout).display,
+          dataTableSearchBackground: getComputedStyle(dataTableSearch).backgroundColor,
+          dataTableCurrentBackground: getComputedStyle(dataTableCurrentPage).backgroundColor,
+          dataTableWidth: dataTable.getBoundingClientRect().width,
         };
       });
 
@@ -95,6 +103,9 @@ try {
       if (metrics.paginationDisplay !== "flex" || metrics.paginationCurrentBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: pagination layout or current-page state did not apply`);
       if (viewport.name === "mobile" && metrics.paginationOptionalDisplay !== "none") failures.push(`${theme}/${viewport.name}: optional pagination item remained visible`);
       if (viewport.name === "desktop" && metrics.paginationOptionalDisplay === "none") failures.push(`${theme}/${viewport.name}: optional pagination item was hidden`);
+      if (metrics.dataTableLayoutDisplay !== (viewport.name === "mobile" ? "grid" : "flex")) failures.push(`${theme}/${viewport.name}: DataTables control layout did not respond`);
+      if (metrics.dataTableSearchBackground === "rgba(0, 0, 0, 0)" || metrics.dataTableCurrentBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: DataTables controls did not resolve themed surfaces`);
+      if (metrics.dataTableWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: DataTables integration escaped its container`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
@@ -156,6 +167,7 @@ try {
         document.documentElement.dataset.bsPalette = activePalette;
         document.documentElement.dataset.bsTheme = activeTheme;
       }, { activePalette: palette, activeTheme: theme });
+      await page.waitForTimeout(500);
 
       const paletteMetrics = await page.evaluate(() => {
         const rootStyle = getComputedStyle(document.documentElement);
@@ -175,7 +187,7 @@ try {
 
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {
-        failures.push(`${theme}/${palette}: Axe violations: ${accessibility.violations.map((violation) => violation.id).join(", ")}`);
+        failures.push(`${theme}/${palette}: Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
       }
       await context.close();
     }
