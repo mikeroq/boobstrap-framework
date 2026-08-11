@@ -136,7 +136,7 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 
 ## What ships
 
-- Dark and light semantic theme tokens
+- Composable dark/light modes, five color palettes, and rounded/square radius presets
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
 - Buttons, cards, badges, comprehensive form controls, alerts, and code windows
@@ -152,18 +152,30 @@ The complete component, class, and design-token reference lives in the [framewor
 
 ## Themes and customization
 
-Dark mode is the default. Set the theme on the document or any subtree:
+Dark mode, the rose palette, and rounded corners are the defaults. Mode, palette, and radius are independent attributes that can be combined on the document or scoped to any subtree:
 
 ```html
-<html data-bs-theme="light">
+<html
+  data-bs-theme="light"
+  data-bs-palette="blue"
+  data-bs-radius="square"
+>
 ```
 
-Override semantic tokens after importing Boobstrap:
+- `data-bs-theme`: `dark` or `light`
+- `data-bs-palette`: `rose`, `violet`, `blue`, `teal`, or `amber`
+- `data-bs-radius`: `rounded` or `square`
+
+Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. The radius presets remap the complete `--bs-radius-*` scale while leaving intrinsic circles such as radio controls and status dots circular.
+
+Preset attributes are optional. Override semantic tokens after importing Boobstrap when a product needs a custom system:
 
 ```css
 :root {
   --bs-color-primary: #6d4aff;
   --bs-color-primary-hover: #8568ff;
+  --bs-color-primary-contrast: #ffffff;
+  --bs-color-focus-ring: rgb(109 74 255 / 30%);
   --bs-radius-md: 0.5rem;
 }
 ```

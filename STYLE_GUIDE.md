@@ -204,6 +204,12 @@ Do not:
 
 Use pink for emphasis rather than everywhere.
 
+### Framework Palette Presets
+
+Rose remains the Boobstrap brand default. Product interfaces may select an accessible preset with `data-bs-palette="rose|violet|blue|teal|amber"`. Palette presets remap semantic color, focus, gradient, and shadow tokens; components must consume those tokens rather than hard-coded brand colors.
+
+Color mode remains independent through `data-bs-theme="dark|light"`. Shape is independently selectable through `data-bs-radius="rounded|square"`; the square preset remaps the radius scale to zero but does not alter intrinsic circles such as radio controls, spinners, or status dots.
+
 ## 4. Typography
 
 ### Interface Font

@@ -17,8 +17,8 @@
 }
 
 .bs-alert-primary {
-  background: rgb(216 60 135 / 8%);
-  border-color: rgb(216 60 135 / 24%);
+  background: color-mix(in srgb, var(--bs-color-primary) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bs-color-primary) 24%, transparent);
 }
 
 .bs-alert-success {
