@@ -64,6 +64,13 @@ try {
         const dataTableLayout = dataTable.querySelector(".dt-layout-row");
         const dataTableSearch = dataTable.querySelector('.dt-search input');
         const dataTableCurrentPage = dataTable.querySelector('[aria-current="page"]');
+        const structuredCard = document.querySelector("[data-test-structured-card]");
+        const cardHeader = structuredCard.querySelector(".bs-card-header");
+        const cardTitle = structuredCard.querySelector(".bs-card-title");
+        const cardDescription = structuredCard.querySelector(".bs-card-description");
+        const cardAction = structuredCard.querySelector(".bs-card-action");
+        const cardContent = structuredCard.querySelector(".bs-card-content");
+        const cardFooter = structuredCard.querySelector(".bs-card-footer");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -89,6 +96,15 @@ try {
           dataTableSearchBackground: getComputedStyle(dataTableSearch).backgroundColor,
           dataTableCurrentBackground: getComputedStyle(dataTableCurrentPage).backgroundColor,
           dataTableWidth: dataTable.getBoundingClientRect().width,
+          cardLayout: getComputedStyle(structuredCard).display,
+          cardHeaderLayout: getComputedStyle(cardHeader).display,
+          cardTitleArea: getComputedStyle(cardTitle).gridArea,
+          cardDescriptionArea: getComputedStyle(cardDescription).gridArea,
+          cardActionArea: getComputedStyle(cardAction).gridArea,
+          cardActionAlignment: getComputedStyle(cardAction).justifySelf,
+          cardContentPaddingInline: getComputedStyle(cardContent).paddingInline,
+          cardFooterLayout: getComputedStyle(cardFooter).display,
+          cardFooterPaddingInline: getComputedStyle(cardFooter).paddingInline,
         };
       });
 
@@ -106,6 +122,9 @@ try {
       if (metrics.dataTableLayoutDisplay !== (viewport.name === "mobile" ? "grid" : "flex")) failures.push(`${theme}/${viewport.name}: DataTables control layout did not respond`);
       if (metrics.dataTableSearchBackground === "rgba(0, 0, 0, 0)" || metrics.dataTableCurrentBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: DataTables controls did not resolve themed surfaces`);
       if (metrics.dataTableWidth > metrics.clientWidth + 1) failures.push(`${theme}/${viewport.name}: DataTables integration escaped its container`);
+      if (metrics.cardLayout !== "flex" || metrics.cardHeaderLayout !== "grid" || metrics.cardFooterLayout !== "flex") failures.push(`${theme}/${viewport.name}: structured card regions did not compose`);
+      if (metrics.cardTitleArea !== "title" || metrics.cardDescriptionArea !== "description" || metrics.cardActionArea !== "action" || metrics.cardActionAlignment !== "end") failures.push(`${theme}/${viewport.name}: card header slots did not align`);
+      if (metrics.cardContentPaddingInline === "0px" || metrics.cardContentPaddingInline !== metrics.cardFooterPaddingInline) failures.push(`${theme}/${viewport.name}: card content and footer spacing did not share the region contract`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
