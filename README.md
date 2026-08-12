@@ -121,12 +121,15 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
     <main class="bs-container bs-section">
       <div class="bs-grid bs-gap-4">
         <article class="bs-card bs-col-12 bs-col-md-6">
-          <div class="bs-card-body">
-            <span class="bs-badge bs-badge-primary">Boobstrap</span>
-            <h1 class="bs-card-title bs-mt-4">Look good. Ship fast.</h1>
-            <p class="bs-card-text">Thoughtful defaults, ready to customize.</p>
+          <header class="bs-card-header">
+            <h1 class="bs-card-title">Look good. Ship fast.</h1>
+            <p class="bs-card-description">Thoughtful defaults, ready to customize.</p>
+            <span class="bs-badge bs-badge-primary bs-card-action">Boobstrap</span>
+          </header>
+          <div class="bs-card-content">Build a polished interface from semantic, composable regions.</div>
+          <footer class="bs-card-footer">
             <button class="bs-btn bs-btn-primary" type="button">Get started</button>
-          </div>
+          </footer>
         </article>
       </div>
     </main>
