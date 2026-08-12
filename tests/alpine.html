@@ -42,6 +42,19 @@
         </div>
       </section>
 
+      <section x-data="bsDialog" aria-label="Alpine dialog example">
+        <button class="bs-btn bs-btn-primary" id="alpine-dialog-toggle" type="button" x-bind="trigger" aria-controls="alpine-dialog">Open dialog</button>
+        <dialog class="bs-dialog bs-dialog-sm" id="alpine-dialog" x-ref="dialog" x-bind="panel" aria-labelledby="alpine-dialog-title">
+          <header class="bs-dialog-header">
+            <h2 class="bs-dialog-title" id="alpine-dialog-title">Alpine dialog</h2>
+            <p class="bs-dialog-description">Reactive state with native dialog semantics.</p>
+            <button class="bs-dialog-close" type="button" x-bind="dismiss" aria-label="Close Alpine dialog">×</button>
+          </header>
+          <div class="bs-dialog-body">Adapter-controlled content.</div>
+          <footer class="bs-dialog-footer"><button class="bs-btn bs-btn-primary" type="button" x-bind="dismiss">Done</button></footer>
+        </dialog>
+      </section>
+
       <section aria-label="Alpine dropdown example">
         <div class="bs-dropdown" x-data="bsDropdown" x-bind="root" data-test-dropdown>
           <button
@@ -64,6 +77,21 @@
             <button class="bs-dropdown-item" type="button" role="menuitem">Edit</button>
             <button class="bs-dropdown-item" type="button" role="menuitem" disabled>Archive</button>
             <button class="bs-dropdown-item" type="button" role="menuitem">Duplicate</button>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Alpine combobox example">
+        <label class="bs-label" for="alpine-role-input">Role</label>
+        <div class="bs-combobox" x-data="bsCombobox" x-bind="root">
+          <input class="bs-combobox-input" id="alpine-role-input" x-bind="input" data-bs-combobox-input placeholder="Search roles" />
+          <button class="bs-combobox-toggle" x-bind="toggleButton" data-bs-combobox-toggle aria-label="Toggle roles"></button>
+          <input type="hidden" name="role" data-bs-combobox-value />
+          <div class="bs-combobox-listbox" x-bind="listbox" data-bs-combobox-listbox hidden>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="designer">Designer</div>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
+            <div class="bs-combobox-option" x-bind="option" data-bs-combobox-option data-bs-value="founder" aria-disabled="true">Founder</div>
+            <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
           </div>
         </div>
       </section>

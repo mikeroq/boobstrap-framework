@@ -7,15 +7,26 @@
     <link rel="stylesheet" href="/dist/boobstrap.css" />
   </head>
   <body>
-    <header class="bs-container bs-py-4 bs-flex bs-items-center bs-justify-between">
-      <strong>Boobstrap</strong>
-      <span class="bs-badge bs-badge-primary">v0.3.1</span>
-      <svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true" data-test-icon><path d="M12 3v18m9-9H3" /></svg>
+    <header class="bs-navbar bs-container">
+      <a class="bs-navbar-brand" href="#main">Boobstrap</a>
+      <nav aria-label="Primary"><a class="bs-navbar-link" href="#components">Components</a></nav>
+      <button class="bs-navbar-toggle" type="button" aria-label="Open menu"><svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true" data-test-icon><path d="M12 3v18m9-9H3" /></svg></button>
     </header>
 
-    <main class="bs-container bs-section">
+    <main class="bs-container bs-section" id="main">
       <h1 class="bs-display bs-text-gradient bs-mb-4">Browser contract</h1>
       <p class="bs-lead">A semantic fixture exercising the public component and layout surface.</p>
+
+      <nav class="bs-breadcrumb bs-mt-4" aria-label="Breadcrumb"><a href="#main">Docs</a><span aria-hidden="true">/</span><span>Components</span></nav>
+
+      <section aria-labelledby="navigation-title" class="bs-mt-8" id="components">
+        <h2 id="navigation-title">Navigation</h2>
+        <nav class="bs-nav" aria-label="Component navigation" data-test-nav>
+          <span class="bs-nav-heading">Components</span>
+          <a class="bs-nav-link" href="#grid-title" aria-current="page">Cards</a>
+          <a class="bs-nav-link bs-nav-link-subitem" href="#code-title">Code</a>
+        </nav>
+      </section>
 
       <section aria-labelledby="grid-title" class="bs-mt-8">
         <h2 id="grid-title">Responsive grid</h2>
@@ -35,6 +46,21 @@
             </div>
           </article>
         </div>
+        <article class="bs-card bs-card-raised bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
+          <header class="bs-card-header">
+            <h3 class="bs-card-title" id="structured-card-title">Workspace usage</h3>
+            <p class="bs-card-description">Review current storage and manage plan capacity.</p>
+            <button class="bs-btn bs-btn-ghost bs-btn-sm bs-card-action" type="button">Manage</button>
+          </header>
+          <div class="bs-card-content">
+            <strong>68 GB of 100 GB</strong>
+            <p class="bs-card-text bs-mb-0">Storage resets on the first day of each month.</p>
+          </div>
+          <footer class="bs-card-footer">
+            <button class="bs-btn bs-btn-primary bs-btn-sm" type="button">Upgrade plan</button>
+            <button class="bs-btn bs-btn-secondary bs-btn-sm" type="button">View usage</button>
+          </footer>
+        </article>
       </section>
 
       <section aria-labelledby="form-title" class="bs-mt-8">
@@ -52,6 +78,49 @@
             <label class="bs-label" for="message">Message</label>
             <textarea class="bs-textarea" id="message" name="message"></textarea>
           </div>
+          <div class="bs-form-row">
+            <div class="bs-form-group">
+              <label class="bs-label" for="small-input">Small input</label>
+              <input class="bs-input bs-input-sm" id="small-input" name="small" />
+            </div>
+            <div class="bs-form-group">
+              <label class="bs-label" for="large-input">Large input</label>
+              <input class="bs-input bs-input-lg" id="large-input" name="large" />
+            </div>
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="website">Website <span class="bs-label-optional">Optional</span></label>
+            <div class="bs-input-group" data-test-input-group>
+              <span class="bs-input-group-text">https://</span>
+              <input class="bs-input" id="website" name="website" placeholder="example.com" />
+              <button class="bs-btn bs-btn-secondary" type="button">Check</button>
+            </div>
+            <span class="bs-form-text">Use a public hostname.</span>
+          </div>
+          <div class="bs-form-group">
+            <label class="bs-label" for="search-input">Search</label>
+            <div class="bs-input-wrap">
+              <svg class="bs-input-icon bs-input-icon-start" data-test-input-icon viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle><path d="m21 21-4.35-4.35" fill="none" stroke="currentColor"></path></svg>
+              <input class="bs-input bs-input-has-icon-start" id="search-input" name="search" type="search" />
+            </div>
+          </div>
+          <div class="bs-form-row">
+            <div class="bs-form-group">
+              <label class="bs-label" for="event-date">Date</label>
+              <input class="bs-input" id="event-date" name="date" type="date" />
+            </div>
+            <div class="bs-form-group">
+              <label class="bs-label" for="event-time">Time</label>
+              <input class="bs-input" id="event-time" name="time" type="time" />
+            </div>
+          </div>
+          <fieldset class="bs-check-group">
+            <legend class="bs-label">Preferences</legend>
+            <label class="bs-check"><input class="bs-check-input" type="checkbox" name="updates" checked /><span class="bs-check-label">Product updates</span><span class="bs-check-description">Occasional release notes.</span></label>
+            <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" checked /><span class="bs-check-label">Monthly</span></label>
+            <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" /><span class="bs-check-label">Yearly</span></label>
+            <label class="bs-check bs-switch"><input class="bs-check-input" type="checkbox" name="alerts" /><span class="bs-check-label">Security alerts</span></label>
+          </fieldset>
         </form>
       </section>
 
@@ -64,10 +133,74 @@
       <section aria-labelledby="code-title" class="bs-mt-8">
         <h2 id="code-title">Code sample</h2>
         <div class="bs-code-window">
-          <div class="bs-code-toolbar"><div class="bs-code-dots" aria-hidden="true"><span class="bs-code-dot"></span><span class="bs-code-dot"></span><span class="bs-code-dot"></span></div><span>example.html</span></div>
+          <div class="bs-code-header"><span>example.html</span><button class="bs-code-action" type="button">Copy</button></div>
+          <div class="bs-code-tabs" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
           <pre class="bs-code-body bs-m-0"><span class="bs-code-tag">&lt;button</span> <span class="bs-code-attribute">class</span>=<span class="bs-code-string">"bs-btn"</span><span class="bs-code-tag">&gt;</span>Ship<span class="bs-code-tag">&lt;/button&gt;</span></pre>
         </div>
       </section>
+
+      <section aria-labelledby="tabs-title" class="bs-mt-8">
+        <h2 id="tabs-title">Tab variants</h2>
+        <div class="bs-tabs bs-tabs-pills" role="tablist" aria-label="Package manager"><button class="bs-tab" role="tab" type="button" aria-selected="true">npm</button><button class="bs-tab" role="tab" type="button" aria-selected="false">pnpm</button></div>
+        <div class="bs-tabs bs-tabs-contained bs-mt-4" role="tablist" aria-label="Framework"><button class="bs-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-tab" role="tab" type="button" aria-selected="false">React</button></div>
+        <div class="bs-tab-panel bs-tab-panel-contained"><code class="bs-code-inline">npm install @boobstrap/boobstrap</code></div>
+      </section>
+
+      <section aria-labelledby="table-title" class="bs-mt-8">
+        <h2 id="table-title">Reference table</h2>
+        <div class="bs-table-responsive bs-table-sticky-header" tabindex="0" role="region" aria-label="Component reference" data-test-table>
+          <table class="bs-table bs-table-striped bs-table-hover bs-table-bordered bs-table-compact">
+            <caption>Public component classes</caption>
+            <thead><tr><th scope="col" aria-sort="ascending"><button class="bs-table-sort" type="button">Class</button></th><th scope="col">Purpose</th><th class="bs-table-cell-numeric" scope="col">Selectors</th><th class="bs-table-cell-actions" scope="col">Action</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>.bs-btn</code></th><td>Base button styles</td><td class="bs-table-cell-numeric">18</td><td class="bs-table-cell-actions"><a href="#navigation-title">Review</a></td></tr>
+              <tr><th scope="row"><code>.bs-card</code></th><td>Surface container</td><td class="bs-table-cell-numeric">8</td><td class="bs-table-cell-actions"><a href="#grid-title">Review</a></td></tr>
+            </tbody>
+            <tfoot><tr><th scope="row" colspan="2">Total selectors</th><td class="bs-table-cell-numeric">26</td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <div class="bs-table-responsive bs-mt-4" tabindex="0" role="region" aria-label="Archived components"><table class="bs-table bs-table-borderless bs-table-caption-bottom"><caption>Borderless table with a bottom caption</caption><tbody><tr><td class="bs-table-empty">No archived components</td></tr></tbody></table></div>
+        <nav class="bs-mt-4" aria-label="Component reference pages">
+          <ul class="bs-pagination" data-test-pagination>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title" aria-disabled="true" tabindex="-1">Previous</a></li>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title" aria-current="page">1</a></li>
+            <li class="bs-pagination-item bs-pagination-optional"><a class="bs-pagination-link" href="#table-title">2</a></li>
+            <li class="bs-pagination-item"><span class="bs-pagination-ellipsis" aria-hidden="true">…</span></li>
+            <li class="bs-pagination-item"><a class="bs-pagination-link" href="#table-title">Next</a></li>
+          </ul>
+        </nav>
+      </section>
+
+      <section aria-labelledby="reference-title" class="bs-mt-8">
+        <h2 id="reference-title">Reference list</h2>
+        <div class="bs-reference-list"><div class="bs-reference-row"><code class="bs-reference-name">--bs-color-primary</code><span class="bs-reference-value">#d83c87</span></div><div class="bs-reference-row"><code class="bs-reference-name">--bs-space-4</code><span class="bs-reference-value">1rem</span></div></div>
+        <ul class="bs-checklist bs-mt-4"><li>Keyboard accessible</li><li>Theme aware</li></ul>
+      </section>
+
+      <section aria-labelledby="datatable-title" class="bs-mt-8">
+        <h2 id="datatable-title">DataTables integration</h2>
+        <div class="bs-datatable" data-test-datatable>
+          <div class="dt-container">
+            <div class="dt-layout-row">
+              <div class="dt-layout-cell dt-layout-start"><div class="dt-length"><label for="dt-length-test">Rows</label><select class="dt-input" id="dt-length-test"><option>5</option><option>10</option></select></div></div>
+              <div class="dt-layout-cell dt-layout-end"><div class="dt-search"><label for="dt-search-test">Search</label><input class="dt-input" id="dt-search-test" type="search" /></div></div>
+            </div>
+            <div class="dt-layout-row dt-layout-table"><div class="dt-layout-cell dt-layout-full" role="region" tabindex="0" aria-label="Customer records">
+              <table class="dataTable bs-table bs-table-striped bs-table-hover">
+                <caption>Customer records</caption>
+                <thead><tr><th class="dt-orderable-asc dt-orderable-desc dt-ordering-asc" scope="col" aria-sort="ascending"><div class="dt-column-header"><span class="dt-column-title">Name</span><span class="dt-column-order" role="button" tabindex="0" aria-label="Name: activate to invert sorting"></span></div></th><th class="dt-type-numeric" scope="col"><div class="dt-column-header"><span class="dt-column-title">Seats</span><span class="dt-column-order"></span></div></th></tr></thead>
+                <tbody><tr><th scope="row">Avery Morgan</th><td class="dt-type-numeric">12</td></tr><tr><th scope="row">Kai Patel</th><td class="dt-type-numeric">8</td></tr></tbody>
+              </table>
+            </div></div>
+            <div class="dt-layout-row">
+              <div class="dt-layout-cell dt-layout-start"><div class="dt-info" role="status">Showing 1 to 2 of 12 customers</div></div>
+              <div class="dt-layout-cell dt-layout-end"><nav class="dt-paging" aria-label="pagination"><button class="dt-paging-button disabled" type="button" aria-disabled="true">Previous</button><button class="dt-paging-button current" type="button" aria-current="page">1</button><button class="dt-paging-button" type="button">2</button><button class="dt-paging-button" type="button">Next</button></nav></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="bs-page-nav bs-mt-8" aria-label="Adjacent pages"><a class="bs-page-nav-link" href="#navigation-title"><span class="bs-page-nav-context">Previous</span><strong class="bs-page-nav-title">Navigation</strong></a><a class="bs-page-nav-link" href="#table-title"><span class="bs-page-nav-context">Next</span><strong class="bs-page-nav-title">Tables</strong></a></nav>
     </main>
   </body>
 </html>

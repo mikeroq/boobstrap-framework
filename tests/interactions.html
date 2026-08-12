@@ -6,12 +6,44 @@
     <link rel="stylesheet" href="/dist/boobstrap.css" />
     <title>Boobstrap interaction contract</title>
     <style>
-      body { padding: 2rem; }
-      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; }
+      main { display: grid; gap: 2rem; max-width: 42rem; margin-inline: auto; padding: 2rem; }
     </style>
   </head>
   <body>
-    <main>
+    <div class="bs-banner bs-banner-warning" id="framework-banner" role="status" data-bs-banner>
+      <div class="bs-banner-inner">
+        <svg class="bs-banner-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"></path><path d="M12 9v5M12 18h.01"></path></svg>
+        <div class="bs-banner-content">
+          <strong class="bs-banner-title">Development environment</strong>
+          <span class="bs-banner-message">Changes here may be incomplete.</span>
+        </div>
+        <a class="bs-banner-action" href="#live">View live site</a>
+        <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss development banner">×</button>
+      </div>
+    </div>
+    <button class="bs-sidebar-trigger" id="sidebar-toggle" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar" aria-label="Toggle navigation">☰</button>
+    <div class="bs-sidebar-layout">
+    <aside class="bs-sidebar bs-sidebar-start bs-sidebar-drawer bs-sidebar-collapsible" id="navigation-sidebar" data-bs-sidebar data-bs-sidebar-collapse="icon" data-bs-sidebar-shortcut="b" data-bs-state="closed" aria-label="Documentation navigation">
+      <div class="bs-sidebar-header">
+        <strong class="bs-sidebar-label">Boobstrap</strong>
+        <button class="bs-btn bs-btn-secondary" type="button" data-bs-sidebar-dismiss>Close navigation</button>
+      </div>
+      <div class="bs-sidebar-content">
+        <nav class="bs-sidebar-group" aria-label="Documentation sections">
+          <div class="bs-sidebar-group-label">Documentation</div>
+          <div class="bs-sidebar-group-content">
+            <ul class="bs-sidebar-menu">
+              <li class="bs-sidebar-menu-item"><a class="bs-sidebar-menu-button" href="#collapse-heading" data-bs-sidebar-close><span aria-hidden="true">◆</span><span class="bs-sidebar-label">Interaction contract</span></a></li>
+              <li class="bs-sidebar-menu-item"><a class="bs-sidebar-menu-button" href="#account-tabs-label"><span aria-hidden="true">◆</span><span class="bs-sidebar-label">Account tabs</span><span class="bs-sidebar-menu-badge">2</span></a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div class="bs-sidebar-footer"><span class="bs-sidebar-label">Signed in</span></div>
+      <button class="bs-sidebar-rail" type="button" data-bs-toggle="sidebar" aria-controls="navigation-sidebar" aria-label="Toggle navigation width"></button>
+    </aside>
+    <button class="bs-sidebar-backdrop" type="button" data-bs-sidebar-dismiss aria-controls="navigation-sidebar" aria-label="Close navigation"></button>
+    <main class="bs-sidebar-main">
       <section aria-label="Loading button example">
         <button
           class="bs-btn bs-btn-primary"
@@ -39,6 +71,45 @@
           <div class="bs-card-body">Collapsible details</div>
         </div>
       </section>
+
+      <section aria-label="Dialog examples">
+        <button class="bs-btn bs-btn-primary" id="modal-toggle" type="button" data-bs-toggle="dialog" aria-controls="settings-modal">Open settings</button>
+        <button class="bs-btn bs-btn-secondary" id="drawer-toggle" type="button" data-bs-toggle="dialog" aria-controls="activity-drawer">Open activity</button>
+      </section>
+
+      <dialog class="bs-dialog bs-dialog-sm bs-dialog-height-sm" id="settings-modal" data-bs-dialog data-bs-dialog-close-on-backdrop="false" aria-labelledby="settings-modal-title" aria-describedby="settings-modal-description">
+        <header class="bs-dialog-header">
+          <h2 class="bs-dialog-title" id="settings-modal-title">Workspace settings</h2>
+          <p class="bs-dialog-description" id="settings-modal-description">Update the defaults for this workspace.</p>
+          <button class="bs-dialog-close" type="button" data-bs-dialog-dismiss aria-label="Close settings">×</button>
+        </header>
+        <div class="bs-dialog-body">
+          <label class="bs-label" for="workspace-name">Workspace name</label>
+          <input class="bs-input" id="workspace-name" value="Acme" />
+        </div>
+        <footer class="bs-dialog-footer">
+          <button class="bs-btn bs-btn-secondary" type="button" data-bs-dialog-dismiss>Cancel</button>
+          <button class="bs-btn bs-btn-primary" type="button">Save changes</button>
+        </footer>
+      </dialog>
+
+      <dialog class="bs-drawer bs-drawer-end bs-drawer-sm" id="activity-drawer" data-bs-dialog aria-labelledby="activity-drawer-title" aria-describedby="activity-drawer-description">
+        <header class="bs-drawer-header">
+          <h2 class="bs-drawer-title" id="activity-drawer-title">Recent activity</h2>
+          <p class="bs-drawer-description" id="activity-drawer-description">Changes from the last seven days.</p>
+          <button class="bs-drawer-close" type="button" data-bs-dialog-dismiss aria-label="Close activity">×</button>
+        </header>
+        <div class="bs-drawer-body">
+          <ol style="min-block-size: 80rem">
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+          </ol>
+        </div>
+        <footer class="bs-drawer-footer"><button class="bs-btn bs-btn-primary" type="button">View all activity</button></footer>
+      </dialog>
 
       <section aria-label="Dropdown example">
         <div class="bs-dropdown" data-bs-dropdown>
@@ -74,13 +145,55 @@
         <div class="bs-tab-panel" id="billing-panel" role="tabpanel" aria-labelledby="billing-tab" hidden>Billing settings</div>
         <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" hidden>Security settings</div>
       </section>
+
+      <section aria-labelledby="combobox-label">
+        <label class="bs-label" id="combobox-label" for="framework-combobox-input">Role</label>
+        <div class="bs-combobox" data-bs-combobox>
+          <input class="bs-combobox-input" id="framework-combobox-input" data-bs-combobox-input placeholder="Search roles" />
+          <button class="bs-combobox-toggle" type="button" data-bs-combobox-toggle aria-label="Toggle roles"></button>
+          <input type="hidden" name="role" data-bs-combobox-value />
+          <div class="bs-combobox-listbox" data-bs-combobox-listbox hidden>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="designer">Designer</div>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
+            <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="founder" aria-disabled="true">Founder</div>
+            <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bs-form-group" data-bs-password>
+        <label class="bs-label" for="framework-password">Password</label>
+        <div class="bs-input-wrap">
+          <input class="bs-input bs-input-has-icon-end" id="framework-password" type="password" data-bs-password-input />
+          <button class="bs-input-action" type="button" data-bs-password-toggle><span data-bs-password-label>Show password</span></button>
+        </div>
+      </section>
+
+      <section class="bs-form-group">
+        <label class="bs-label" for="framework-phone">Phone</label>
+        <input class="bs-input" id="framework-phone" type="tel" data-bs-mask="(999) 999-9999" />
+      </section>
+
+      <section class="bs-form-group">
+        <span class="bs-label" id="otp-label">Verification code</span>
+        <div class="bs-otp" data-bs-otp aria-labelledby="otp-label">
+          <input class="bs-otp-input" aria-label="Digit 1" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 2" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 3" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 4" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 5" data-bs-otp-input />
+          <input class="bs-otp-input" aria-label="Digit 6" data-bs-otp-input />
+          <input type="hidden" name="verification_code" data-bs-otp-value />
+        </div>
+      </section>
     </main>
+    </div>
 
     <script type="module">
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

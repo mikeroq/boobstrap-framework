@@ -31,14 +31,14 @@
 }
 
 .bs-btn-primary {
-  color: var(--bs-white);
+  color: var(--bs-color-primary-contrast);
   background: var(--bs-gradient-brand);
   border-color: rgb(255 255 255 / 8%);
   box-shadow: var(--bs-shadow-brand), inset 0 1px rgb(255 255 255 / 20%);
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
-  box-shadow: 0 14px 38px rgb(216 60 135 / 32%), inset 0 1px rgb(255 255 255 / 22%);
+  box-shadow: 0 14px 38px color-mix(in srgb, var(--bs-color-primary) 32%, transparent), inset 0 1px rgb(255 255 255 / 22%);
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
@@ -57,7 +57,7 @@
 
 .bs-btn-secondary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
   background: var(--bs-color-surface-hover);
-  border-color: rgb(234 90 159 / 55%);
+  border-color: color-mix(in srgb, var(--bs-color-primary) 55%, transparent);
 }
 
 .bs-btn-secondary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
@@ -180,8 +180,10 @@
 .bs-btn[data-bs-state="loading"] .bs-btn-spinner {
   position: absolute;
   display: inline-block;
-  inset: 0;
-  margin: auto;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  margin: 0;
+  translate: -50% -50%;
 }
 
 @keyframes bs-spinner {

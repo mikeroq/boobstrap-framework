@@ -31,7 +31,24 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+
+## Dialog or drawer
+
+```html
+<div x-data="bsDialog">
+  <button class="bs-btn" type="button" x-bind="trigger" aria-controls="account-drawer">Account</button>
+  <dialog class="bs-drawer bs-drawer-end" id="account-drawer" x-ref="dialog" x-bind="panel" aria-labelledby="account-drawer-title">
+    <header class="bs-drawer-header">
+      <h2 class="bs-drawer-title" id="account-drawer-title">Account</h2>
+      <button class="bs-drawer-close" type="button" x-bind="dismiss" aria-label="Close account drawer">×</button>
+    </header>
+    <div class="bs-drawer-body">Drawer content</div>
+  </dialog>
+</div>
+```
+
+Use `.bs-dialog` instead of `.bs-drawer` for a centered modal. The provider exposes `show()`, `hide()`, and `toggle()`, works in the standard and strict-CSP builds, restores focus, and honors `data-bs-dialog-close-on-backdrop="false"`.
 
 ## Loading button
 
@@ -50,5 +67,9 @@ The plugin registers `bsButton`, `bsCollapse`, `bsDropdown`, and `bsTabs` data p
 ```
 
 The button enters loading state on click. Call `stop()` when the asynchronous action settles.
+
+## Searchable combobox
+
+Initialize the component with `x-data="bsCombobox" x-bind="root"`. Apply `x-bind="input"`, `x-bind="toggleButton"`, `x-bind="listbox"`, and `x-bind="option"` to the matching Boobstrap combobox elements. Filtering, active-option navigation, selection, dismissal, hidden-input synchronization, and lifecycle events work in both standard Alpine and strict-CSP builds.
 
 See the [Boobstrap interaction contract](https://boobstrap.org/docs#alpine) for complete markup and behavior guidance.

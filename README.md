@@ -2,7 +2,7 @@
 
 **A cheeky CSS framework that still means business.**
 
-Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. Version 0.2 provides themeable foundations, responsive layout primitives, components, focused utilities, and optional behavior layers under a predictable `bs-` prefix.
+Boobstrap is a lightweight, class-based CSS framework for polished interfaces without a required JavaScript runtime. It provides themeable foundations, responsive layout primitives, components, focused utilities, and optional behavior layers under a predictable `bs-` prefix.
 
 [Documentation](https://boobstrap.org/docs) · [Live site](https://boobstrap.org) · [npm](https://www.npmjs.com/package/@boobstrap/boobstrap) · [Issues](https://github.com/mikeroq/boobstrap-framework/issues)
 
@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.3.1/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.4.0/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS currently provides loading button, collapse, dropdown, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Component-level imports are available at `/js/button`, `/js/collapse`, `/js/dropdown`, and `/js/tabs`.
+Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, composable sidebar, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -121,12 +121,15 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
     <main class="bs-container bs-section">
       <div class="bs-grid bs-gap-4">
         <article class="bs-card bs-col-12 bs-col-md-6">
-          <div class="bs-card-body">
-            <span class="bs-badge bs-badge-primary">Boobstrap</span>
-            <h1 class="bs-card-title bs-mt-4">Look good. Ship fast.</h1>
-            <p class="bs-card-text">Thoughtful defaults, ready to customize.</p>
+          <header class="bs-card-header">
+            <h1 class="bs-card-title">Look good. Ship fast.</h1>
+            <p class="bs-card-description">Thoughtful defaults, ready to customize.</p>
+            <span class="bs-badge bs-badge-primary bs-card-action">Boobstrap</span>
+          </header>
+          <div class="bs-card-content">Build a polished interface from semantic, composable regions.</div>
+          <footer class="bs-card-footer">
             <button class="bs-btn bs-btn-primary" type="button">Get started</button>
-          </div>
+          </footer>
         </article>
       </div>
     </main>
@@ -134,14 +137,20 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 </html>
 ```
 
-## What ships in v0.2
+## What ships
 
-- Dark and light semantic theme tokens
+- Composable dark/light modes, five color palettes, and rounded/square radius presets
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
-- Buttons, cards, badges, forms, alerts, and code windows
+- Buttons, cards, badges, comprehensive form controls, alerts, and code windows
+- Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
-- Optional loading button, collapse, dropdown, and tabs styles and dependency-free controllers
+- A composable sidebar shell with groups, nested menus, badges, loading states, mobile drawers, and desktop collapse modes
+- Native modal dialogs and start/end drawers with composable regions, scroll containment, sizing, focus restoration, and optional backdrop dismissal
+- Semantic data tables with striped, hover, bordered, borderless, compact, sticky-header, sortable-header, footer, numeric, action, and empty-state treatments
+- Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
+- A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
+- Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, and tabs controllers
 - Official Alpine and React adapters with framework-owned state
 - Display, flex, sizing, positioning, spacing, and typography utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
@@ -150,18 +159,30 @@ The complete component, class, and design-token reference lives in the [framewor
 
 ## Themes and customization
 
-Dark mode is the default. Set the theme on the document or any subtree:
+Dark mode, the rose palette, and rounded corners are the defaults. Mode, palette, and radius are independent attributes that can be combined on the document or scoped to any subtree:
 
 ```html
-<html data-bs-theme="light">
+<html
+  data-bs-theme="light"
+  data-bs-palette="blue"
+  data-bs-radius="square"
+>
 ```
 
-Override semantic tokens after importing Boobstrap:
+- `data-bs-theme`: `dark` or `light`
+- `data-bs-palette`: `rose`, `violet`, `blue`, `teal`, or `amber`
+- `data-bs-radius`: `rounded` or `square`
+
+Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. The radius presets remap the complete `--bs-radius-*` scale while leaving intrinsic circles such as radio controls and status dots circular.
+
+Preset attributes are optional. Override semantic tokens after importing Boobstrap when a product needs a custom system:
 
 ```css
 :root {
   --bs-color-primary: #6d4aff;
   --bs-color-primary-hover: #8568ff;
+  --bs-color-primary-contrast: #ffffff;
+  --bs-color-focus-ring: rgb(109 74 255 / 30%);
   --bs-radius-md: 0.5rem;
 }
 ```
@@ -173,6 +194,8 @@ The release test matrix covers current Chromium, Firefox, and WebKit engines at 
 Legacy browsers are not a target. Boobstrap uses modern CSS features including custom properties, Grid, `clamp()`, and modern color syntax.
 
 ## Development
+
+Feature work targets the `dev` branch and is exercised by the website's hosted dev environment without publishing interim npm versions. See [DEVELOPMENT.md](DEVELOPMENT.md) for the cross-repository integration and release flow.
 
 ```bash
 git clone https://github.com/mikeroq/boobstrap-framework.git
@@ -199,7 +222,7 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 
 ### v0.2 — Interaction foundation (shipped)
 
-- Dependency-free collapse, dropdown, and tabs controllers
+- Dependency-free collapse, dropdown, responsive sidebar, and tabs controllers
 - Shared state, event, keyboard, and accessibility contract
 - Official Alpine and React adapters
 

@@ -1,9 +1,9 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
 
 window.bsEvents = [];
-for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
   document.addEventListener(name, (event) => window.bsEvents.push({ name, adapter: event.detail.adapter }));
 }
 
@@ -46,6 +46,24 @@ function ControlledCollapseExample() {
   );
 }
 
+function DialogExample() {
+  const dialog = useDialog({ id: "react-dialog" });
+  return (
+    <section aria-label="React dialog example">
+      <button id="react-dialog-toggle" className="bs-btn bs-btn-primary" {...dialog.getTriggerProps()}>Open dialog</button>
+      <dialog className="bs-dialog bs-dialog-sm" aria-labelledby="react-dialog-title" {...dialog.getDialogProps()}>
+        <header className="bs-dialog-header">
+          <h2 className="bs-dialog-title" id="react-dialog-title">React dialog</h2>
+          <p className="bs-dialog-description">Controlled with a reusable hook.</p>
+          <button className="bs-dialog-close" aria-label="Close React dialog" {...dialog.getDismissProps()}>×</button>
+        </header>
+        <div className="bs-dialog-body">Hook-controlled content.</div>
+        <footer className="bs-dialog-footer"><button className="bs-btn bs-btn-primary" {...dialog.getDismissProps()}>Done</button></footer>
+      </dialog>
+    </section>
+  );
+}
+
 function DropdownExample() {
   const dropdown = useDropdown({ id: "react-actions-menu" });
   return (
@@ -56,6 +74,32 @@ function DropdownExample() {
           <button className="bs-dropdown-item" type="button" role="menuitem">Edit</button>
           <button className="bs-dropdown-item" type="button" role="menuitem" aria-disabled="true">Archive</button>
           <button className="bs-dropdown-item" type="button" role="menuitem">Duplicate</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const roles = [
+  { value: "designer", label: "Designer" },
+  { value: "engineer", label: "Engineer" },
+  { value: "founder", label: "Founder", disabled: true },
+];
+
+function ComboboxExample() {
+  const combobox = useCombobox({ options: roles });
+  return (
+    <section aria-label="React combobox example">
+      <label className="bs-label" htmlFor="react-role-input">Role</label>
+      <div className="bs-combobox" {...combobox.getRootProps()}>
+        <input id="react-role-input" className="bs-combobox-input" placeholder="Search roles" {...combobox.getInputProps()} />
+        <button className="bs-combobox-toggle" {...combobox.getToggleProps()} />
+        <input id="react-role-value" type="hidden" name="role" value={combobox.value} readOnly />
+        <div className="bs-combobox-listbox" {...combobox.getListboxProps()}>
+          {combobox.filteredOptions.map((option, index) => (
+            <div className="bs-combobox-option" key={option.value} {...combobox.getOptionProps(option, index)}>{option.label}</div>
+          ))}
+          {!combobox.filteredOptions.length && <div className="bs-combobox-empty">No roles found</div>}
         </div>
       </div>
     </section>
@@ -85,7 +129,9 @@ function App() {
       <LoadingButtonExample />
       <CollapseExample />
       <ControlledCollapseExample />
+      <DialogExample />
       <DropdownExample />
+      <ComboboxExample />
       <TabsExample />
     </>
   );

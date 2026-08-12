@@ -48,12 +48,12 @@ a {
 }
 
 ::selection {
-  color: var(--bs-white);
+  color: var(--bs-color-primary-contrast);
   background: var(--bs-brand-600);
 }
 
 :focus-visible {
-  outline: 3px solid rgb(234 90 159 / 42%);
+  outline: 3px solid var(--bs-color-focus-ring);
   outline-offset: 3px;
 }
 

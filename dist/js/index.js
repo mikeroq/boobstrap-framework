@@ -1,18 +1,39 @@
 export { Button, initButtons } from "./button.js";
+export { Banner, initBanners } from "./banner.js";
 export { Collapse, initCollapses } from "./collapse.js";
+export { Combobox, initComboboxes } from "./combobox.js";
 export { Dropdown, initDropdowns } from "./dropdown.js";
+export { Dialog, initDialogs } from "./dialog.js";
+export { formatMask, InputMask, initInputMasks } from "./input-mask.js";
+export { Otp, initOtps } from "./otp.js";
+export { Password, initPasswords } from "./password.js";
+export { Sidebar, initSidebars } from "./sidebar.js";
 export { Tabs, initTabs } from "./tabs.js";
 
 import { initButtons } from "./button.js";
+import { initBanners } from "./banner.js";
 import { initCollapses } from "./collapse.js";
+import { initComboboxes } from "./combobox.js";
 import { initDropdowns } from "./dropdown.js";
+import { initDialogs } from "./dialog.js";
+import { initInputMasks } from "./input-mask.js";
+import { initOtps } from "./otp.js";
+import { initPasswords } from "./password.js";
+import { initSidebars } from "./sidebar.js";
 import { initTabs } from "./tabs.js";
 
 export function initBoobstrap(root = document) {
   const controllers = [
+    ...initBanners(root),
     ...initButtons(root),
     ...initCollapses(root),
+    ...initComboboxes(root),
     ...initDropdowns(root),
+    ...initDialogs(root),
+    ...initInputMasks(root),
+    ...initOtps(root),
+    ...initPasswords(root),
+    ...initSidebars(root),
     ...initTabs(root),
   ];
 
