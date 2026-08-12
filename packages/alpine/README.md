@@ -31,7 +31,24 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, and `bsTabs` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+
+## Dialog or drawer
+
+```html
+<div x-data="bsDialog">
+  <button class="bs-btn" type="button" x-bind="trigger" aria-controls="account-drawer">Account</button>
+  <dialog class="bs-drawer bs-drawer-end" id="account-drawer" x-ref="dialog" x-bind="panel" aria-labelledby="account-drawer-title">
+    <header class="bs-drawer-header">
+      <h2 class="bs-drawer-title" id="account-drawer-title">Account</h2>
+      <button class="bs-drawer-close" type="button" x-bind="dismiss" aria-label="Close account drawer">×</button>
+    </header>
+    <div class="bs-drawer-body">Drawer content</div>
+  </dialog>
+</div>
+```
+
+Use `.bs-dialog` instead of `.bs-drawer` for a centered modal. The provider exposes `show()`, `hide()`, and `toggle()`, works in the standard and strict-CSP builds, restores focus, and honors `data-bs-dialog-close-on-backdrop="false"`.
 
 ## Loading button
 

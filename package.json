@@ -27,6 +27,7 @@
     "./js/collapse": "./dist/js/collapse.js",
     "./js/combobox": "./dist/js/combobox.js",
     "./js/dropdown": "./dist/js/dropdown.js",
+    "./js/dialog": "./dist/js/dialog.js",
     "./js/input-mask": "./dist/js/input-mask.js",
     "./js/otp": "./dist/js/otp.js",
     "./js/password": "./dist/js/password.js",

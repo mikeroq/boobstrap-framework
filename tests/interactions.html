@@ -72,6 +72,45 @@
         </div>
       </section>
 
+      <section aria-label="Dialog examples">
+        <button class="bs-btn bs-btn-primary" id="modal-toggle" type="button" data-bs-toggle="dialog" aria-controls="settings-modal">Open settings</button>
+        <button class="bs-btn bs-btn-secondary" id="drawer-toggle" type="button" data-bs-toggle="dialog" aria-controls="activity-drawer">Open activity</button>
+      </section>
+
+      <dialog class="bs-dialog bs-dialog-sm bs-dialog-height-sm" id="settings-modal" data-bs-dialog data-bs-dialog-close-on-backdrop="false" aria-labelledby="settings-modal-title" aria-describedby="settings-modal-description">
+        <header class="bs-dialog-header">
+          <h2 class="bs-dialog-title" id="settings-modal-title">Workspace settings</h2>
+          <p class="bs-dialog-description" id="settings-modal-description">Update the defaults for this workspace.</p>
+          <button class="bs-dialog-close" type="button" data-bs-dialog-dismiss aria-label="Close settings">×</button>
+        </header>
+        <div class="bs-dialog-body">
+          <label class="bs-label" for="workspace-name">Workspace name</label>
+          <input class="bs-input" id="workspace-name" value="Acme" />
+        </div>
+        <footer class="bs-dialog-footer">
+          <button class="bs-btn bs-btn-secondary" type="button" data-bs-dialog-dismiss>Cancel</button>
+          <button class="bs-btn bs-btn-primary" type="button">Save changes</button>
+        </footer>
+      </dialog>
+
+      <dialog class="bs-drawer bs-drawer-end bs-drawer-sm" id="activity-drawer" data-bs-dialog aria-labelledby="activity-drawer-title" aria-describedby="activity-drawer-description">
+        <header class="bs-drawer-header">
+          <h2 class="bs-drawer-title" id="activity-drawer-title">Recent activity</h2>
+          <p class="bs-drawer-description" id="activity-drawer-description">Changes from the last seven days.</p>
+          <button class="bs-drawer-close" type="button" data-bs-dialog-dismiss aria-label="Close activity">×</button>
+        </header>
+        <div class="bs-drawer-body">
+          <ol style="min-block-size: 80rem">
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+            <li>Release created</li><li>Review requested</li><li>Build completed</li><li>Deployment started</li>
+          </ol>
+        </div>
+        <footer class="bs-drawer-footer"><button class="bs-btn bs-btn-primary" type="button">View all activity</button></footer>
+      </dialog>
+
       <section aria-label="Dropdown example">
         <div class="bs-dropdown" data-bs-dropdown>
           <button class="bs-btn bs-btn-secondary" id="actions-toggle" type="button" data-bs-toggle="dropdown" aria-controls="actions-menu">
@@ -154,7 +193,7 @@
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

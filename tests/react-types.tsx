@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const [saving, setSaving] = useState(false);
@@ -21,6 +21,7 @@ export function ReactAdapterTypeFixture() {
     },
   });
   const dropdown = useDropdown({ defaultOpen: false });
+  const dialog = useDialog({ id: "typed-dialog", defaultOpen: false });
   const combobox = useCombobox({
     options: [{ value: "engineer", label: "Engineer" }],
     defaultValue: "engineer",
@@ -34,6 +35,7 @@ export function ReactAdapterTypeFixture() {
   collapse.show();
   button.stop("type-test");
   dropdown.hide({ restoreFocus: true, reason: "type-test" });
+  dialog.show("type-test");
   tabs.activate("typed-profile-tab");
 
   return (
@@ -48,6 +50,12 @@ export function ReactAdapterTypeFixture() {
           <button className="bs-dropdown-item" type="button" role="menuitem">Edit</button>
         </div>
       </div>
+
+      <button className="bs-btn" {...dialog.getTriggerProps()}>Open dialog</button>
+      <dialog className="bs-dialog" {...dialog.getDialogProps()}>
+        <div className="bs-dialog-body">Typed dialog</div>
+        <button {...dialog.getDismissProps()}>Close</button>
+      </dialog>
 
       <div className="bs-combobox" {...combobox.getRootProps()}>
         <input className="bs-combobox-input" {...combobox.getInputProps()} />

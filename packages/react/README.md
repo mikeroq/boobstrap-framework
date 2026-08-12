@@ -10,7 +10,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
 React remains a peer dependency. The adapter does not import or initialize Boobstrap JS.
@@ -51,6 +51,26 @@ function Details() {
 ```
 
 Pass `open` and `onOpenChange` for controlled state, or `defaultOpen` for uncontrolled state.
+
+## Dialog or drawer
+
+```jsx
+function AccountDrawer() {
+  const dialog = useDialog({ id: "account-drawer" });
+  return <>
+    <button className="bs-btn" {...dialog.getTriggerProps()}>Account</button>
+    <dialog className="bs-drawer bs-drawer-end" aria-labelledby="account-drawer-title" {...dialog.getDialogProps()}>
+      <header className="bs-drawer-header">
+        <h2 className="bs-drawer-title" id="account-drawer-title">Account</h2>
+        <button className="bs-drawer-close" aria-label="Close account drawer" {...dialog.getDismissProps()}>×</button>
+      </header>
+      <div className="bs-drawer-body">Drawer content</div>
+    </dialog>
+  </>;
+}
+```
+
+Use `.bs-dialog` for a centered modal. Pass `open` and `onOpenChange` for controlled state, or `defaultOpen` for uncontrolled state.
 
 ## Dropdown
 

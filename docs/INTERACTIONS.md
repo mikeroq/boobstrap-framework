@@ -149,6 +149,53 @@ collapse.destroy();
 
 Events: `bs:collapse:show`, `bs:collapse:shown`, `bs:collapse:hide`, and `bs:collapse:hidden`.
 
+## Dialogs and drawers
+
+Dialogs and drawers share one native `<dialog>` behavior contract. Use `.bs-dialog` for a centered modal or `.bs-drawer` with `.bs-drawer-start` / `.bs-drawer-end` for a viewport-height panel at a logical edge. Both accept optional header and footer regions around an independently scrolling body.
+
+```html
+<button class="bs-btn bs-btn-primary" type="button" data-bs-toggle="dialog" aria-controls="profile-dialog">
+  Edit profile
+</button>
+
+<dialog
+  class="bs-dialog bs-dialog-lg bs-dialog-height-lg"
+  id="profile-dialog"
+  data-bs-dialog
+  aria-labelledby="profile-dialog-title"
+  aria-describedby="profile-dialog-description"
+>
+  <header class="bs-dialog-header">
+    <h2 class="bs-dialog-title" id="profile-dialog-title">Edit profile</h2>
+    <p class="bs-dialog-description" id="profile-dialog-description">Update the details shown to your team.</p>
+    <button class="bs-dialog-close" type="button" data-bs-dialog-dismiss aria-label="Close profile dialog">×</button>
+  </header>
+  <div class="bs-dialog-body"><!-- long content or a form --></div>
+  <footer class="bs-dialog-footer">
+    <button class="bs-btn bs-btn-secondary" type="button" data-bs-dialog-dismiss>Cancel</button>
+    <button class="bs-btn bs-btn-primary" type="submit">Save changes</button>
+  </footer>
+</dialog>
+```
+
+The header, description, close button, and footer are optional. The body uses `overflow: auto`; constrained dialogs and full-height drawers keep their header and footer visible while only the body scrolls. Modal widths are `.bs-dialog-sm`, `.bs-dialog-lg`, and `.bs-dialog-xl`; heights are `.bs-dialog-height-sm`, `.bs-dialog-height-lg`, and `.bs-dialog-fullscreen`. Drawer widths are `.bs-drawer-sm`, `.bs-drawer-lg`, and `.bs-drawer-xl`. Override `--bs-dialog-width`, `--bs-dialog-max-height`, or `--bs-drawer-width` at the component boundary for a product-specific size.
+
+Backdrop clicks dismiss by default. Set `data-bs-dialog-close-on-backdrop="false"` when an outside pointer must not discard work. `Escape` remains available, and applications should always provide at least one explicit dismiss path. Native modal semantics contain focus and make background content inert; the controller synchronizes triggers, locks document scrolling, emits lifecycle events, and restores focus.
+
+Public API:
+
+```js
+import { Dialog } from "@boobstrap/boobstrap/js/dialog";
+
+const dialog = Dialog.getOrCreateInstance(document.querySelector("#profile-dialog"));
+dialog.show();
+dialog.hide();
+dialog.toggle();
+dialog.destroy();
+```
+
+Events: cancelable `bs:dialog:show` and `bs:dialog:hide`; completed `bs:dialog:shown` and `bs:dialog:hidden`. The drawer API and events are intentionally identical because placement is a CSS presentation choice.
+
 ## Sidebar
 
 Sidebar is a composable application shell and navigation component. The CSS API owns layout, visual variants, menu anatomy, and responsive states; the optional controller owns mobile dialog behavior and desktop collapse state. Start with `.bs-sidebar-layout`, place `.bs-sidebar` and `.bs-sidebar-main` inside it, then compose only the regions your product needs.
@@ -378,7 +425,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
 
 ### Alpine loading button
 
@@ -413,6 +460,21 @@ The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `
   <div class="bs-collapse" id="details" x-bind="panel" hidden>
     Details
   </div>
+</div>
+```
+
+Dialogs use one provider around the trigger and native dialog. The same markup can use `.bs-drawer` for edge placement:
+
+```html
+<div x-data="bsDialog">
+  <button class="bs-btn" type="button" x-bind="trigger" aria-controls="account-drawer">Account</button>
+  <dialog class="bs-drawer bs-drawer-end" id="account-drawer" x-ref="dialog" x-bind="panel" aria-labelledby="account-drawer-title">
+    <header class="bs-drawer-header">
+      <h2 class="bs-drawer-title" id="account-drawer-title">Account</h2>
+      <button class="bs-drawer-close" type="button" x-bind="dismiss" aria-label="Close account drawer">×</button>
+    </header>
+    <div class="bs-drawer-body">...</div>
+  </dialog>
 </div>
 ```
 
@@ -473,7 +535,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
 ```
 
 The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.

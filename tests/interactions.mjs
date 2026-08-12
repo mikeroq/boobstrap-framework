@@ -16,6 +16,7 @@ const assets = new Map([
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
   ["/dist/js/dropdown.js", await readFile(new URL("../dist/js/dropdown.js", import.meta.url))],
+  ["/dist/js/dialog.js", await readFile(new URL("../dist/js/dialog.js", import.meta.url))],
   ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
@@ -114,6 +115,54 @@ try {
   await collapseToggle.click();
   if (!await collapsePanel.isHidden() || await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not close");
 
+  const modalToggle = page.locator("#modal-toggle");
+  const modal = page.locator("#settings-modal");
+  await modalToggle.click();
+  if (!await modal.evaluate((element) => element.open)
+    || await modal.getAttribute("data-bs-state") !== "open"
+    || await modalToggle.getAttribute("aria-expanded") !== "true"
+    || !await page.locator("body").evaluate((element) => element.classList.contains("bs-dialog-open"))) {
+    failures.push("Dialog did not open and synchronize public state");
+  }
+  const modalLayout = await modal.evaluate((element) => ({
+    display: getComputedStyle(element).display,
+    bodyOverflow: getComputedStyle(element.querySelector(".bs-dialog-body")).overflowY,
+    footerBottom: element.querySelector(".bs-dialog-footer").getBoundingClientRect().bottom,
+    dialogBottom: element.getBoundingClientRect().bottom,
+  }));
+  if (modalLayout.display !== "flex" || modalLayout.bodyOverflow !== "auto" || Math.abs(modalLayout.footerBottom - modalLayout.dialogBottom) > 1) {
+    failures.push(`Dialog regions are not fixed around a scrolling body (${JSON.stringify(modalLayout)})`);
+  }
+  await page.mouse.click(1, 1);
+  if (!await modal.evaluate((element) => element.open)) failures.push("Static dialog dismissed from its backdrop");
+  await page.evaluate(() => document.querySelector("#settings-modal").addEventListener("bs:dialog:hide", (event) => event.preventDefault(), { once: true }));
+  await modal.getByRole("button", { name: "Close settings" }).click();
+  if (!await modal.evaluate((element) => element.open)) failures.push("Dialog ignored a canceled hide event");
+  await modal.getByRole("button", { name: "Close settings" }).click();
+  await page.waitForFunction(() => !document.querySelector("#settings-modal").open);
+  if (!await modalToggle.evaluate((element) => element === document.activeElement)) failures.push("Dialog did not restore focus to its trigger");
+
+  const drawerToggle = page.locator("#drawer-toggle");
+  const drawer = page.locator("#activity-drawer");
+  await drawerToggle.click();
+  await drawer.evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)));
+  const drawerLayout = await drawer.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const body = element.querySelector(".bs-drawer-body");
+    const header = element.querySelector(".bs-drawer-header").getBoundingClientRect();
+    const footer = element.querySelector(".bs-drawer-footer").getBoundingClientRect();
+    return {
+      meetsEnd: Math.abs(rect.right - document.documentElement.clientWidth) <= 1,
+      fillsHeight: Math.abs(rect.height - window.innerHeight) <= 1,
+      bodyScrolls: body.scrollHeight > body.clientHeight && getComputedStyle(body).overflowY === "auto",
+      fixedRegionsFit: header.top >= rect.top && footer.bottom <= rect.bottom + 1,
+    };
+  });
+  if (!Object.values(drawerLayout).every(Boolean)) failures.push(`Drawer layout is incomplete (${JSON.stringify(drawerLayout)})`);
+  await page.mouse.click(1, 1);
+  await page.waitForFunction(() => !document.querySelector("#activity-drawer").open);
+  if (!await drawerToggle.evaluate((element) => element === document.activeElement)) failures.push("Drawer backdrop did not dismiss and restore focus");
+
   const sidebarToggle = page.locator("#sidebar-toggle");
   const sidebar = page.locator("#navigation-sidebar");
   const sidebarBackdrop = page.locator(".bs-sidebar-backdrop");
@@ -191,7 +240,7 @@ try {
   if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -205,7 +254,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 11) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 13) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
@@ -250,5 +299,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Interaction contract passed in ${browserName}: forms, combobox, loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
+  console.log(`Interaction contract passed in ${browserName}: forms, dialogs, drawers, combobox, loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
 }

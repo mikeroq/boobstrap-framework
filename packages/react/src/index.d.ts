@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, RefAttributes } from "react";
+import type { ButtonHTMLAttributes, DialogHTMLAttributes, HTMLAttributes, InputHTMLAttributes, RefAttributes } from "react";
 
 export interface TransitionDetail {
   adapter: "react";
@@ -50,6 +50,21 @@ export interface CollapseResult {
 }
 
 export function useCollapse(options?: CollapseOptions): CollapseResult;
+
+export interface DialogOptions extends CollapseOptions {}
+
+export interface DialogResult {
+  open: boolean;
+  dialogId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+  getDialogProps: (props?: DialogHTMLAttributes<HTMLDialogElement> & RefAttributes<HTMLDialogElement>) => DialogHTMLAttributes<HTMLDialogElement> & RefAttributes<HTMLDialogElement>;
+  getDismissProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+}
+
+export function useDialog(options?: DialogOptions): DialogResult;
 
 export interface ComboboxOption {
   value: string;

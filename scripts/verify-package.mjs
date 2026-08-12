@@ -19,6 +19,7 @@ const requiredPaths = [
   "dist/js/collapse.js",
   "dist/js/combobox.js",
   "dist/js/dropdown.js",
+  "dist/js/dialog.js",
   "dist/js/input-mask.js",
   "dist/js/otp.js",
   "dist/js/password.js",
