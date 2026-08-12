@@ -16,6 +16,7 @@ const assets = new Map([
   ["/adapter/collapse.js", await readFile(new URL("../packages/alpine/src/collapse.js", import.meta.url))],
   ["/adapter/combobox.js", await readFile(new URL("../packages/alpine/src/combobox.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
+  ["/adapter/dialog.js", await readFile(new URL("../packages/alpine/src/dialog.js", import.meta.url))],
   ["/adapter/shared.js", await readFile(new URL("../packages/alpine/src/shared.js", import.meta.url))],
   ["/adapter/tabs.js", await readFile(new URL("../packages/alpine/src/tabs.js", import.meta.url))],
   ["/vendor/alpine.js", await readFile(new URL("../node_modules/alpinejs/dist/module.esm.js", import.meta.url))],
@@ -76,6 +77,17 @@ try {
     await collapseToggle.click();
     if (!await collapsePanel.isHidden()) failures.push(`${build}: collapse did not close`);
 
+    const dialogToggle = page.locator("#alpine-dialog-toggle");
+    const dialog = page.locator("#alpine-dialog");
+    await dialogToggle.click();
+    if (!await dialog.evaluate((element) => element.open) || await dialog.getAttribute("data-bs-state") !== "open") failures.push(`${build}: dialog did not open`);
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(() => !document.querySelector("#alpine-dialog").open);
+    if (!await dialogToggle.evaluate((element) => element === document.activeElement)) failures.push(`${build}: dialog did not close and restore focus from Escape`);
+    await dialogToggle.click();
+    await dialog.getByRole("button", { name: "Close Alpine dialog" }).click();
+    await page.waitForFunction(() => !document.querySelector("#alpine-dialog").open);
+
     const dropdownToggle = page.locator("#alpine-actions-toggle");
     const dropdownMenu = page.locator("#alpine-actions-menu");
     await dropdownToggle.focus();
@@ -119,7 +131,7 @@ try {
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
     const events = await page.evaluate(() => window.bsEvents);
-    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
       if (!events.some((event) => event.name === name && event.adapter === "alpine")) failures.push(`${build}: missing ${name}`);
     }
 
@@ -139,5 +151,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, combobox, loading, interactions, keyboard behavior, events, and Axe.`);
+  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, dialogs, combobox, loading, interactions, keyboard behavior, events, and Axe.`);
 }

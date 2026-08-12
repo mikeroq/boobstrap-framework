@@ -42,6 +42,19 @@
         </div>
       </section>
 
+      <section x-data="bsDialog" aria-label="Alpine dialog example">
+        <button class="bs-btn bs-btn-primary" id="alpine-dialog-toggle" type="button" x-bind="trigger" aria-controls="alpine-dialog">Open dialog</button>
+        <dialog class="bs-dialog bs-dialog-sm" id="alpine-dialog" x-ref="dialog" x-bind="panel" aria-labelledby="alpine-dialog-title">
+          <header class="bs-dialog-header">
+            <h2 class="bs-dialog-title" id="alpine-dialog-title">Alpine dialog</h2>
+            <p class="bs-dialog-description">Reactive state with native dialog semantics.</p>
+            <button class="bs-dialog-close" type="button" x-bind="dismiss" aria-label="Close Alpine dialog">×</button>
+          </header>
+          <div class="bs-dialog-body">Adapter-controlled content.</div>
+          <footer class="bs-dialog-footer"><button class="bs-btn bs-btn-primary" type="button" x-bind="dismiss">Done</button></footer>
+        </dialog>
+      </section>
+
       <section aria-label="Alpine dropdown example">
         <div class="bs-dropdown" x-data="bsDropdown" x-bind="root" data-test-dropdown>
           <button

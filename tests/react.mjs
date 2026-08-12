@@ -76,6 +76,17 @@ try {
   await page.locator("#react-controlled-external").click();
   if (!await controlledPanel.isHidden()) failures.push("controlled collapse did not accept external state");
 
+  const dialogToggle = page.locator("#react-dialog-toggle");
+  const dialog = page.locator("#react-dialog");
+  await dialogToggle.click();
+  if (!await dialog.evaluate((element) => element.open) || await dialog.getAttribute("data-bs-state") !== "open") failures.push("dialog did not open");
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => !document.querySelector("#react-dialog").open);
+  if (!await dialogToggle.evaluate((element) => element === document.activeElement)) failures.push("dialog did not restore focus");
+  await dialogToggle.click();
+  await dialog.getByRole("button", { name: "Close React dialog" }).click();
+  await page.waitForFunction(() => !document.querySelector("#react-dialog").open);
+
   const dropdownToggle = page.locator("#react-actions-toggle");
   const dropdownMenu = page.locator("#react-actions-menu");
   await dropdownToggle.focus();
@@ -110,7 +121,7 @@ try {
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
@@ -129,5 +140,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`React adapter passed in ${browserName}: controlled and uncontrolled combobox, loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
+  console.log(`React adapter passed in ${browserName}: dialogs, controlled and uncontrolled combobox, loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
 }
