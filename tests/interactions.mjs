@@ -124,13 +124,18 @@ try {
     || !await page.locator("body").evaluate((element) => element.classList.contains("bs-dialog-open"))) {
     failures.push("Dialog did not open and synchronize public state");
   }
-  const modalLayout = await modal.evaluate((element) => ({
-    display: getComputedStyle(element).display,
-    bodyOverflow: getComputedStyle(element.querySelector(".bs-dialog-body")).overflowY,
-    footerBottom: element.querySelector(".bs-dialog-footer").getBoundingClientRect().bottom,
-    dialogBottom: element.getBoundingClientRect().bottom,
-  }));
-  if (modalLayout.display !== "flex" || modalLayout.bodyOverflow !== "auto" || Math.abs(modalLayout.footerBottom - modalLayout.dialogBottom) > 1) {
+  const modalLayout = await modal.evaluate((element) => {
+    const styles = getComputedStyle(element);
+    return {
+      display: styles.display,
+      bodyOverflow: getComputedStyle(element.querySelector(".bs-dialog-body")).overflowY,
+      footerBottom: element.querySelector(".bs-dialog-footer").getBoundingClientRect().bottom,
+      dialogBottom: element.getBoundingClientRect().bottom,
+      borderBottomWidth: Number.parseFloat(styles.borderBottomWidth),
+    };
+  });
+  const footerInset = modalLayout.dialogBottom - modalLayout.footerBottom;
+  if (modalLayout.display !== "flex" || modalLayout.bodyOverflow !== "auto" || Math.abs(footerInset - modalLayout.borderBottomWidth) > 0.1) {
     failures.push(`Dialog regions are not fixed around a scrolling body (${JSON.stringify(modalLayout)})`);
   }
   await page.mouse.click(1, 1);
