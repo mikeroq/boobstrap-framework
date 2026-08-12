@@ -82,18 +82,16 @@ try {
   if (!await loadingButton.locator(".bs-btn-spinner").isVisible()) failures.push("Loading button spinner is not visible");
   const spinnerCenters = [];
   for (let sample = 0; sample < 3; sample += 1) {
-    const [buttonBox, spinnerBox] = await Promise.all([
-      loadingButton.boundingBox(),
-      loadingButton.locator(".bs-btn-spinner").boundingBox(),
-    ]);
-    if (buttonBox && spinnerBox) {
-      spinnerCenters.push({
+    spinnerCenters.push(await loadingButton.evaluate((element) => {
+      const buttonBox = element.getBoundingClientRect();
+      const spinnerBox = element.querySelector(".bs-btn-spinner").getBoundingClientRect();
+      return {
         x: spinnerBox.x + spinnerBox.width / 2,
         y: spinnerBox.y + spinnerBox.height / 2,
         buttonX: buttonBox.x + buttonBox.width / 2,
         buttonY: buttonBox.y + buttonBox.height / 2,
-      });
-    }
+      };
+    }));
     await page.waitForTimeout(90);
   }
   if (spinnerCenters.some(({ x, y, buttonX, buttonY }) => Math.abs(x - buttonX) > 2.5 || Math.abs(y - buttonY) > 2.5)) {
