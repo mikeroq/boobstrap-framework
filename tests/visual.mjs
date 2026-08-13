@@ -20,6 +20,7 @@ await mkdir(snapshots, { recursive: true });
 await mkdir(artifacts, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const failures = [];
+let captureCount = 0;
 
 async function capture(name, options = {}) {
   const context = await browser.newContext({ viewport: options.viewport ?? { width: 800, height: 900 }, reducedMotion: options.reducedMotion ?? "no-preference" });
@@ -44,6 +45,7 @@ async function capture(name, options = {}) {
       }
     }
     if (requests.some((url) => !url.startsWith(`http://127.0.0.1:${server.address().port}`))) failures.push(`${name}: external request detected`);
+    captureCount += 1;
     console.log(`${update ? "Updated" : "Checked"} visual snapshot ${name}.`);
   } finally {
     await context.close();
@@ -52,8 +54,10 @@ async function capture(name, options = {}) {
 
 try {
   for (const theme of ["dark", "light"]) {
-    for (const region of ["controls", "accordion", "data", "loading"]) await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
-    await capture(`${theme}-mobile`, { theme, viewport: { width: 390, height: 1400 }, reducedMotion: "reduce", animations: "allow" });
+    for (const region of ["controls", "accordion", "data", "loading"]) {
+      await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
+      await capture(`${theme}-mobile-${region}`, { theme, viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
+    }
   }
   await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
   await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
@@ -64,4 +68,4 @@ try {
 }
 
 if (failures.length) { console.error(failures.join("\n")); process.exitCode = 1; }
-else console.log(`${update ? "Updated" : "Verified"} 13 focused Chromium visual snapshots.`);
+else console.log(`${update ? "Updated" : "Verified"} ${captureCount} focused Chromium visual snapshots.`);
