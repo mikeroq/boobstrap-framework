@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
 import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
+import { isKnownBrowserWarning } from "./browser-console.mjs";
 
 const browserName = process.env.BROWSER || "chromium";
 const browserType = { chromium, firefox, webkit }[browserName];
@@ -43,7 +44,9 @@ try {
   const page = await context.newPage();
   const consoleErrors = [];
   page.on("console", (message) => {
-    if (message.type() === "error" || message.type() === "warning") consoleErrors.push(`${message.type()}: ${message.text()}`);
+    if ((message.type() === "error" || message.type() === "warning") && !isKnownBrowserWarning(message, browserName)) {
+      consoleErrors.push(`${message.type()}: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(baseUrl, { waitUntil: "networkidle" });
