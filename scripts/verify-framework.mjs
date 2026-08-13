@@ -1,10 +1,14 @@
 import { readFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import { parseTokenCss } from "./token-artifacts.mjs";
 
 const root = new URL("../", import.meta.url);
 const css = await readFile(new URL("dist/boobstrap.css", root), "utf8");
 const sourceEntry = await readFile(new URL("src/boobstrap.css", root), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
 const contract = JSON.parse(await readFile(new URL("tests/api-contract.json", root), "utf8"));
+const tokenSource = await readFile(new URL("src/base/tokens.css", root), "utf8");
+const tokenArtifact = JSON.parse(await readFile(new URL("dist/tokens.json", root), "utf8"));
 
 const actualClasses = [...new Set(
   [...css.matchAll(/\.([a-z][a-z0-9-]*)/gi)]
@@ -34,6 +38,14 @@ function compareApi(label, expected, actual) {
 
 compareApi("Class", contract.classes, actualClasses);
 compareApi("Token", contract.tokens, actualTokens);
+assert.deepEqual(tokenArtifact, parseTokenCss(tokenSource), "Generated token artifact differs from CSS source");
+const generatedTokenNames = Object.values(tokenArtifact.tokens).flatMap((group) => Object.values(group).filter((value) => value?.$extensions).map((value) => value.$extensions["org.boobstrap.css-variable"])).sort();
+assert.deepEqual(generatedTokenNames, actualTokens, "Token artifact must account for every public root token");
+for (const preset of ["rose", "violet", "blue", "teal", "amber"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-palette=\"${preset}\"`)), `Missing ${preset} mode`);
+for (const preset of ["rounded", "square"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-radius=\"${preset}\"`)), `Missing ${preset} radius mode`);
+assert.equal(tokenArtifact.tokens.base.white.$value, "#ffffff", "Expected ungrouped CSS tokens under the DTCG-safe base group");
+assert.equal(tokenArtifact.modes['[data-bs-theme="light"]']["--bs-color-primary-contrast"], "{base.white}", "Expected root-token aliases to use a complete DTCG path");
+assert.ok(Object.keys(tokenArtifact.modes).every((selector) => !selector.includes("/*")), "Token mode selector keys must not contain CSS comments");
 
 if (css.includes("@import")) throw new Error("dist/boobstrap.css still contains unresolved imports");
 

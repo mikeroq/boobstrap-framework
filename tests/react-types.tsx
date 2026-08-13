@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
+  const accordion = useAccordion({ defaultOpenIds: ["one"] });
+  accordion.setOpen("two", true);
   const [saving, setSaving] = useState(false);
   const button = useButton({
     loading: saving,
@@ -31,12 +33,18 @@ export function ReactAdapterTypeFixture() {
     defaultSelectedId: "typed-profile-tab",
     onSelectedChange: (_selectedId, detail) => detail.panel?.focus(),
   });
+  const toast = useToast({ defaultOpen: false, duration: 2500 });
+  const tooltip = useTooltip({ id: "typed-tooltip", placement: "top" });
+  const popover = usePopover({ id: "typed-popover", placement: "bottom" });
 
   collapse.show();
   button.stop("type-test");
   dropdown.hide({ restoreFocus: true, reason: "type-test" });
   dialog.show("type-test");
   tabs.activate("typed-profile-tab");
+  toast.show("type-test");
+  tooltip.hide("type-test");
+  popover.toggle("type-test");
 
   return (
     <main>
@@ -69,6 +77,9 @@ export function ReactAdapterTypeFixture() {
         <button className="bs-tab" {...tabs.getTabProps({ id: "typed-profile-tab", controls: "typed-profile-panel" })}>Profile</button>
       </div>
       <div className="bs-tab-panel" id="typed-profile-panel" {...tabs.getPanelProps({ tabId: "typed-profile-tab" })}>Profile settings</div>
+      <button {...toast.getTriggerProps()}>Toast</button><div {...toast.getToastProps()}><button {...toast.getDismissProps()}>Dismiss</button></div>
+      <button {...tooltip.getTriggerProps()}>Tooltip</button><div {...tooltip.getTooltipProps()}>Details</div>
+      <button {...popover.getTriggerProps()}>Popover</button><div {...popover.getPopoverProps()}>Details</div>
     </main>
   );
 }

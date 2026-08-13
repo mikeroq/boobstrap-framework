@@ -60,3 +60,32 @@ export function useControllableState({ value, defaultValue, onChange }) {
 export function normalizeId(value) {
   return value.replaceAll(":", "");
 }
+
+function floatingCoordinates(triggerRect, panelRect, placement, gap = 10) {
+  if (placement === "bottom") return { left: triggerRect.left + ((triggerRect.width - panelRect.width) / 2), top: triggerRect.bottom + gap };
+  if (placement === "start") return { left: triggerRect.left - panelRect.width - gap, top: triggerRect.top + ((triggerRect.height - panelRect.height) / 2) };
+  if (placement === "end") return { left: triggerRect.right + gap, top: triggerRect.top + ((triggerRect.height - panelRect.height) / 2) };
+  return { left: triggerRect.left + ((triggerRect.width - panelRect.width) / 2), top: triggerRect.top - panelRect.height - gap };
+}
+
+export function positionFloating(trigger, panel, requestedPlacement = "top") {
+  if (!trigger || !panel) return;
+  const padding = 8;
+  const triggerRect = trigger.getBoundingClientRect();
+  const panelRect = panel.getBoundingClientRect();
+  const viewport = trigger.ownerDocument.documentElement;
+  const direction = getComputedStyle(trigger).direction;
+  const physicalPlacement = requestedPlacement === "start" ? (direction === "rtl" ? "end" : "start")
+    : requestedPlacement === "end" ? (direction === "rtl" ? "start" : "end") : requestedPlacement;
+  const fallback = { top: "bottom", bottom: "top", start: "end", end: "start" }[physicalPlacement];
+  const preferred = floatingCoordinates(triggerRect, panelRect, physicalPlacement);
+  const fits = preferred.left >= padding && preferred.top >= padding
+    && preferred.left + panelRect.width <= viewport.clientWidth - padding
+    && preferred.top + panelRect.height <= viewport.clientHeight - padding;
+  const placement = fits ? physicalPlacement : fallback;
+  const coordinates = floatingCoordinates(triggerRect, panelRect, placement);
+  panel.dataset.bsPlacement = direction === "rtl" && ["start", "end"].includes(placement)
+    ? (placement === "start" ? "end" : "start") : placement;
+  panel.style.left = `${Math.min(Math.max(coordinates.left, padding), Math.max(padding, viewport.clientWidth - panelRect.width - padding))}px`;
+  panel.style.top = `${Math.min(Math.max(coordinates.top, padding), Math.max(padding, viewport.clientHeight - panelRect.height - padding))}px`;
+}

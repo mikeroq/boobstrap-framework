@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
@@ -15,24 +15,32 @@ const requiredPaths = [
   "LICENSE",
   "README.md",
   "package.json",
+  "src/accordion.js",
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
   "src/dropdown.js",
   "src/dialog.js",
+  "src/popover.js",
   "src/index.d.ts",
   "src/index.js",
   "src/shared.js",
   "src/tabs.js",
+  "src/toast.js",
+  "src/tooltip.js",
 ];
 
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "React package is missing required files");
+assert.equal(typeof useAccordion, "function");
 assert.equal(typeof useButton, "function");
 assert.equal(typeof useCollapse, "function");
 assert.equal(typeof useCombobox, "function");
 assert.equal(typeof useDropdown, "function");
 assert.equal(typeof useDialog, "function");
+assert.equal(typeof usePopover, "function");
 assert.equal(typeof useTabs, "function");
+assert.equal(typeof useToast, "function");
+assert.equal(typeof useTooltip, "function");
 
 function ServerFixture() {
   const button = useButton({ defaultLoading: true, loadingLabel: "Saving" });
@@ -63,4 +71,4 @@ assert.match(serverMarkup, /role="combobox"/);
 assert.match(serverMarkup, /id="ssr-dialog"/);
 assert.match(serverMarkup, /aria-controls="ssr-role"/);
 
-console.log(`Verified @boobstrap/react package contents, six hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/react package contents, ten hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);

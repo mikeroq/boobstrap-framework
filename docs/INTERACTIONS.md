@@ -14,7 +14,7 @@ The contract in this document is also the compatibility target for official Alpi
 | React adapter | React peer dependency | Controlled and uncontrolled React components |
 | Vue adapter | Vue peer dependency | Vue components and `v-model` state |
 
-The CSS, Boobstrap JS, Alpine, and React layers are implemented today. Vue remains a planned adapter.
+The CSS, Boobstrap JS, Alpine, React, and Vue layers are implemented and tested against the same public lifecycle contract.
 
 ## Installation and initialization
 
@@ -148,6 +148,27 @@ collapse.destroy();
 ```
 
 Events: `bs:collapse:show`, `bs:collapse:shown`, `bs:collapse:hide`, and `bs:collapse:hidden`.
+
+## Accordion
+
+Accordion composes the collapse contract into a group. Put each native button inside a heading, connect it to a uniquely identified panel with `aria-controls`, and label an optional panel `role="region"` with the trigger. The default group keeps one item open; add `data-bs-accordion-always-open` when multiple panels may remain open.
+
+```html
+<div class="bs-accordion" data-bs-accordion>
+  <section class="bs-accordion-item">
+    <h2 class="bs-accordion-header">
+      <button class="bs-accordion-trigger" type="button" data-bs-toggle="collapse" aria-controls="answer-one">
+        Question <span class="bs-accordion-icon" aria-hidden="true">⌄</span>
+      </button>
+    </h2>
+    <div class="bs-collapse bs-accordion-panel" id="answer-one" role="region">
+      <div class="bs-accordion-body">Answer</div>
+    </div>
+  </section>
+</div>
+```
+
+Use `.bs-accordion-flush` to remove the outer inline border/radius and `.bs-accordion-compact` for denser spacing. Avoid `role="region"` when a page contains many accordion panels, since excessive landmarks make navigation harder. Accordion uses native button keyboard behavior and the existing cancelable collapse events; canceled sibling closure also cancels the requested opening.
 
 ## Dialogs and drawers
 
@@ -395,6 +416,36 @@ Public API: `activate(tab)` and `destroy()`.
 
 Events: cancelable `bs:tabs:change` and completed `bs:tabs:changed`. Event detail includes the previous and next tabs and panels.
 
+## Toast notifications
+
+```html
+<button class="bs-btn" type="button" data-bs-toggle="toast" aria-controls="saved-toast">Show notification</button>
+<div class="bs-toast-region" aria-live="polite">
+  <div class="bs-toast bs-toast-success" id="saved-toast" data-bs-toast hidden>
+    <div>
+      <strong class="bs-toast-title">Saved</strong>
+      <span class="bs-toast-message">Workspace changes are live.</span>
+    </div>
+    <button class="bs-toast-dismiss" type="button" data-bs-toast-dismiss aria-label="Dismiss notification">×</button>
+  </div>
+</div>
+```
+
+Toasts default to a five-second timeout. Set `data-bs-toast-duration="8000"` to change it or `data-bs-toast-autohide="false"` for persistent notifications. Vanilla, Alpine, React, and Vue all pause the remaining autohide duration while the toast is hovered or focused, resume it afterward, support explicit dismissal, and restart the full duration when an already-open toast is shown again. Regions support logical start and bottom placement modifiers.
+
+Public API: `show()`, `hide()`, and `destroy()`. Events are cancelable `bs:toast:show` / `bs:toast:hide` and completed `bs:toast:shown` / `bs:toast:hidden`.
+
+## Tooltips and popovers
+
+```html
+<button class="bs-btn" type="button" data-bs-tooltip="Keyboard shortcut: Control B" data-bs-placement="top">Shortcut</button>
+<button class="bs-btn" type="button" data-bs-popover="Use one behavior layer per component." data-bs-title="Integration guidance">Guidance</button>
+```
+
+Tooltips are brief, non-interactive descriptions shown by hover or focus and dismissed by pointer exit, blur, or `Escape`. Popovers are click-triggered non-modal dialogs that may contain a title and body; they dismiss on an outside pointer or `Escape`. Both support `top`, `bottom`, `start`, and `end`, automatically flip when the requested placement would leave the viewport, and synchronize accessible relationships.
+
+Public APIs expose `show()`, `hide()`, and `destroy()`; popovers also expose `toggle()`. Lifecycle events use `bs:tooltip:*` and `bs:popover:*` with cancelable `show` / `hide` and completed `shown` / `hidden` actions.
+
 ## Adapter requirements
 
 Official adapters must:
@@ -425,7 +476,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, and `bsTabs` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
 
 ### Alpine loading button
 
@@ -535,7 +586,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 ```
 
 The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.
@@ -616,3 +667,27 @@ function Account() {
 ```
 
 Do not initialize Boobstrap JS or an Alpine provider on a React-owned component subtree. React controls the DOM state while preserving Boobstrap lifecycle events and `data-bs-state` values.
+
+## Vue adapter
+
+Install the headless Vue composables with Vue 3.5 or newer:
+
+```bash
+npm install @boobstrap/boobstrap @boobstrap/vue vue
+```
+
+```vue
+<script setup>
+import "@boobstrap/boobstrap";
+import { useCollapse } from "@boobstrap/vue";
+
+const details = useCollapse({ id: "details" });
+</script>
+
+<template>
+  <button class="bs-btn" v-bind="details.getTriggerProps()">Details</button>
+  <div class="bs-collapse" v-bind="details.getPanelProps()">Progressive content</div>
+</template>
+```
+
+The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.

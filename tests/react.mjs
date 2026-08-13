@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
 import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
+import { isKnownBrowserWarning } from "./browser-console.mjs";
 
 const browserName = process.env.BROWSER || "chromium";
 const browserType = { chromium, firefox, webkit }[browserName];
@@ -43,7 +44,9 @@ try {
   const page = await context.newPage();
   const consoleErrors = [];
   page.on("console", (message) => {
-    if (message.type() === "error" || message.type() === "warning") consoleErrors.push(`${message.type()}: ${message.text()}`);
+    if ((message.type() === "error" || message.type() === "warning") && !isKnownBrowserWarning(message, browserName)) {
+      consoleErrors.push(`${message.type()}: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(baseUrl, { waitUntil: "networkidle" });
@@ -120,8 +123,31 @@ try {
   if (await profileTab.getAttribute("aria-selected") !== "true") failures.push("tabs did not support Home");
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
+  await page.locator("#react-toast-toggle").click();
+  const reactToast = page.locator("#react-toast");
+  if (await reactToast.isHidden()) failures.push("toast did not show");
+  await reactToast.hover();
+  await page.waitForTimeout(260);
+  if (await reactToast.isHidden()) failures.push("toast autohide did not pause on pointer enter");
+  await page.locator("#react-heading").hover();
+  await reactToast.waitFor({ state: "hidden" });
+  await page.locator("#react-toast-toggle").click();
+  await reactToast.getByRole("button").focus();
+  await page.waitForTimeout(260);
+  if (await reactToast.isHidden()) failures.push("toast autohide did not pause on focus");
+  await page.locator("#react-toast-toggle").focus();
+  await reactToast.waitFor({ state: "hidden" });
+  await page.locator("#react-toast-toggle").click();
+  await reactToast.getByRole("button").click();
+  await page.locator("#react-tooltip-trigger").hover();
+  if (await page.locator("#react-tooltip").isHidden() || !await page.locator("#react-tooltip-trigger").getAttribute("aria-describedby")) failures.push("tooltip did not show with its description");
+  await page.locator("#react-popover-trigger").click();
+  if (await page.locator("#react-popover").isHidden()) failures.push("popover did not show");
+  await page.locator("#react-heading").click();
+  if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
+
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
@@ -140,5 +166,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`React adapter passed in ${browserName}: dialogs, controlled and uncontrolled combobox, loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
+  console.log(`React adapter passed in ${browserName}: dialogs, controlled and uncontrolled combobox, loading, floating feedback, keyboard behavior, events, SSR-safe rendering, and Axe.`);
 }

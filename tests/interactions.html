@@ -72,6 +72,20 @@
         </div>
       </section>
 
+      <section aria-labelledby="accordion-heading">
+        <h2 id="accordion-heading">Questions</h2>
+        <div class="bs-accordion" data-bs-accordion>
+          <section class="bs-accordion-item">
+            <h3 class="bs-accordion-header"><button class="bs-accordion-trigger" id="accordion-trigger-one" type="button" data-bs-toggle="collapse" aria-controls="accordion-panel-one">First question <span class="bs-accordion-icon" aria-hidden="true">⌄</span></button></h3>
+            <div class="bs-collapse bs-accordion-panel" id="accordion-panel-one" role="region" aria-labelledby="accordion-trigger-one"><div class="bs-accordion-body">First answer</div></div>
+          </section>
+          <section class="bs-accordion-item">
+            <h3 class="bs-accordion-header"><button class="bs-accordion-trigger" id="accordion-trigger-two" type="button" data-bs-toggle="collapse" aria-controls="accordion-panel-two">Second question <span class="bs-accordion-icon" aria-hidden="true">⌄</span></button></h3>
+            <div class="bs-collapse bs-accordion-panel" id="accordion-panel-two" role="region" aria-labelledby="accordion-trigger-two" hidden><div class="bs-accordion-body">Second answer</div></div>
+          </section>
+        </div>
+      </section>
+
       <section aria-label="Dialog examples">
         <button class="bs-btn bs-btn-primary" id="modal-toggle" type="button" data-bs-toggle="dialog" aria-controls="settings-modal">Open settings</button>
         <button class="bs-btn bs-btn-secondary" id="drawer-toggle" type="button" data-bs-toggle="dialog" aria-controls="activity-drawer">Open activity</button>
@@ -186,14 +200,26 @@
           <input type="hidden" name="verification_code" data-bs-otp-value />
         </div>
       </section>
+
+      <section class="bs-stack bs-gap-4" aria-label="Floating feedback examples">
+        <button class="bs-btn bs-btn-secondary" id="toast-toggle" type="button" data-bs-toggle="toast" aria-controls="save-toast">Show notification</button>
+        <button class="bs-btn bs-btn-secondary" id="tooltip-trigger" type="button" data-bs-tooltip="Keyboard shortcut: Control B" data-bs-placement="top">Sidebar shortcut</button>
+        <button class="bs-btn bs-btn-secondary" id="popover-trigger" type="button" data-bs-popover="Use one behavior layer per component." data-bs-title="Integration guidance">Show guidance</button>
+        <div class="bs-toast-region" aria-live="polite">
+          <div class="bs-toast bs-toast-success" id="save-toast" data-bs-toast data-bs-toast-autohide="false" hidden>
+            <div><strong class="bs-toast-title">Saved</strong><span class="bs-toast-message">Workspace changes are live.</span></div>
+            <button class="bs-toast-dismiss" type="button" data-bs-toast-dismiss aria-label="Dismiss saved notification">×</button>
+          </div>
+        </div>
+      </section>
     </main>
     </div>
 
     <script type="module">
-      import { initBoobstrap } from "/dist/boobstrap.js";
+      import { initBoobstrap, interactionEvents } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
+      for (const name of interactionEvents) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

@@ -1,18 +1,22 @@
 {
   "name": "@boobstrap/alpine",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Official Alpine.js behavior adapter for Boobstrap components.",
   "type": "module",
   "sideEffects": false,
+  "types": "./src/index.d.ts",
   "files": [
     "src"
   ],
   "exports": {
-    ".": "./src/index.js"
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
   },
   "peerDependencies": {
     "@alpinejs/csp": "^3.15.0",
-    "@boobstrap/boobstrap": "^0.4.0",
+    "@boobstrap/boobstrap": "^0.5.0",
     "alpinejs": "^3.15.0"
   },
   "peerDependenciesMeta": {

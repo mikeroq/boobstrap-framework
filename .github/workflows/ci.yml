@@ -58,6 +58,39 @@ jobs:
             BROWSER="$browser" npm run test:browser
           done
 
+  visual:
+    name: Visual regression (${{ matrix.group }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [dark-components, dark-content, light-components, light-content, variants]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Build framework
+        run: npm run build
+      - name: Run visual regression contract
+        run: npm run test:visual
+        env:
+          VISUAL_GROUP: ${{ matrix.group }}
+      - name: Upload visual diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-regression-diagnostics-${{ matrix.group }}
+          path: artifacts/visual/
+          if-no-files-found: ignore
+
   package-managers:
     name: Install with ${{ matrix.manager }}
     runs-on: ubuntu-latest
@@ -89,15 +122,19 @@ jobs:
           npm pack --silent >/dev/null
           npm pack --silent --workspace @boobstrap/alpine >/dev/null
           npm pack --silent --workspace @boobstrap/react >/dev/null
+          npm pack --silent --workspace @boobstrap/vue >/dev/null
           core_version="$(node -p "require('./package.json').version")"
           alpine_version="$(node -p "require('./packages/alpine/package.json').version")"
           react_version="$(node -p "require('./packages/react/package.json').version")"
+          vue_version="$(node -p "require('./packages/vue/package.json').version")"
           core_archive="boobstrap-boobstrap-${core_version}.tgz"
           alpine_archive="boobstrap-alpine-${alpine_version}.tgz"
           react_archive="boobstrap-react-${react_version}.tgz"
+          vue_archive="boobstrap-vue-${vue_version}.tgz"
           echo "core_archive=${core_archive}" >> "$GITHUB_OUTPUT"
           echo "alpine_archive=${alpine_archive}" >> "$GITHUB_OUTPUT"
           echo "react_archive=${react_archive}" >> "$GITHUB_OUTPUT"
+          echo "vue_archive=${vue_archive}" >> "$GITHUB_OUTPUT"
       - name: Create consumer fixture
         run: mkdir consumer && cd consumer && npm init -y && touch yarn.lock
       - name: Install packed framework
@@ -107,11 +144,12 @@ jobs:
           core_archive="../${{ steps.pack.outputs.core_archive }}"
           alpine_archive="../${{ steps.pack.outputs.alpine_archive }}"
           react_archive="../${{ steps.pack.outputs.react_archive }}"
+          vue_archive="../${{ steps.pack.outputs.vue_archive }}"
           case "${{ matrix.manager }}" in
-            npm) npm install "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
-            yarn) yarn add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
-            pnpm) pnpm add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
-            bun) bun add "$core_archive" "$alpine_archive" "$react_archive" alpinejs@3.15.12 react@19.2.8 ;;
+            npm) npm install "$core_archive" "$alpine_archive" "$react_archive" "$vue_archive" alpinejs@3.15.12 react@19.2.8 vue@3.5.0 ;;
+            yarn) yarn add "$core_archive" "$alpine_archive" "$react_archive" "$vue_archive" alpinejs@3.15.12 react@19.2.8 vue@3.5.0 ;;
+            pnpm) pnpm add "$core_archive" "$alpine_archive" "$react_archive" "$vue_archive" alpinejs@3.15.12 react@19.2.8 vue@3.5.0 ;;
+            bun) bun add "$core_archive" "$alpine_archive" "$react_archive" "$vue_archive" alpinejs@3.15.12 react@19.2.8 vue@3.5.0 ;;
           esac
       - name: Verify exported stylesheet
         working-directory: consumer

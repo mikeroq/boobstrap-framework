@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.4.0/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.5.0/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, composable sidebar, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
+Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, popover, composable sidebar, tabs, toast, and tooltip controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every public controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -104,7 +104,17 @@ function Details() {
 }
 ```
 
-Vue will follow the same contract with its runtime supplied as a peer dependency.
+The official Vue adapter exposes matching headless composables and accepts Vue refs for controlled state:
+
+```bash
+npm install @boobstrap/vue vue
+```
+
+```js
+import { useCollapse } from "@boobstrap/vue";
+
+const details = useCollapse({ id: "details" });
+```
 
 ## Quick start
 
@@ -150,9 +160,11 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - Semantic data tables with striped, hover, bordered, borderless, compact, sticky-header, sortable-header, footer, numeric, action, and empty-state treatments
 - Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
 - A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
-- Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, and tabs controllers
-- Official Alpine and React adapters with framework-owned state
-- Display, flex, sizing, positioning, spacing, and typography utilities
+- Determinate, striped, animated, and indeterminate progress indicators with semantic variants and reduced-motion behavior
+- Toast regions, anchored tooltips, and accessible popovers with optional controllers
+- Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, tabs, toast, tooltip, and popover controllers
+- Official Alpine, React, and Vue adapters with framework-owned state
+- Display, flex, sizing, positioning, spacing, typography, and responsive breakpoint utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
 The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs). The reference is derived from the compiled package used by the site.
@@ -187,6 +199,21 @@ Preset attributes are optional. Override semantic tokens after importing Boobstr
 }
 ```
 
+Build tools and design-system integrations can consume the same source-derived tokens as JSON or an ES module:
+
+```js
+import tokenArtifact, { modes, tokens } from "@boobstrap/boobstrap/tokens";
+import tokenJson from "@boobstrap/boobstrap/tokens.json" with { type: "json" };
+```
+
+`dist/tokens.json` follows the DTCG `$value` and alias shape. Exact CSS `var()` aliases become token references; CSS-native expressions such as `clamp()`, gradients, shadows, and font stacks remain lossless strings without a misleading `$type`. CSS custom properties remain the runtime styling API; these generated artifacts are interoperability data and must not be edited directly.
+
+## Browser support
+
+### Loading skeletons
+
+Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with `.bs-skeleton-text`, `.bs-skeleton-circle`, `.bs-skeleton-media`, size modifiers, and either `.bs-skeleton-pulse` or `.bs-skeleton-wave`. Set widths with `--bs-skeleton-width` or existing layout utilities. Mark the placeholder group `aria-hidden="true"`, put `aria-busy="true"` on the containing content region, and update that region when real content replaces it; skeletons are not progress bars. Both animations become static under reduced motion.
+
 ## Browser support
 
 The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, optional controller interactions, keyboard navigation, and automated Axe accessibility checks.
@@ -196,6 +223,8 @@ Legacy browsers are not a target. Boobstrap uses modern CSS features including c
 ## Development
 
 Feature work targets the `dev` branch and is exercised by the website's hosted dev environment without publishing interim npm versions. See [DEVELOPMENT.md](DEVELOPMENT.md) for the cross-repository integration and release flow.
+
+Release history and compatibility policy live in [CHANGELOG.md](CHANGELOG.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [docs/MIGRATING.md](docs/MIGRATING.md).
 
 ```bash
 git clone https://github.com/mikeroq/boobstrap-framework.git
@@ -211,6 +240,8 @@ Useful commands:
 |---|---|
 | `npm run build` | Compile source imports into `dist/boobstrap.css` |
 | `npm run test:contract` | Verify the exact public class/token contract and bundle metadata |
+| `npm run test:visual` | Compare focused Chromium component snapshots |
+| `npm run test:visual:update` | Regenerate visual baselines after reviewing an intentional visual change |
 | `npm run test:css` | Validate compiled CSS syntax |
 | `npm run test:browser` | Test themes, layout, interactions, keyboard behavior, focus, motion, and accessibility |
 | `npm run test:package` | Inspect the npm tarball contents without publishing |
@@ -234,22 +265,29 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Generic current-color spinners
 - Loading controllers for Boobstrap JS, Alpine, and React
 
-### v0.4 — Component breadth and adapter parity
+### v0.4 — Component breadth (shipped)
 
 - Navigation
 - Breadcrumbs and pagination
 - Tables
+- Native modal dialogs and drawers
+
+### v0.5 — Adapter parity, feedback, and interoperability
+
 - Progress indicators
 - Expanded responsive utilities
 - Official Vue adapter
 - Toast notifications
-- Modals, tooltips, and popovers
+- Tooltips and popovers
+- Core and Alpine TypeScript declarations
+- Machine-readable design token exports
+- Accordion and loading skeleton primitives
+- Adapter conformance and visual regression contracts
 
 ### Future
 
-- Token export tooling
 - Component-level distribution if bundle growth makes partial imports worthwhile
-- Migration guides before the first stable major release
+- Stable-major preparation guided by the published compatibility and migration policy
 
 ## Project structure
 

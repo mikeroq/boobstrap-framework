@@ -9,12 +9,16 @@
 @import "./components/badge.css";
 @import "./components/form.css";
 @import "./components/alert.css";
+@import "./components/accordion.css";
 @import "./components/banner.css";
+@import "./components/progress.css";
+@import "./components/skeleton.css";
 @import "./components/navigation.css";
 @import "./components/code.css";
 @import "./components/table.css";
 @import "./components/list.css";
 @import "./components/interactions.css";
+@import "./components/floating.css";
 @import "./integrations/datatables.css";
 @import "./utilities/layout.css";
 @import "./utilities/spacing.css";

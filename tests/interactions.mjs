@@ -12,18 +12,24 @@ const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/dist/boobstrap.js", await readFile(new URL("../dist/boobstrap.js", import.meta.url))],
   ["/dist/js/banner.js", await readFile(new URL("../dist/js/banner.js", import.meta.url))],
+  ["/dist/js/accordion.js", await readFile(new URL("../dist/js/accordion.js", import.meta.url))],
   ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
   ["/dist/js/dropdown.js", await readFile(new URL("../dist/js/dropdown.js", import.meta.url))],
   ["/dist/js/dialog.js", await readFile(new URL("../dist/js/dialog.js", import.meta.url))],
+  ["/dist/js/floating.js", await readFile(new URL("../dist/js/floating.js", import.meta.url))],
   ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
+  ["/dist/js/interaction-contract.js", await readFile(new URL("../dist/js/interaction-contract.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
+  ["/dist/js/popover.js", await readFile(new URL("../dist/js/popover.js", import.meta.url))],
   ["/dist/js/sidebar.js", await readFile(new URL("../dist/js/sidebar.js", import.meta.url))],
   ["/dist/js/shared.js", await readFile(new URL("../dist/js/shared.js", import.meta.url))],
   ["/dist/js/tabs.js", await readFile(new URL("../dist/js/tabs.js", import.meta.url))],
+  ["/dist/js/toast.js", await readFile(new URL("../dist/js/toast.js", import.meta.url))],
+  ["/dist/js/tooltip.js", await readFile(new URL("../dist/js/tooltip.js", import.meta.url))],
 ]);
 const server = createServer((request, response) => {
   const asset = assets.get(request.url);
@@ -112,6 +118,14 @@ try {
   if (await collapsePanel.isHidden()) failures.push("Collapse ignored a canceled hide event");
   await collapseToggle.click();
   if (!await collapsePanel.isHidden() || await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not close");
+
+  const accordionFirst = page.locator("#accordion-panel-one");
+  const accordionSecond = page.locator("#accordion-panel-two");
+  await page.locator("#accordion-trigger-two").click();
+  if (!await accordionFirst.isHidden() || await accordionSecond.isHidden()) failures.push("Accordion did not enforce single-open mode");
+  await page.evaluate(() => document.querySelector("#accordion-panel-two").addEventListener("bs:collapse:hide", (event) => event.preventDefault(), { once: true }));
+  await page.locator("#accordion-trigger-one").click();
+  if (!await accordionFirst.isHidden() || await accordionSecond.isHidden()) failures.push("Accordion ignored a canceled sibling close");
 
   const modalToggle = page.locator("#modal-toggle");
   const modal = page.locator("#settings-modal");
@@ -242,8 +256,29 @@ try {
   for (let index = 0; index < 6; index += 1) await otpInputs.nth(index).fill(String(index + 1));
   if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
 
+  const toast = page.locator("#save-toast");
+  await page.locator("#toast-toggle").click();
+  await page.waitForFunction(() => document.querySelector("#save-toast").dataset.bsState === "shown");
+  if (await toast.isHidden() || await page.locator("#toast-toggle").getAttribute("aria-expanded") !== "true") failures.push("Toast did not show and synchronize its trigger");
+  await toast.locator("[data-bs-toast-dismiss]").click();
+  await page.waitForFunction(() => document.querySelector("#save-toast").hidden);
+
+  const tooltipTrigger = page.locator("#tooltip-trigger");
+  await tooltipTrigger.hover();
+  const tooltip = page.locator(".bs-tooltip");
+  if (!await tooltip.isVisible() || !await tooltipTrigger.getAttribute("aria-describedby") || !await tooltip.getAttribute("data-bs-placement")) failures.push("Tooltip did not show, position, and name its trigger");
+  await page.locator("h1").hover();
+  if (await tooltip.isVisible()) failures.push("Tooltip did not hide after pointer exit");
+
+  const popoverTrigger = page.locator("#popover-trigger");
+  await popoverTrigger.click();
+  const popover = page.locator(".bs-popover");
+  if (!await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "true" || await popover.getAttribute("role") !== "dialog") failures.push("Popover did not show with synchronized accessible state");
+  await page.locator("h1").click();
+  if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
+
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -257,7 +292,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 13) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 19) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
@@ -302,5 +337,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Interaction contract passed in ${browserName}: forms, dialogs, drawers, combobox, loading buttons, split dropdowns, collapse, tabs, keyboard behavior, events, and Axe.`);
+  console.log(`Interaction contract passed in ${browserName}: forms, dialogs, drawers, combobox, loading buttons, split dropdowns, collapse, tabs, toast, tooltip, popover, keyboard behavior, events, and Axe.`);
 }

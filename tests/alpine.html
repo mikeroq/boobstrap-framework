@@ -107,6 +107,21 @@
         <div class="bs-tab-panel" id="alpine-billing-panel" role="tabpanel" aria-labelledby="alpine-billing-tab" x-bind="panel" hidden>Billing settings</div>
         <div class="bs-tab-panel" id="alpine-security-panel" role="tabpanel" aria-labelledby="alpine-security-tab" x-bind="panel" hidden>Security settings</div>
       </section>
+
+      <section class="bs-stack bs-gap-4" aria-label="Alpine floating feedback">
+        <div x-data="bsToast">
+          <button class="bs-btn bs-btn-secondary" id="alpine-toast-toggle" type="button" x-bind="trigger">Show toast</button>
+          <div class="bs-toast-region"><div class="bs-toast" id="alpine-toast" x-ref="toast" x-bind="panel" aria-label="Saved notification" hidden><span class="bs-toast-message">Saved</span><button class="bs-toast-dismiss" type="button" x-bind="dismiss">×</button></div></div>
+        </div>
+        <div x-data="bsTooltip">
+          <button class="bs-btn bs-btn-secondary" id="alpine-tooltip-trigger" type="button" x-ref="trigger" x-bind="trigger">Tooltip trigger</button>
+          <div class="bs-tooltip" id="alpine-tooltip" x-ref="tooltip" x-bind="panel" hidden>Tooltip details<span class="bs-floating-arrow" aria-hidden="true"></span></div>
+        </div>
+        <div x-data="bsPopover">
+          <button class="bs-btn bs-btn-secondary" id="alpine-popover-trigger" type="button" x-ref="trigger" x-bind="trigger">Popover trigger</button>
+          <div class="bs-popover" id="alpine-popover" x-ref="popover" x-bind="panel" aria-label="Integration guidance" hidden><div class="bs-popover-body">Popover details</div><span class="bs-floating-arrow" aria-hidden="true"></span></div>
+        </div>
+      </section>
     </main>
   </body>
 </html>
