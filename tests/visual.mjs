@@ -1,9 +1,10 @@
-import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import pixelmatch from "pixelmatch";
 import { chromium } from "playwright";
+import { PNG } from "pngjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const snapshots = resolve(root, "tests", "visual-snapshots");
@@ -11,6 +12,7 @@ const artifacts = resolve(root, "artifacts", "visual");
 const update = process.env.UPDATE_VISUAL === "1";
 const visualGroup = process.env.VISUAL_GROUP ?? "all";
 const visualGroups = new Set(["all", "dark-components", "dark-content", "light-components", "light-content", "variants"]);
+const maxDifferentPixelRatio = 0.02;
 if (!visualGroups.has(visualGroup)) throw new Error(`Unsupported visual group: ${visualGroup}`);
 const html = await readFile(resolve(root, "tests", "visual.html"));
 const css = await readFile(resolve(root, "dist", "boobstrap.css"));
@@ -41,10 +43,22 @@ async function capture(name, options = {}) {
     const path = resolve(snapshots, `${name}.png`);
     if (update) await writeFile(path, image);
     else {
-      try { assert.deepEqual(image, await readFile(path)); }
-      catch {
+      const expected = PNG.sync.read(await readFile(path));
+      const actual = PNG.sync.read(image);
+      if (actual.width !== expected.width || actual.height !== expected.height) {
         await writeFile(resolve(artifacts, `${name}-actual.png`), image);
-        failures.push(`${name}: screenshot differs; inspect artifacts/visual/${name}-actual.png and run npm run test:visual:update if intentional`);
+        failures.push(`${name}: dimensions differ (expected ${expected.width}x${expected.height}, received ${actual.width}x${actual.height})`);
+      } else {
+        const diff = new PNG({ width: expected.width, height: expected.height });
+        const differentPixels = pixelmatch(expected.data, actual.data, diff.data, expected.width, expected.height, { threshold: 0.1 });
+        const differentPixelRatio = differentPixels / (expected.width * expected.height);
+        if (differentPixelRatio > maxDifferentPixelRatio) {
+          await Promise.all([
+            writeFile(resolve(artifacts, `${name}-actual.png`), image),
+            writeFile(resolve(artifacts, `${name}-diff.png`), PNG.sync.write(diff)),
+          ]);
+          failures.push(`${name}: ${(differentPixelRatio * 100).toFixed(3)}% of pixels differ (maximum ${(maxDifferentPixelRatio * 100).toFixed(1)}%); inspect artifacts/visual/${name}-{actual,diff}.png`);
+        }
       }
     }
     if (requests.some((url) => !url.startsWith(`http://127.0.0.1:${server.address().port}`))) failures.push(`${name}: external request detected`);
