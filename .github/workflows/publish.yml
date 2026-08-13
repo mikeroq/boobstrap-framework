@@ -73,3 +73,14 @@ jobs:
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish Vue adapter with provenance
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./packages/vue/package.json').version")"
+          if npm view "@boobstrap/vue@${package_version}" version >/dev/null 2>&1; then
+            echo "@boobstrap/vue@${package_version} is already published; skipping."
+          else
+            npm publish --workspace @boobstrap/vue --access public --provenance --tag "${{ inputs.npm_tag }}"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
