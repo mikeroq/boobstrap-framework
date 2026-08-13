@@ -1,0 +1,49 @@
+{
+  "name": "@boobstrap/vue",
+  "version": "0.4.0",
+  "description": "Official Vue behavior adapter for Boobstrap components.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "LICENSE",
+    "README.md",
+    "src"
+  ],
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@boobstrap/boobstrap": "^0.4.0",
+    "vue": ">=3.5.0 <4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@boobstrap/boobstrap": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "vue",
+    "boobstrap",
+    "components",
+    "composables",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeroq/boobstrap-framework.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://boobstrap.org/docs#vue",
+  "bugs": {
+    "url": "https://github.com/mikeroq/boobstrap-framework/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT"
+}

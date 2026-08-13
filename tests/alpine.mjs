@@ -17,8 +17,11 @@ const assets = new Map([
   ["/adapter/combobox.js", await readFile(new URL("../packages/alpine/src/combobox.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
   ["/adapter/dialog.js", await readFile(new URL("../packages/alpine/src/dialog.js", import.meta.url))],
+  ["/adapter/popover.js", await readFile(new URL("../packages/alpine/src/popover.js", import.meta.url))],
   ["/adapter/shared.js", await readFile(new URL("../packages/alpine/src/shared.js", import.meta.url))],
   ["/adapter/tabs.js", await readFile(new URL("../packages/alpine/src/tabs.js", import.meta.url))],
+  ["/adapter/toast.js", await readFile(new URL("../packages/alpine/src/toast.js", import.meta.url))],
+  ["/adapter/tooltip.js", await readFile(new URL("../packages/alpine/src/tooltip.js", import.meta.url))],
   ["/vendor/alpine.js", await readFile(new URL("../node_modules/alpinejs/dist/module.esm.js", import.meta.url))],
   ["/vendor/alpine-csp.js", await readFile(new URL("../node_modules/@alpinejs/csp/dist/module.esm.js", import.meta.url))],
 ]);
@@ -130,8 +133,19 @@ try {
     if (await profileTab.getAttribute("aria-selected") !== "true") failures.push(`${build}: tabs did not support Home`);
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
+    await page.locator("#alpine-toast-toggle").click();
+    if (await page.locator("#alpine-toast").isHidden()) failures.push(`${build}: toast did not show`);
+    await page.locator("#alpine-toast").getByRole("button").click();
+    await page.locator("#alpine-tooltip-trigger").hover();
+    if (await page.locator("#alpine-tooltip").isHidden() || !await page.locator("#alpine-tooltip-trigger").getAttribute("aria-describedby")) failures.push(`${build}: tooltip did not show with its description`);
+    await page.locator("#alpine-popover-trigger").click();
+    if (await page.locator("#alpine-popover").isHidden()) failures.push(`${build}: popover did not show`);
+    await page.locator("#alpine-heading").click();
+    if (await page.locator("#alpine-popover").isVisible()) failures.push(`${build}: popover did not dismiss outside`);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:popover:hidden"));
+
     const events = await page.evaluate(() => window.bsEvents);
-    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
       if (!events.some((event) => event.name === name && event.adapter === "alpine")) failures.push(`${build}: missing ${name}`);
     }
 
@@ -151,5 +165,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, dialogs, combobox, loading, interactions, keyboard behavior, events, and Axe.`);
+  console.log(`Alpine adapter passed in ${browserName}: standard and strict-CSP builds, dialogs, combobox, loading, floating feedback, keyboard behavior, events, and Axe.`);
 }

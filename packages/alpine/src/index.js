@@ -3,9 +3,12 @@ import { collapse } from "./collapse.js";
 import { combobox } from "./combobox.js";
 import { dropdown } from "./dropdown.js";
 import { dialog } from "./dialog.js";
+import { popover } from "./popover.js";
 import { tabs } from "./tabs.js";
+import { toast } from "./toast.js";
+import { tooltip } from "./tooltip.js";
 
-export { button, collapse, combobox, dialog, dropdown, tabs };
+export { button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip };
 
 export function boobstrap(Alpine) {
   Alpine.data("bsButton", button);
@@ -13,7 +16,10 @@ export function boobstrap(Alpine) {
   Alpine.data("bsCombobox", combobox);
   Alpine.data("bsDropdown", dropdown);
   Alpine.data("bsDialog", dialog);
+  Alpine.data("bsPopover", popover);
   Alpine.data("bsTabs", tabs);
+  Alpine.data("bsToast", toast);
+  Alpine.data("bsTooltip", tooltip);
 }
 
 export default boobstrap;

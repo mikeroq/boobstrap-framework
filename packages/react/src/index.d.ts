@@ -167,3 +167,46 @@ export interface TabsResult {
 }
 
 export function useTabs(options?: TabsOptions): TabsResult;
+
+export interface ToastOptions extends CollapseOptions {
+  duration?: number;
+  autohide?: boolean;
+}
+
+export interface ToastResult {
+  open: boolean;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  getToastProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+  getDismissProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+}
+
+export function useToast(options?: ToastOptions): ToastResult;
+
+export interface FloatingOptions extends CollapseOptions {
+  placement?: "top" | "bottom" | "start" | "end";
+}
+
+export interface TooltipResult {
+  open: boolean;
+  tooltipId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>;
+  getTooltipProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+}
+
+export function useTooltip(options?: FloatingOptions): TooltipResult;
+
+export interface PopoverResult {
+  open: boolean;
+  popoverId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>;
+  getPopoverProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+}
+
+export function usePopover(options?: FloatingOptions): PopoverResult;

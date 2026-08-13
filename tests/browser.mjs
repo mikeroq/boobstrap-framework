@@ -71,6 +71,9 @@ try {
         const cardAction = structuredCard.querySelector(".bs-card-action");
         const cardContent = structuredCard.querySelector(".bs-card-content");
         const cardFooter = structuredCard.querySelector(".bs-card-footer");
+        const progress = document.querySelector("[data-test-progress]");
+        const progressBar = progress.querySelector(".bs-progress-bar");
+        const responsiveUtility = document.querySelector("[data-test-responsive-utility]");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -105,6 +108,10 @@ try {
           cardContentPaddingInline: getComputedStyle(cardContent).paddingInline,
           cardFooterLayout: getComputedStyle(cardFooter).display,
           cardFooterPaddingInline: getComputedStyle(cardFooter).paddingInline,
+          progressRatio: progressBar.getBoundingClientRect().width / progress.getBoundingClientRect().width,
+          progressBackground: getComputedStyle(progressBar).backgroundColor,
+          progressHeight: progress.getBoundingClientRect().height,
+          responsiveDirection: getComputedStyle(responsiveUtility).flexDirection,
         };
       });
 
@@ -125,6 +132,8 @@ try {
       if (metrics.cardLayout !== "flex" || metrics.cardHeaderLayout !== "grid" || metrics.cardFooterLayout !== "flex") failures.push(`${theme}/${viewport.name}: structured card regions did not compose`);
       if (metrics.cardTitleArea !== "title" || metrics.cardDescriptionArea !== "description" || metrics.cardActionArea !== "action" || metrics.cardActionAlignment !== "end") failures.push(`${theme}/${viewport.name}: card header slots did not align`);
       if (metrics.cardContentPaddingInline === "0px" || metrics.cardContentPaddingInline !== metrics.cardFooterPaddingInline) failures.push(`${theme}/${viewport.name}: card content and footer spacing did not share the region contract`);
+      if (Math.abs(metrics.progressRatio - 0.68) > 0.03 || metrics.progressBackground === "rgba(0, 0, 0, 0)" || metrics.progressHeight < 14) failures.push(`${theme}/${viewport.name}: progress indicator contract did not resolve`);
+      if (metrics.responsiveDirection !== (viewport.name === "mobile" ? "column" : "row")) failures.push(`${theme}/${viewport.name}: responsive flex direction utility did not apply`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
@@ -235,6 +244,8 @@ try {
   if (!transitionDuration.split(",").every((duration) => Number.parseFloat(duration) <= 0.00001)) {
     failures.push(`Reduced motion did not minimize transitions: ${transitionDuration}`);
   }
+  const progressMotion = await motionPage.locator(".bs-progress-animated").evaluate((element) => getComputedStyle(element).animationName);
+  if (progressMotion !== "none") failures.push(`Reduced motion did not disable progress animation: ${progressMotion}`);
   await motionContext.close();
 } finally {
   await browser.close();

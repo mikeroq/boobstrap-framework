@@ -70,7 +70,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, composable sidebar, and tabs controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every controller has a component-level `/js/<name>` import.
+Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, popover, composable sidebar, tabs, toast, and tooltip controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every public controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -104,7 +104,17 @@ function Details() {
 }
 ```
 
-Vue will follow the same contract with its runtime supplied as a peer dependency.
+The official Vue adapter exposes matching headless composables and accepts Vue refs for controlled state:
+
+```bash
+npm install @boobstrap/vue vue
+```
+
+```js
+import { useCollapse } from "@boobstrap/vue";
+
+const details = useCollapse({ id: "details" });
+```
 
 ## Quick start
 
@@ -150,9 +160,11 @@ Vue will follow the same contract with its runtime supplied as a peer dependency
 - Semantic data tables with striped, hover, bordered, borderless, compact, sticky-header, sortable-header, footer, numeric, action, and empty-state treatments
 - Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
 - A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
-- Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, and tabs controllers
-- Official Alpine and React adapters with framework-owned state
-- Display, flex, sizing, positioning, spacing, and typography utilities
+- Determinate, striped, animated, and indeterminate progress indicators with semantic variants and reduced-motion behavior
+- Toast regions, anchored tooltips, and accessible popovers with optional controllers
+- Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, tabs, toast, tooltip, and popover controllers
+- Official Alpine, React, and Vue adapters with framework-owned state
+- Display, flex, sizing, positioning, spacing, typography, and responsive breakpoint utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
 The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs). The reference is derived from the compiled package used by the site.
@@ -234,16 +246,20 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Generic current-color spinners
 - Loading controllers for Boobstrap JS, Alpine, and React
 
-### v0.4 — Component breadth and adapter parity
+### v0.4 — Component breadth (shipped)
 
 - Navigation
 - Breadcrumbs and pagination
 - Tables
+- Native modal dialogs and drawers
+
+### Next release — Adapter parity and feedback (implemented on `dev`)
+
 - Progress indicators
 - Expanded responsive utilities
 - Official Vue adapter
 - Toast notifications
-- Modals, tooltips, and popovers
+- Tooltips and popovers
 
 ### Future
 

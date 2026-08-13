@@ -120,8 +120,18 @@ try {
   if (await profileTab.getAttribute("aria-selected") !== "true") failures.push("tabs did not support Home");
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
+  await page.locator("#react-toast-toggle").click();
+  if (await page.locator("#react-toast").isHidden()) failures.push("toast did not show");
+  await page.locator("#react-toast").getByRole("button").click();
+  await page.locator("#react-tooltip-trigger").hover();
+  if (await page.locator("#react-tooltip").isHidden() || !await page.locator("#react-tooltip-trigger").getAttribute("aria-describedby")) failures.push("tooltip did not show with its description");
+  await page.locator("#react-popover-trigger").click();
+  if (await page.locator("#react-popover").isHidden()) failures.push("popover did not show");
+  await page.locator("#react-heading").click();
+  if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
+
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
@@ -140,5 +150,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`React adapter passed in ${browserName}: dialogs, controlled and uncontrolled combobox, loading, interactions, keyboard behavior, events, SSR-safe rendering, and Axe.`);
+  console.log(`React adapter passed in ${browserName}: dialogs, controlled and uncontrolled combobox, loading, floating feedback, keyboard behavior, events, SSR-safe rendering, and Axe.`);
 }

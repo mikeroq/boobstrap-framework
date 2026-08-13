@@ -31,17 +31,20 @@
     "./js/input-mask": "./dist/js/input-mask.js",
     "./js/otp": "./dist/js/otp.js",
     "./js/password": "./dist/js/password.js",
+    "./js/popover": "./dist/js/popover.js",
     "./js/sidebar": "./dist/js/sidebar.js",
-    "./js/tabs": "./dist/js/tabs.js"
+    "./js/tabs": "./dist/js/tabs.js",
+    "./js/toast": "./dist/js/toast.js",
+    "./js/tooltip": "./dist/js/tooltip.js"
   },
   "scripts": {
     "build": "node scripts/build-framework.mjs",
     "test": "npm run build && npm run test:contract && npm run test:css && npm run test:browser && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs",
-    "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs && node scripts/verify-react-package.mjs && npm run test:types",
-    "test:types": "tsc --noEmit --strict --jsx react-jsx --module NodeNext --moduleResolution NodeNext --target ES2022 --lib ES2022,DOM --skipLibCheck tests/react-types.tsx",
+    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
+    "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs && node scripts/verify-react-package.mjs && node scripts/verify-vue-package.mjs && npm run test:types",
+    "test:types": "tsc --noEmit --strict --jsx react-jsx --module NodeNext --moduleResolution NodeNext --target ES2022 --lib ES2022,DOM --skipLibCheck tests/react-types.tsx tests/vue-types.ts",
     "test:starter": "npm --prefix examples/starter ci && npm --prefix examples/starter run validate",
     "prepack": "npm run build && npm run test:contract && npm run test:css",
     "prepare": "npm run build"
@@ -76,6 +79,7 @@
     "playwright": "^1.62.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vue": "^3.5.0"
   }
 }

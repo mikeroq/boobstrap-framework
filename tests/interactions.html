@@ -186,6 +186,18 @@
           <input type="hidden" name="verification_code" data-bs-otp-value />
         </div>
       </section>
+
+      <section class="bs-stack bs-gap-4" aria-label="Floating feedback examples">
+        <button class="bs-btn bs-btn-secondary" id="toast-toggle" type="button" data-bs-toggle="toast" aria-controls="save-toast">Show notification</button>
+        <button class="bs-btn bs-btn-secondary" id="tooltip-trigger" type="button" data-bs-tooltip="Keyboard shortcut: Control B" data-bs-placement="top">Sidebar shortcut</button>
+        <button class="bs-btn bs-btn-secondary" id="popover-trigger" type="button" data-bs-popover="Use one behavior layer per component." data-bs-title="Integration guidance">Show guidance</button>
+        <div class="bs-toast-region" aria-live="polite">
+          <div class="bs-toast bs-toast-success" id="save-toast" data-bs-toast data-bs-toast-autohide="false" hidden>
+            <div><strong class="bs-toast-title">Saved</strong><span class="bs-toast-message">Workspace changes are live.</span></div>
+            <button class="bs-toast-dismiss" type="button" data-bs-toast-dismiss aria-label="Dismiss saved notification">×</button>
+          </div>
+        </div>
+      </section>
     </main>
     </div>
 
@@ -193,7 +205,7 @@
       import { initBoobstrap } from "/dist/boobstrap.js";
 
       window.bsEvents = [];
-      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed"]) {
+      for (const name of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:sidebar:expanded", "bs:sidebar:collapsed", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
         document.addEventListener(name, () => window.bsEvents.push(name));
       }
       window.bs = initBoobstrap();

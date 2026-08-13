@@ -1,9 +1,9 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useTabs } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 window.bsEvents = [];
-for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:tabs:changed"]) {
+for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
   document.addEventListener(name, (event) => window.bsEvents.push({ name, adapter: event.detail.adapter }));
 }
 
@@ -122,6 +122,22 @@ function TabsExample() {
   );
 }
 
+function FloatingFeedbackExample() {
+  const toast = useToast({ autohide: false });
+  const tooltip = useTooltip({ id: "react-tooltip", placement: "top" });
+  const popover = usePopover({ id: "react-popover", placement: "bottom" });
+  return (
+    <section className="bs-stack bs-gap-4" aria-label="React floating feedback">
+      <button id="react-toast-toggle" className="bs-btn bs-btn-secondary" {...toast.getTriggerProps()}>Show toast</button>
+      <div className="bs-toast-region"><div id="react-toast" className="bs-toast" aria-label="Saved notification" {...toast.getToastProps()}><span className="bs-toast-message">Saved</span><button className="bs-toast-dismiss" {...toast.getDismissProps()}>×</button></div></div>
+      <button id="react-tooltip-trigger" className="bs-btn bs-btn-secondary" {...tooltip.getTriggerProps()}>Tooltip trigger</button>
+      <div id="react-tooltip" className="bs-tooltip" {...tooltip.getTooltipProps()}>Tooltip details<span className="bs-floating-arrow" aria-hidden="true" /></div>
+      <button id="react-popover-trigger" className="bs-btn bs-btn-secondary" {...popover.getTriggerProps()}>Popover trigger</button>
+      <div id="react-popover" className="bs-popover" aria-label="Integration guidance" {...popover.getPopoverProps()}><div className="bs-popover-body">Popover details</div><span className="bs-floating-arrow" aria-hidden="true" /></div>
+    </section>
+  );
+}
+
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
@@ -133,6 +149,7 @@ function App() {
       <DropdownExample />
       <ComboboxExample />
       <TabsExample />
+      <FloatingFeedbackExample />
     </>
   );
 }
