@@ -23,34 +23,37 @@ const failures = [];
 
 async function capture(name, options = {}) {
   const context = await browser.newContext({ viewport: options.viewport ?? { width: 800, height: 900 }, reducedMotion: options.reducedMotion ?? "no-preference" });
-  const page = await context.newPage();
-  const requests = [];
-  page.on("request", (request) => requests.push(request.url()));
-  await page.goto(`http://127.0.0.1:${server.address().port}`, { waitUntil: "networkidle" });
-  await page.evaluate(({ theme, direction, radius }) => {
-    document.documentElement.dataset.bsTheme = theme;
-    document.documentElement.dir = direction;
-    document.documentElement.dataset.bsRadius = radius;
-  }, { theme: options.theme ?? "dark", direction: options.direction ?? "ltr", radius: options.radius ?? "rounded" });
-  const image = await page.locator(options.selector ?? ".visual-page").screenshot({ animations: "disabled" });
-  const path = resolve(snapshots, `${name}.png`);
-  if (update) await writeFile(path, image);
-  else {
-    try { assert.deepEqual(image, await readFile(path)); }
-    catch {
-      await writeFile(resolve(artifacts, `${name}-actual.png`), image);
-      failures.push(`${name}: screenshot differs; inspect artifacts/visual/${name}-actual.png and run npm run test:visual:update if intentional`);
+  try {
+    const page = await context.newPage();
+    const requests = [];
+    page.on("request", (request) => requests.push(request.url()));
+    await page.goto(`http://127.0.0.1:${server.address().port}`, { waitUntil: "networkidle" });
+    await page.evaluate(({ theme, direction, radius }) => {
+      document.documentElement.dataset.bsTheme = theme;
+      document.documentElement.dir = direction;
+      document.documentElement.dataset.bsRadius = radius;
+    }, { theme: options.theme ?? "dark", direction: options.direction ?? "ltr", radius: options.radius ?? "rounded" });
+    const image = await page.locator(options.selector ?? ".visual-page").screenshot({ animations: options.animations ?? "disabled", timeout: 20_000 });
+    const path = resolve(snapshots, `${name}.png`);
+    if (update) await writeFile(path, image);
+    else {
+      try { assert.deepEqual(image, await readFile(path)); }
+      catch {
+        await writeFile(resolve(artifacts, `${name}-actual.png`), image);
+        failures.push(`${name}: screenshot differs; inspect artifacts/visual/${name}-actual.png and run npm run test:visual:update if intentional`);
+      }
     }
+    if (requests.some((url) => !url.startsWith(`http://127.0.0.1:${server.address().port}`))) failures.push(`${name}: external request detected`);
+    console.log(`${update ? "Updated" : "Checked"} visual snapshot ${name}.`);
+  } finally {
+    await context.close();
   }
-  if (requests.some((url) => !url.startsWith(`http://127.0.0.1:${server.address().port}`))) failures.push(`${name}: external request detected`);
-  await context.close();
-  console.log(`${update ? "Updated" : "Checked"} visual snapshot ${name}.`);
 }
 
 try {
   for (const theme of ["dark", "light"]) {
     for (const region of ["controls", "accordion", "data", "loading"]) await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
-    await capture(`${theme}-mobile`, { theme, viewport: { width: 390, height: 900 } });
+    await capture(`${theme}-mobile`, { theme, viewport: { width: 390, height: 900 }, reducedMotion: "reduce", animations: "allow" });
   }
   await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
   await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
