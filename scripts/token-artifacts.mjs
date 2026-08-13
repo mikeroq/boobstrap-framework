@@ -4,6 +4,7 @@ const declarationPattern = /(--bs-[a-z0-9-]+)\s*:\s*([^;]+);/g;
 
 function tokenPath(name) {
   const [group, ...rest] = name.replace(/^--bs-/, "").split("-");
+  if (!rest.length) return ["base", group];
   return [group, rest.join("-")];
 }
 
@@ -19,7 +20,10 @@ function declarations(body) {
 }
 
 export function parseTokenCss(css) {
-  const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({ selector: match[1].trim(), values: declarations(match[2]) }));
+  const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1].replace(/\/\*[\s\S]*?\*\//g, "").trim(),
+    values: declarations(match[2]),
+  }));
   const root = blocks.find(({ selector }) => selector.startsWith(":root,"));
   if (!root) throw new Error("Could not find root token block");
   const tokens = {};

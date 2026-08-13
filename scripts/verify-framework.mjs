@@ -43,6 +43,9 @@ const generatedTokenNames = Object.values(tokenArtifact.tokens).flatMap((group) 
 assert.deepEqual(generatedTokenNames, actualTokens, "Token artifact must account for every public root token");
 for (const preset of ["rose", "violet", "blue", "teal", "amber"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-palette=\"${preset}\"`)), `Missing ${preset} mode`);
 for (const preset of ["rounded", "square"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-radius=\"${preset}\"`)), `Missing ${preset} radius mode`);
+assert.equal(tokenArtifact.tokens.base.white.$value, "#ffffff", "Expected ungrouped CSS tokens under the DTCG-safe base group");
+assert.equal(tokenArtifact.modes['[data-bs-theme="light"]']["--bs-color-primary-contrast"], "{base.white}", "Expected root-token aliases to use a complete DTCG path");
+assert.ok(Object.keys(tokenArtifact.modes).every((selector) => !selector.includes("/*")), "Token mode selector keys must not contain CSS comments");
 
 if (css.includes("@import")) throw new Error("dist/boobstrap.css still contains unresolved imports");
 

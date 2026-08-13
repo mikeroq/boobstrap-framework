@@ -1,6 +1,9 @@
-import boobstrap, { accordion, button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip } from "@boobstrap/alpine";
+import boobstrap, { accordion, button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip, type AccordionProvider, type AlpineLike } from "@boobstrap/alpine";
 
-boobstrap({ data: (_name, _provider) => {} });
+const Alpine: AlpineLike = { data: (_name, _provider) => {} };
+boobstrap(Alpine);
+const typedAccordion: AccordionProvider = accordion(["one"], { alwaysOpen: true });
+Alpine.data("typedAccordion", () => typedAccordion);
 accordion(["one"]).toggle("two");
 button(false, { loadingLabel: "Saving" }).start("test");
 collapse(false).toggle();

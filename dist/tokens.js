@@ -1,8 +1,8 @@
 // Generated from src/base/tokens.css. Do not edit.
 export const tokens = Object.freeze({
-  "white": {
-    "$description": "white design tokens generated from src/base/tokens.css.",
-    "": {
+  "base": {
+    "$description": "base design tokens generated from src/base/tokens.css.",
+    "white": {
       "$value": "#ffffff",
       "$extensions": {
         "org.boobstrap.css-variable": "--bs-white"
@@ -547,13 +547,13 @@ export const modes = Object.freeze({
     "--bs-color-primary": "#c93179",
     "--bs-color-primary-hover": "#ae2868",
     "--bs-color-primary-active": "#8f2057",
-    "--bs-color-primary-contrast": "{white.}",
+    "--bs-color-primary-contrast": "{base.white}",
     "--bs-color-focus-ring": "rgb(201 49 121 / 28%)",
     "--bs-shadow-sm": "0 2px 8px rgb(72 31 55 / 8%)",
     "--bs-shadow-md": "0 12px 30px rgb(72 31 55 / 12%)",
     "--bs-shadow-lg": "0 24px 70px rgb(72 31 55 / 16%)"
   },
-  "/* Palette presets compose with either color mode and may be scoped to any subtree. */ [data-bs-palette=\"rose\"], [data-bs-palette=\"rose\"] [data-bs-theme=\"dark\"]": {
+  "[data-bs-palette=\"rose\"], [data-bs-palette=\"rose\"] [data-bs-theme=\"dark\"]": {
     "--bs-brand-300": "#f28abb",
     "--bs-brand-400": "#ea5a9f",
     "--bs-brand-500": "#d83c87",
@@ -793,7 +793,7 @@ export const modes = Object.freeze({
     "--bs-shadow-lg": "0 24px 70px rgb(83 51 18 / 16%)",
     "--bs-shadow-brand": "0 10px 34px rgb(180 83 9 / 19%)"
   },
-  "/* Radius presets only remap shape tokens; intrinsic circles remain circular. */ [data-bs-radius=\"rounded\"]": {
+  "[data-bs-radius=\"rounded\"]": {
     "--bs-radius-xs": "0.25rem",
     "--bs-radius-sm": "0.5rem",
     "--bs-radius-md": "0.75rem",

@@ -58,6 +58,8 @@ Changes to selectors, tokens, exports, behavior contracts, or package contents a
 
 Do not weaken contract assertions merely to make an accidental change pass.
 
+A framework addition or public change is not complete until the official website documentation is updated in the same integration cycle. The framework handoff must identify the affected site guides and examples; the site change must cover route metadata, navigation, adapter examples, and smoke tests where applicable. A generated class or token reference refresh is supporting work, not a substitute for user-facing documentation.
+
 ## Validation expectations
 
 - Run `npm run build` for source changes.
