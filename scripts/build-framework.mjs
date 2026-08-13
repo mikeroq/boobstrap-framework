@@ -44,6 +44,8 @@ const javascriptFiles = (await readdir(javascriptSource)).filter((file) => file.
 for (const file of javascriptFiles) {
   await copyFile(join(javascriptSource, file), join(javascriptDestination, file));
 }
+await copyFile(join(javascriptSource, "index.d.ts"), join(javascriptDestination, "index.d.ts"));
 await copyFile(join(root, "src", "boobstrap.js"), join(root, "dist", "boobstrap.js"));
+await copyFile(join(javascriptSource, "index.d.ts"), join(root, "dist", "boobstrap.d.ts"));
 
 console.log(`Built ${destination.replace(`${root}/`, "")} (${Buffer.byteLength(css)} bytes) and ${javascriptFiles.length} JavaScript modules.`);

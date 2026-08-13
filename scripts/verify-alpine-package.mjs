@@ -20,6 +20,7 @@ const requiredPaths = [
   "src/dialog.js",
   "src/popover.js",
   "src/index.js",
+  "src/index.d.ts",
   "src/shared.js",
   "src/tabs.js",
   "src/toast.js",
