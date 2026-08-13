@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
 import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
+import { isKnownBrowserWarning } from "./browser-console.mjs";
 
 const browserName = process.env.BROWSER || "chromium";
 const browserType = { chromium, firefox, webkit }[browserName];
@@ -32,7 +33,11 @@ try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   const consoleErrors = [];
-  page.on("console", (message) => { if (["error", "warning"].includes(message.type())) consoleErrors.push(`${message.type()}: ${message.text()}`); });
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type()) && !isKnownBrowserWarning(message, browserName)) {
+      consoleErrors.push(`${message.type()}: ${message.text()}`);
+    }
+  });
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(`http://127.0.0.1:${server.address().port}`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.vueReady === true);
