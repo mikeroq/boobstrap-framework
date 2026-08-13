@@ -4,6 +4,8 @@ Notable changes to Boobstrap are documented here. The project follows [Keep a Ch
 
 ## Unreleased
 
+## 0.5.0
+
 - Added deterministic design-token JSON and ES module exports.
 - Added core and Alpine TypeScript declarations.
 - Added accordion and loading skeleton component families.

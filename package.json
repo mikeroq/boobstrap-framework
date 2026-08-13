@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/boobstrap",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A cheeky CSS framework that still means business.",
   "type": "module",
   "workspaces": [
@@ -17,7 +17,10 @@
     "dist/tokens.js",
     "dist/tokens.d.ts",
     "dist/js",
+    "CHANGELOG.md",
     "docs/INTERACTIONS.md",
+    "docs/MIGRATING.md",
+    "docs/VERSIONING.md",
     "src"
   ],
   "style": "dist/boobstrap.css",

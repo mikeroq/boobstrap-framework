@@ -10,8 +10,11 @@ const paths = pack.files.map((file) => file.path);
 
 const requiredPaths = [
   "LICENSE",
+  "CHANGELOG.md",
   "README.md",
   "docs/INTERACTIONS.md",
+  "docs/MIGRATING.md",
+  "docs/VERSIONING.md",
   "dist/boobstrap.css",
   "dist/boobstrap.js",
   "dist/boobstrap.d.ts",

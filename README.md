@@ -24,7 +24,7 @@ bun add @boobstrap/boobstrap
 All four commands install the same package from the npm registry. For a plain HTML page, use the version-pinned CDN build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.4.0/dist/boobstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@boobstrap/boobstrap@0.5.0/dist/boobstrap.css" />
 ```
 
 Import the compiled stylesheet once at your application entry point:
@@ -272,19 +272,22 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Tables
 - Native modal dialogs and drawers
 
-### Next release — Adapter parity and feedback (implemented on `dev`)
+### v0.5 — Adapter parity, feedback, and interoperability
 
 - Progress indicators
 - Expanded responsive utilities
 - Official Vue adapter
 - Toast notifications
 - Tooltips and popovers
+- Core and Alpine TypeScript declarations
+- Machine-readable design token exports
+- Accordion and loading skeleton primitives
+- Adapter conformance and visual regression contracts
 
 ### Future
 
-- Token export tooling
 - Component-level distribution if bundle growth makes partial imports worthwhile
-- Migration guides before the first stable major release
+- Stable-major preparation guided by the published compatibility and migration policy
 
 ## Project structure
 
