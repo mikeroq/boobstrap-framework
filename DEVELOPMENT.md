@@ -31,6 +31,8 @@ The production website does not use the floating branch. It continues to install
 
 ## Release promotion
 
+Before promotion, review the public compatibility boundary and deprecation procedure in [docs/VERSIONING.md](docs/VERSIONING.md), update [CHANGELOG.md](CHANGELOG.md), and add migration guidance in [docs/MIGRATING.md](docs/MIGRATING.md) when consumer action is required.
+
 1. Freeze framework merges into `dev` and verify CI plus the hosted dev site.
 2. Merge framework `dev` into `master` through a pull request.
 3. Set the release version, run the full gate, create the matching `v<version>` tag, and invoke the existing publish workflow once.

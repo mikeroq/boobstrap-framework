@@ -224,6 +224,8 @@ Legacy browsers are not a target. Boobstrap uses modern CSS features including c
 
 Feature work targets the `dev` branch and is exercised by the website's hosted dev environment without publishing interim npm versions. See [DEVELOPMENT.md](DEVELOPMENT.md) for the cross-repository integration and release flow.
 
+Release history and compatibility policy live in [CHANGELOG.md](CHANGELOG.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [docs/MIGRATING.md](docs/MIGRATING.md).
+
 ```bash
 git clone https://github.com/mikeroq/boobstrap-framework.git
 cd boobstrap-framework
@@ -238,6 +240,8 @@ Useful commands:
 |---|---|
 | `npm run build` | Compile source imports into `dist/boobstrap.css` |
 | `npm run test:contract` | Verify the exact public class/token contract and bundle metadata |
+| `npm run test:visual` | Compare focused Chromium component snapshots |
+| `npm run test:visual:update` | Regenerate visual baselines after reviewing an intentional visual change |
 | `npm run test:css` | Validate compiled CSS syntax |
 | `npm run test:browser` | Test themes, layout, interactions, keyboard behavior, focus, motion, and accessibility |
 | `npm run test:package` | Inspect the npm tarball contents without publishing |

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boobstrap visual contract</title>
+    <link rel="stylesheet" href="/dist/boobstrap.css" />
+    <style>
+      * { animation: none !important; caret-color: transparent !important; transition: none !important; }
+      body { margin: 0; font-family: Arial, sans-serif; }
+      .visual-page { inline-size: 720px; padding: 24px; }
+      .visual-region { padding: 20px; border: 1px solid var(--bs-color-border); background: var(--bs-color-background); }
+      .visual-region + .visual-region { margin-block-start: 16px; }
+      @media (max-width: 600px) { .visual-page { inline-size: 360px; padding: 12px; } }
+    </style>
+  </head>
+  <body>
+    <main class="visual-page">
+      <section class="visual-region" data-visual="controls" aria-label="Controls">
+        <div class="bs-stack bs-gap-4">
+          <div class="bs-flex bs-flex-wrap bs-gap-3"><button class="bs-btn bs-btn-primary">Primary</button><button class="bs-btn bs-btn-secondary">Secondary</button><span class="bs-badge bs-badge-primary">New</span></div>
+          <label class="bs-label" for="visual-input">Workspace</label><input class="bs-input" id="visual-input" value="Acme studio" />
+          <div class="bs-alert bs-alert-success"><strong class="bs-alert-title">Saved</strong> Changes are live.</div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="accordion" aria-label="Accordion">
+        <div class="bs-accordion">
+          <section class="bs-accordion-item"><h2 class="bs-accordion-header"><button class="bs-accordion-trigger" aria-expanded="true">Account <span class="bs-accordion-icon">⌄</span></button></h2><div class="bs-accordion-panel"><div class="bs-accordion-body">Profile and security preferences.</div></div></section>
+          <section class="bs-accordion-item"><h2 class="bs-accordion-header"><button class="bs-accordion-trigger" aria-expanded="false">Billing <span class="bs-accordion-icon">⌄</span></button></h2><div class="bs-accordion-panel" hidden></div></section>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="data" aria-label="Data display">
+        <article class="bs-card bs-card-raised"><div class="bs-card-body"><h2 class="bs-card-title">Usage</h2><div class="bs-progress"><span class="bs-progress-bar" style="width: 68%">68%</span></div></div></article>
+        <table class="bs-table bs-mt-4"><thead><tr><th>Package</th><th>Status</th></tr></thead><tbody><tr><td>Core</td><td>Ready</td></tr><tr><td>Adapters</td><td>Ready</td></tr></tbody></table>
+      </section>
+      <section class="visual-region" data-visual="loading" aria-label="Loading" aria-busy="true">
+        <div class="bs-card" aria-hidden="true"><div class="bs-card-body bs-stack bs-gap-3"><span class="bs-skeleton bs-skeleton-circle" style="--bs-skeleton-width:3rem;--bs-skeleton-height:3rem"></span><span class="bs-skeleton bs-skeleton-lg" style="--bs-skeleton-width:60%"></span><span class="bs-skeleton bs-skeleton-text"></span><span class="bs-skeleton bs-skeleton-text" style="--bs-skeleton-width:78%"></span><span class="bs-skeleton bs-skeleton-media"></span></div></div>
+      </section>
+    </main>
+  </body>
+</html>

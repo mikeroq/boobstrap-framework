@@ -57,6 +57,15 @@ jobs:
           for browser in chromium firefox webkit; do
             BROWSER="$browser" npm run test:browser
           done
+      - name: Run visual regression contract
+        run: npm run test:visual
+      - name: Upload visual diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-regression-diagnostics
+          path: artifacts/visual/
+          if-no-files-found: ignore
 
   package-managers:
     name: Install with ${{ matrix.manager }}
