@@ -9,6 +9,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const snapshots = resolve(root, "tests", "visual-snapshots");
 const artifacts = resolve(root, "artifacts", "visual");
 const update = process.env.UPDATE_VISUAL === "1";
+const visualGroup = process.env.VISUAL_GROUP ?? "all";
+const visualGroups = new Set(["all", "dark-components", "dark-content", "light-components", "light-content", "variants"]);
+if (!visualGroups.has(visualGroup)) throw new Error(`Unsupported visual group: ${visualGroup}`);
 const html = await readFile(resolve(root, "tests", "visual.html"));
 const css = await readFile(resolve(root, "dist", "boobstrap.css"));
 const server = createServer((request, response) => {
@@ -55,13 +58,18 @@ async function capture(name, options = {}) {
 try {
   for (const theme of ["dark", "light"]) {
     for (const region of ["controls", "accordion", "data", "loading"]) {
-      await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
-      await capture(`${theme}-mobile-${region}`, { theme, viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
+      const regionGroup = ["controls", "accordion"].includes(region) ? "components" : "content";
+      if (visualGroup === "all" || visualGroup === `${theme}-${regionGroup}`) {
+        await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
+        await capture(`${theme}-mobile-${region}`, { theme, viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
+      }
     }
   }
-  await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
-  await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
-  await capture("reduced-loading", { reducedMotion: "reduce", selector: '[data-visual="loading"]' });
+  if (visualGroup === "all" || visualGroup === "variants") {
+    await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
+    await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
+    await capture("reduced-loading", { reducedMotion: "reduce", selector: '[data-visual="loading"]' });
+  }
 } finally {
   await browser.close();
   await new Promise((resolveClose, reject) => server.close((error) => error ? reject(error) : resolveClose()));

@@ -59,8 +59,12 @@ jobs:
           done
 
   visual:
-    name: Visual regression
+    name: Visual regression (${{ matrix.group }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [dark-components, dark-content, light-components, light-content, variants]
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -77,11 +81,13 @@ jobs:
         run: npm run build
       - name: Run visual regression contract
         run: npm run test:visual
+        env:
+          VISUAL_GROUP: ${{ matrix.group }}
       - name: Upload visual diagnostics
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: visual-regression-diagnostics
+          name: visual-regression-diagnostics-${{ matrix.group }}
           path: artifacts/visual/
           if-no-files-found: ignore
 
