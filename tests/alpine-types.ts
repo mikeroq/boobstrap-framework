@@ -1,6 +1,7 @@
-import boobstrap, { button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip } from "@boobstrap/alpine";
+import boobstrap, { accordion, button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip } from "@boobstrap/alpine";
 
 boobstrap({ data: (_name, _provider) => {} });
+accordion(["one"]).toggle("two");
 button(false, { loadingLabel: "Saving" }).start("test");
 collapse(false).toggle();
 combobox({ options: [] }).hide();

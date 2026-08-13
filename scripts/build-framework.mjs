@@ -1,6 +1,7 @@
 import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeTokenArtifacts } from "./token-artifacts.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const entry = join(root, "src", "boobstrap.css");
@@ -47,5 +48,11 @@ for (const file of javascriptFiles) {
 await copyFile(join(javascriptSource, "index.d.ts"), join(javascriptDestination, "index.d.ts"));
 await copyFile(join(root, "src", "boobstrap.js"), join(root, "dist", "boobstrap.js"));
 await copyFile(join(javascriptSource, "index.d.ts"), join(root, "dist", "boobstrap.d.ts"));
+await writeTokenArtifacts(
+  join(root, "src", "base", "tokens.css"),
+  join(root, "dist", "tokens.json"),
+  join(root, "dist", "tokens.js"),
+  join(root, "dist", "tokens.d.ts"),
+);
 
 console.log(`Built ${destination.replace(`${root}/`, "")} (${Buffer.byteLength(css)} bytes) and ${javascriptFiles.length} JavaScript modules.`);

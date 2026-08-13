@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
@@ -15,6 +15,7 @@ const requiredPaths = [
   "LICENSE",
   "README.md",
   "package.json",
+  "src/accordion.js",
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
@@ -30,6 +31,7 @@ const requiredPaths = [
 ];
 
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "React package is missing required files");
+assert.equal(typeof useAccordion, "function");
 assert.equal(typeof useButton, "function");
 assert.equal(typeof useCollapse, "function");
 assert.equal(typeof useCombobox, "function");
@@ -69,4 +71,4 @@ assert.match(serverMarkup, /role="combobox"/);
 assert.match(serverMarkup, /id="ssr-dialog"/);
 assert.match(serverMarkup, /aria-controls="ssr-role"/);
 
-console.log(`Verified @boobstrap/react package contents, nine hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/react package contents, ten hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);

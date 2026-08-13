@@ -1,3 +1,4 @@
+export { useAccordion } from "./accordion.js";
 export { useButton } from "./button.js";
 export { useCollapse } from "./collapse.js";
 export { useCombobox } from "./combobox.js";

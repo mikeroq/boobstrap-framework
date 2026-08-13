@@ -1,5 +1,9 @@
 import type { ButtonHTMLAttributes, DialogHTMLAttributes, HTMLAttributes, InputHTMLAttributes, RefAttributes } from "react";
 
+export interface AccordionOptions { defaultOpenIds?: string[]; alwaysOpen?: boolean; onOpenIdsChange?: (ids: string[]) => void; }
+export interface AccordionResult { openIds: string[]; isOpen: (id: string) => boolean; setOpen: (id: string, open: boolean) => void; getItemOptions: (id: string) => CollapseOptions; getRootProps: (props?: HTMLAttributes<HTMLElement>) => HTMLAttributes<HTMLElement>; }
+export function useAccordion(options?: AccordionOptions): AccordionResult;
+
 export interface TransitionDetail {
   adapter: "react";
   reason: string;

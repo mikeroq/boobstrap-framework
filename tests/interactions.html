@@ -72,6 +72,20 @@
         </div>
       </section>
 
+      <section aria-labelledby="accordion-heading">
+        <h2 id="accordion-heading">Questions</h2>
+        <div class="bs-accordion" data-bs-accordion>
+          <section class="bs-accordion-item">
+            <h3 class="bs-accordion-header"><button class="bs-accordion-trigger" id="accordion-trigger-one" type="button" data-bs-toggle="collapse" aria-controls="accordion-panel-one">First question <span class="bs-accordion-icon" aria-hidden="true">⌄</span></button></h3>
+            <div class="bs-collapse bs-accordion-panel" id="accordion-panel-one" role="region" aria-labelledby="accordion-trigger-one"><div class="bs-accordion-body">First answer</div></div>
+          </section>
+          <section class="bs-accordion-item">
+            <h3 class="bs-accordion-header"><button class="bs-accordion-trigger" id="accordion-trigger-two" type="button" data-bs-toggle="collapse" aria-controls="accordion-panel-two">Second question <span class="bs-accordion-icon" aria-hidden="true">⌄</span></button></h3>
+            <div class="bs-collapse bs-accordion-panel" id="accordion-panel-two" role="region" aria-labelledby="accordion-trigger-two" hidden><div class="bs-accordion-body">Second answer</div></div>
+          </section>
+        </div>
+      </section>
+
       <section aria-label="Dialog examples">
         <button class="bs-btn bs-btn-primary" id="modal-toggle" type="button" data-bs-toggle="dialog" aria-controls="settings-modal">Open settings</button>
         <button class="bs-btn bs-btn-secondary" id="drawer-toggle" type="button" data-bs-toggle="dialog" aria-controls="activity-drawer">Open activity</button>

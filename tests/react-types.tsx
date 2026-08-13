@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
+  const accordion = useAccordion({ defaultOpenIds: ["one"] });
+  accordion.setOpen("two", true);
   const [saving, setSaving] = useState(false);
   const button = useButton({
     loading: saving,

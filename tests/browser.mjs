@@ -246,6 +246,8 @@ try {
   }
   const progressMotion = await motionPage.locator(".bs-progress-animated").evaluate((element) => getComputedStyle(element).animationName);
   if (progressMotion !== "none") failures.push(`Reduced motion did not disable progress animation: ${progressMotion}`);
+  const skeletonMotion = await motionPage.locator(".bs-skeleton-pulse").first().evaluate((element) => getComputedStyle(element).animationName);
+  if (skeletonMotion !== "none") failures.push(`Reduced motion did not disable skeleton animation: ${skeletonMotion}`);
   await motionContext.close();
 } finally {
   await browser.close();

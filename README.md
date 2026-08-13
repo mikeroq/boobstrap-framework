@@ -199,6 +199,21 @@ Preset attributes are optional. Override semantic tokens after importing Boobstr
 }
 ```
 
+Build tools and design-system integrations can consume the same source-derived tokens as JSON or an ES module:
+
+```js
+import tokenArtifact, { modes, tokens } from "@boobstrap/boobstrap/tokens";
+import tokenJson from "@boobstrap/boobstrap/tokens.json" with { type: "json" };
+```
+
+`dist/tokens.json` follows the DTCG `$value` and alias shape. Exact CSS `var()` aliases become token references; CSS-native expressions such as `clamp()`, gradients, shadows, and font stacks remain lossless strings without a misleading `$type`. CSS custom properties remain the runtime styling API; these generated artifacts are interoperability data and must not be edited directly.
+
+## Browser support
+
+### Loading skeletons
+
+Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with `.bs-skeleton-text`, `.bs-skeleton-circle`, `.bs-skeleton-media`, size modifiers, and either `.bs-skeleton-pulse` or `.bs-skeleton-wave`. Set widths with `--bs-skeleton-width` or existing layout utilities. Mark the placeholder group `aria-hidden="true"`, put `aria-busy="true"` on the containing content region, and update that region when real content replaces it; skeletons are not progress bars. Both animations become static under reduced motion.
+
 ## Browser support
 
 The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, optional controller interactions, keyboard navigation, and automated Axe accessibility checks.

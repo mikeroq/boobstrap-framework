@@ -149,6 +149,27 @@ collapse.destroy();
 
 Events: `bs:collapse:show`, `bs:collapse:shown`, `bs:collapse:hide`, and `bs:collapse:hidden`.
 
+## Accordion
+
+Accordion composes the collapse contract into a group. Put each native button inside a heading, connect it to a uniquely identified panel with `aria-controls`, and label an optional panel `role="region"` with the trigger. The default group keeps one item open; add `data-bs-accordion-always-open` when multiple panels may remain open.
+
+```html
+<div class="bs-accordion" data-bs-accordion>
+  <section class="bs-accordion-item">
+    <h2 class="bs-accordion-header">
+      <button class="bs-accordion-trigger" type="button" data-bs-toggle="collapse" aria-controls="answer-one">
+        Question <span class="bs-accordion-icon" aria-hidden="true">⌄</span>
+      </button>
+    </h2>
+    <div class="bs-collapse bs-accordion-panel" id="answer-one" role="region">
+      <div class="bs-accordion-body">Answer</div>
+    </div>
+  </section>
+</div>
+```
+
+Use `.bs-accordion-flush` to remove the outer inline border/radius and `.bs-accordion-compact` for denser spacing. Avoid `role="region"` when a page contains many accordion panels, since excessive landmarks make navigation harder. Accordion uses native button keyboard behavior and the existing cancelable collapse events; canceled sibling closure also cancels the requested opening.
+
 ## Dialogs and drawers
 
 Dialogs and drawers share one native `<dialog>` behavior contract. Use `.bs-dialog` for a centered modal or `.bs-drawer` with `.bs-drawer-start` / `.bs-drawer-end` for a viewport-height panel at a logical edge. Both accept optional header and footer regions around an independently scrolling body.

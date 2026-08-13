@@ -1,5 +1,9 @@
 import type { ComputedRef, Ref } from "vue";
 
+export interface AccordionOptions { defaultOpenIds?: string[]; alwaysOpen?: boolean; onOpenIdsChange?: (ids: string[]) => void; }
+export interface AccordionResult { openIds: ComputedRef<string[]>; isOpen: (id: string) => boolean; setOpen: (id: string, open: boolean) => void; getItemOptions: (id: string) => OpenOptions; getRootProps: (props?: ElementProps) => ElementProps; }
+export function useAccordion(options?: AccordionOptions): AccordionResult;
+
 export interface TransitionDetail {
   adapter: "vue";
   reason: string;

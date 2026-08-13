@@ -1,6 +1,7 @@
 const adapter = (alpine, react, vue) => ({ alpine, react, vue });
 
 export const interactionContract = Object.freeze({
+  accordion: { core: { controller: "Accordion", initializer: "initAccordions", methods: ["destroy"] }, adapters: adapter("accordion", "useAccordion", "useAccordion"), capabilities: ["single-open", "always-open"], events: ["bs:collapse:show", "bs:collapse:shown", "bs:collapse:hide", "bs:collapse:hidden"] },
   banner: { core: { controller: "Banner", initializer: "initBanners", methods: ["dismiss", "show", "destroy"] }, events: ["bs:banner:dismissed", "bs:banner:shown"] },
   button: { core: { controller: "Button", initializer: "initButtons", methods: ["start", "stop", "toggle", "destroy"] }, adapters: adapter("button", "useButton", "useButton"), events: ["bs:button:started", "bs:button:stopped"] },
   collapse: { core: { controller: "Collapse", initializer: "initCollapses", methods: ["show", "hide", "toggle", "destroy"] }, adapters: adapter("collapse", "useCollapse", "useCollapse"), events: ["bs:collapse:show", "bs:collapse:shown", "bs:collapse:hide", "bs:collapse:hidden"] },

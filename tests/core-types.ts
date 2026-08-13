@@ -1,9 +1,10 @@
-import { Banner, Button, Collapse, Combobox, Dialog, Dropdown, InputMask, Otp, Password, Popover, Sidebar, Tabs, Toast, Tooltip, initBoobstrap, interactionContract } from "@boobstrap/boobstrap/js";
+import { Accordion, Banner, Button, Collapse, Combobox, Dialog, Dropdown, InputMask, Otp, Password, Popover, Sidebar, Tabs, Toast, Tooltip, initBoobstrap, interactionContract } from "@boobstrap/boobstrap/js";
 import { Collapse as CollapseSubpath } from "@boobstrap/boobstrap/js/collapse";
 
 const element = document.createElement("div");
 const buttonElement = document.createElement("button");
 const dialogElement = document.createElement("dialog");
+new Accordion(element).destroy();
 new Banner(element).show();
 new Button(buttonElement, { autoStart: true }).start({ reason: "test" });
 new Collapse(element, { triggers: [buttonElement] }).toggle();

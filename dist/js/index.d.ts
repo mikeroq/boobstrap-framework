@@ -10,6 +10,8 @@ declare class ElementController<E extends HTMLElement = HTMLElement> implements 
   destroy(): void;
 }
 
+export class Accordion extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Accordion; readonly alwaysOpen: boolean; }
+export function initAccordions(root?: Root): Accordion[];
 export class Banner extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Banner; readonly visible: boolean; dismiss(): boolean; show(): boolean; }
 export function initBanners(root?: Root): Banner[];
 export class Button extends ElementController { constructor(element: HTMLElement, options?: { autoStart?: boolean }); static getOrCreateInstance(element: HTMLElement, options?: { autoStart?: boolean }): Button; readonly loading: boolean; start(options?: TransitionOptions): boolean; stop(options?: TransitionOptions): boolean; toggle(options?: TransitionOptions): boolean; }

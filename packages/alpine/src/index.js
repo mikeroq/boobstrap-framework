@@ -1,3 +1,4 @@
+import { accordion } from "./accordion.js";
 import { button } from "./button.js";
 import { collapse } from "./collapse.js";
 import { combobox } from "./combobox.js";
@@ -8,9 +9,10 @@ import { tabs } from "./tabs.js";
 import { toast } from "./toast.js";
 import { tooltip } from "./tooltip.js";
 
-export { button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip };
+export { accordion, button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip };
 
 export function boobstrap(Alpine) {
+  Alpine.data("bsAccordion", accordion);
   Alpine.data("bsButton", button);
   Alpine.data("bsCollapse", collapse);
   Alpine.data("bsCombobox", combobox);

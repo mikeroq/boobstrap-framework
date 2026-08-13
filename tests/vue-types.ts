@@ -1,9 +1,10 @@
 import { ref } from "vue";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/vue";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/vue";
 
 const open = ref(false);
 const value = ref("");
 const selectedId = ref<string | null>("profile");
+useAccordion({ defaultOpenIds: ["one"] }).setOpen("two", true);
 
 useButton({ loading: ref(false), loadingLabel: "Saving" }).start("types");
 useCollapse({ id: "details", open }).toggle("types");

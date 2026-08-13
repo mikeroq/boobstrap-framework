@@ -12,6 +12,7 @@ const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/dist/boobstrap.js", await readFile(new URL("../dist/boobstrap.js", import.meta.url))],
   ["/dist/js/banner.js", await readFile(new URL("../dist/js/banner.js", import.meta.url))],
+  ["/dist/js/accordion.js", await readFile(new URL("../dist/js/accordion.js", import.meta.url))],
   ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
@@ -117,6 +118,14 @@ try {
   if (await collapsePanel.isHidden()) failures.push("Collapse ignored a canceled hide event");
   await collapseToggle.click();
   if (!await collapsePanel.isHidden() || await collapseToggle.getAttribute("aria-expanded") !== "false") failures.push("Collapse did not close");
+
+  const accordionFirst = page.locator("#accordion-panel-one");
+  const accordionSecond = page.locator("#accordion-panel-two");
+  await page.locator("#accordion-trigger-two").click();
+  if (!await accordionFirst.isHidden() || await accordionSecond.isHidden()) failures.push("Accordion did not enforce single-open mode");
+  await page.evaluate(() => document.querySelector("#accordion-panel-two").addEventListener("bs:collapse:hide", (event) => event.preventDefault(), { once: true }));
+  await page.locator("#accordion-trigger-one").click();
+  if (!await accordionFirst.isHidden() || await accordionSecond.isHidden()) failures.push("Accordion ignored a canceled sibling close");
 
   const modalToggle = page.locator("#modal-toggle");
   const modal = page.locator("#settings-modal");
@@ -283,7 +292,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 16) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 19) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");

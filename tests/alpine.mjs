@@ -11,6 +11,7 @@ const fixture = (await readFile(new URL("alpine.html", import.meta.url), "utf8")
 const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/tests/alpine-fixture.js", await readFile(new URL("alpine-fixture.js", import.meta.url))],
+  ["/adapter/accordion.js", await readFile(new URL("../packages/alpine/src/accordion.js", import.meta.url))],
   ["/adapter/button.js", await readFile(new URL("../packages/alpine/src/button.js", import.meta.url))],
   ["/adapter/index.js", await readFile(new URL("../packages/alpine/src/index.js", import.meta.url))],
   ["/adapter/collapse.js", await readFile(new URL("../packages/alpine/src/collapse.js", import.meta.url))],

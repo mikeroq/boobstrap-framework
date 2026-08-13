@@ -1,3 +1,4 @@
+export { Accordion, initAccordions } from "./accordion.js";
 export { Button, initButtons } from "./button.js";
 export { Banner, initBanners } from "./banner.js";
 export { Collapse, initCollapses } from "./collapse.js";
@@ -15,6 +16,7 @@ export { Tooltip, initTooltips } from "./tooltip.js";
 export { interactionContract, interactionEvents } from "./interaction-contract.js";
 
 import { initButtons } from "./button.js";
+import { initAccordions } from "./accordion.js";
 import { initBanners } from "./banner.js";
 import { initCollapses } from "./collapse.js";
 import { initComboboxes } from "./combobox.js";
@@ -31,6 +33,7 @@ import { initTooltips } from "./tooltip.js";
 
 export function initBoobstrap(root = document) {
   const controllers = [
+    ...initAccordions(root),
     ...initBanners(root),
     ...initButtons(root),
     ...initCollapses(root),
