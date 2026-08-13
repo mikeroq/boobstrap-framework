@@ -53,7 +53,7 @@ async function capture(name, options = {}) {
 try {
   for (const theme of ["dark", "light"]) {
     for (const region of ["controls", "accordion", "data", "loading"]) await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
-    await capture(`${theme}-mobile`, { theme, viewport: { width: 390, height: 900 }, reducedMotion: "reduce", animations: "allow" });
+    await capture(`${theme}-mobile`, { theme, viewport: { width: 390, height: 1400 }, reducedMotion: "reduce", animations: "allow" });
   }
   await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
   await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
