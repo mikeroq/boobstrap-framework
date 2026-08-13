@@ -44,6 +44,7 @@ async function capture(name, options = {}) {
   }
   if (requests.some((url) => !url.startsWith(`http://127.0.0.1:${server.address().port}`))) failures.push(`${name}: external request detected`);
   await context.close();
+  console.log(`${update ? "Updated" : "Checked"} visual snapshot ${name}.`);
 }
 
 try {
