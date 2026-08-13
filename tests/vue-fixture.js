@@ -1,8 +1,9 @@
 import { createApp, h, onMounted } from "vue";
 import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
+import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
-for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+for (const name of interactionEvents) {
   document.addEventListener(name, (event) => window.bsEvents.push({ name, adapter: event.detail?.adapter }));
 }
 
@@ -14,7 +15,7 @@ createApp({
     const dropdown = useDropdown({ id: "vue-menu" });
     const combobox = useCombobox({ id: "vue-role", options: [{ value: "designer", label: "Designer" }, { value: "engineer", label: "Engineer" }] });
     const tabs = useTabs({ defaultSelectedId: "vue-profile-tab" });
-    const toast = useToast({ autohide: false });
+    const toast = useToast({ duration: 180 });
     const tooltip = useTooltip({ id: "vue-tooltip", placement: "top" });
     const popover = usePopover({ id: "vue-popover", placement: "bottom" });
     onMounted(() => { window.vueReady = true; });

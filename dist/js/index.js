@@ -12,6 +12,7 @@ export { Sidebar, initSidebars } from "./sidebar.js";
 export { Tabs, initTabs } from "./tabs.js";
 export { Toast, initToasts } from "./toast.js";
 export { Tooltip, initTooltips } from "./tooltip.js";
+export { interactionContract, interactionEvents } from "./interaction-contract.js";
 
 import { initButtons } from "./button.js";
 import { initBanners } from "./banner.js";

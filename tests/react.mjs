@@ -121,8 +121,21 @@ try {
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:tabs:changed"));
 
   await page.locator("#react-toast-toggle").click();
-  if (await page.locator("#react-toast").isHidden()) failures.push("toast did not show");
-  await page.locator("#react-toast").getByRole("button").click();
+  const reactToast = page.locator("#react-toast");
+  if (await reactToast.isHidden()) failures.push("toast did not show");
+  await reactToast.hover();
+  await page.waitForTimeout(260);
+  if (await reactToast.isHidden()) failures.push("toast autohide did not pause on pointer enter");
+  await page.locator("#react-heading").hover();
+  await reactToast.waitFor({ state: "hidden" });
+  await page.locator("#react-toast-toggle").click();
+  await reactToast.getByRole("button").focus();
+  await page.waitForTimeout(260);
+  if (await reactToast.isHidden()) failures.push("toast autohide did not pause on focus");
+  await page.locator("#react-toast-toggle").focus();
+  await reactToast.waitFor({ state: "hidden" });
+  await page.locator("#react-toast-toggle").click();
+  await reactToast.getByRole("button").click();
   await page.locator("#react-tooltip-trigger").hover();
   if (await page.locator("#react-tooltip").isHidden() || !await page.locator("#react-tooltip-trigger").getAttribute("aria-describedby")) failures.push("tooltip did not show with its description");
   await page.locator("#react-popover-trigger").click();

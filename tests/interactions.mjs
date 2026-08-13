@@ -20,6 +20,7 @@ const assets = new Map([
   ["/dist/js/floating.js", await readFile(new URL("../dist/js/floating.js", import.meta.url))],
   ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
+  ["/dist/js/interaction-contract.js", await readFile(new URL("../dist/js/interaction-contract.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
   ["/dist/js/popover.js", await readFile(new URL("../dist/js/popover.js", import.meta.url))],

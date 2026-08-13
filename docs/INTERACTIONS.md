@@ -410,7 +410,7 @@ Events: cancelable `bs:tabs:change` and completed `bs:tabs:changed`. Event detai
 </div>
 ```
 
-Toasts default to a five-second timeout. Set `data-bs-toast-duration="8000"` to change it or `data-bs-toast-autohide="false"` for persistent notifications. Hover and focus pause the timer. Regions support logical start and bottom placement modifiers.
+Toasts default to a five-second timeout. Set `data-bs-toast-duration="8000"` to change it or `data-bs-toast-autohide="false"` for persistent notifications. Vanilla, Alpine, React, and Vue all pause the remaining autohide duration while the toast is hovered or focused, resume it afterward, support explicit dismissal, and restart the full duration when an already-open toast is shown again. Regions support logical start and bottom placement modifiers.
 
 Public API: `show()`, `hide()`, and `destroy()`. Events are cancelable `bs:toast:show` / `bs:toast:hide` and completed `bs:toast:shown` / `bs:toast:hidden`.
 

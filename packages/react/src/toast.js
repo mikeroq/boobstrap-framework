@@ -4,6 +4,8 @@ import { composeHandlers, emit, mergeRefs, useControllableState, useIsomorphicLa
 export function useToast(options = {}) {
   const toastRef = useRef(null);
   const timerRef = useRef(null);
+  const remainingRef = useRef(options.duration ?? 5000);
+  const startedAtRef = useRef(0);
   const pendingTransition = useRef(null);
   const previousOpen = useRef(options.open ?? options.defaultOpen ?? false);
   const [open, setOpen] = useControllableState({
@@ -20,8 +22,38 @@ export function useToast(options = {}) {
     return setOpen(nextOpen, detail);
   }, [open, setOpen]);
 
-  const show = useCallback((reason, sourceEvent) => transition(true, reason, sourceEvent), [transition]);
   const hide = useCallback((reason, sourceEvent) => transition(false, reason, sourceEvent), [transition]);
+
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = null;
+  }, []);
+
+  const schedule = useCallback((duration = options.duration ?? 5000) => {
+    clearTimer();
+    if (!open || options.autohide === false || duration <= 0) return;
+    remainingRef.current = duration;
+    startedAtRef.current = Date.now();
+    timerRef.current = setTimeout(() => hide("timeout"), duration);
+  }, [clearTimer, hide, open, options.autohide, options.duration]);
+
+  const pause = useCallback(() => {
+    if (!timerRef.current) return;
+    remainingRef.current = Math.max(0, remainingRef.current - (Date.now() - startedAtRef.current));
+    clearTimer();
+  }, [clearTimer]);
+
+  const resume = useCallback(() => {
+    if (open && !timerRef.current) schedule(remainingRef.current || options.duration || 5000);
+  }, [open, options.duration, schedule]);
+
+  const show = useCallback((reason, sourceEvent) => {
+    if (open) {
+      schedule();
+      return false;
+    }
+    return transition(true, reason, sourceEvent);
+  }, [open, schedule, transition]);
 
   useIsomorphicLayoutEffect(() => {
     if (previousOpen.current === open) return;
@@ -34,10 +66,10 @@ export function useToast(options = {}) {
   }, [open]);
 
   useEffect(() => {
-    if (!open || options.autohide === false) return undefined;
-    timerRef.current = setTimeout(() => hide("timeout"), options.duration ?? 5000);
-    return () => clearTimeout(timerRef.current);
-  }, [hide, open, options.autohide, options.duration]);
+    if (open) schedule();
+    else clearTimer();
+    return clearTimer;
+  }, [clearTimer, open, schedule]);
 
   const getToastProps = useCallback((props = {}) => ({
     ...props,
@@ -46,7 +78,11 @@ export function useToast(options = {}) {
     role: props.role ?? "status",
     "aria-live": props["aria-live"] ?? "polite",
     "data-bs-state": open ? "shown" : "hidden",
-  }), [open]);
+    onPointerEnter: composeHandlers(props.onPointerEnter, pause),
+    onPointerLeave: composeHandlers(props.onPointerLeave, resume),
+    onFocus: composeHandlers(props.onFocus, pause),
+    onBlur: composeHandlers(props.onBlur, resume),
+  }), [open, pause, resume]);
 
   const getTriggerProps = useCallback((props = {}) => ({
     ...props,
