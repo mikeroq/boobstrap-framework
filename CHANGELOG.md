@@ -4,6 +4,10 @@ Notable changes to Boobstrap are documented here. The project follows [Keep a Ch
 
 ## Unreleased
 
+- Added responsive navbar behavior to core JavaScript and the Alpine, React, and Vue adapters.
+- Added avatar, empty-state, list-group, and alert-dialog component variants.
+- Added native file, range, and color controls plus a documented baseline for links and semantic HTML content.
+
 ## 0.5.0
 
 - Added deterministic design-token JSON and ES module exports.

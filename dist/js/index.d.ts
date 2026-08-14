@@ -28,6 +28,8 @@ export function initDropdowns(root?: Root): Dropdown[];
 export function formatMask(value: string, pattern: string, placeholder?: string): string;
 export class InputMask extends ElementController<HTMLInputElement> { constructor(element: HTMLInputElement); static getOrCreateInstance(element: HTMLInputElement): InputMask; format(options?: { silent?: boolean }): string; }
 export function initInputMasks(root?: Root): InputMask[];
+export class Navbar extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Navbar; readonly overlay: boolean; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions): boolean; toggle(options?: FocusTransitionOptions): boolean; }
+export function initNavbars(root?: Root): Navbar[];
 export class Otp extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Otp; readonly value: string; clear(): void; }
 export function initOtps(root?: Root): Otp[];
 export class Password extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Password; readonly visible: boolean; setVisible(visible: boolean): boolean; toggle(): boolean; }

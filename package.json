@@ -37,6 +37,7 @@
     "./js/dropdown": { "types": "./dist/js/index.d.ts", "default": "./dist/js/dropdown.js" },
     "./js/dialog": { "types": "./dist/js/index.d.ts", "default": "./dist/js/dialog.js" },
     "./js/input-mask": { "types": "./dist/js/index.d.ts", "default": "./dist/js/input-mask.js" },
+    "./js/navbar": { "types": "./dist/js/index.d.ts", "default": "./dist/js/navbar.js" },
     "./js/otp": { "types": "./dist/js/index.d.ts", "default": "./dist/js/otp.js" },
     "./js/password": { "types": "./dist/js/index.d.ts", "default": "./dist/js/password.js" },
     "./js/popover": { "types": "./dist/js/index.d.ts", "default": "./dist/js/popover.js" },

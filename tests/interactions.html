@@ -10,6 +10,20 @@
     </style>
   </head>
   <body>
+    <header class="bs-navbar bs-px-4">
+      <a class="bs-navbar-brand" href="#collapse-heading">Boobstrap</a>
+      <button class="bs-navbar-toggle" id="navbar-toggle" type="button" data-bs-toggle="navbar" aria-controls="primary-navbar" aria-label="Toggle primary navigation">☰</button>
+      <div class="bs-navbar-menu" id="primary-navbar" data-bs-navbar data-bs-state="closed" aria-label="Primary navigation">
+        <nav class="bs-navbar-nav" aria-label="Primary">
+          <a class="bs-navbar-link" href="#collapse-heading" data-bs-navbar-close>Components</a>
+          <a class="bs-navbar-link" href="#account-tabs-label" data-bs-navbar-close>Patterns</a>
+        </nav>
+        <div class="bs-navbar-actions">
+          <button class="bs-btn bs-btn-secondary" type="button" data-bs-navbar-dismiss>Close navigation</button>
+        </div>
+      </div>
+    </header>
+    <button class="bs-navbar-backdrop" type="button" data-bs-navbar-dismiss aria-controls="primary-navbar" aria-label="Close primary navigation"></button>
     <div class="bs-banner bs-banner-warning" id="framework-banner" role="status" data-bs-banner>
       <div class="bs-banner-inner">
         <svg class="bs-banner-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"></path><path d="M12 9v5M12 18h.01"></path></svg>

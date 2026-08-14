@@ -22,6 +22,7 @@ const assets = new Map([
   ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
   ["/dist/js/interaction-contract.js", await readFile(new URL("../dist/js/interaction-contract.js", import.meta.url))],
+  ["/dist/js/navbar.js", await readFile(new URL("../dist/js/navbar.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
   ["/dist/js/popover.js", await readFile(new URL("../dist/js/popover.js", import.meta.url))],
@@ -194,6 +195,23 @@ try {
   await sidebarBackdrop.click({ position: { x: 380, y: 100 } });
   if (await sidebar.getAttribute("data-bs-state") !== "closed") failures.push("Sidebar backdrop did not dismiss the drawer");
 
+  const navbarToggle = page.locator("#navbar-toggle");
+  const navbarMenu = page.locator("#primary-navbar");
+  const navbarBackdrop = page.locator(".bs-navbar-backdrop");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || await navbarMenu.getAttribute("aria-hidden") !== "true") failures.push("Navbar did not initialize as a closed mobile menu");
+  await navbarToggle.click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "open" || await navbarToggle.getAttribute("aria-expanded") !== "true" || !await navbarBackdrop.isVisible()) failures.push("Navbar did not open with its backdrop");
+  if (!await page.locator("body").evaluate((element) => element.classList.contains("bs-navbar-open"))) failures.push("Navbar did not lock document scrolling");
+  if (!await navbarMenu.getByRole("link", { name: "Components" }).evaluate((element) => element === document.activeElement)) failures.push("Navbar did not move focus inside the menu");
+  await page.keyboard.press("Escape");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push("Navbar Escape behavior did not close and restore focus");
+  await navbarToggle.click();
+  await navbarBackdrop.click({ position: { x: 10, y: 100 } });
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed") failures.push("Navbar backdrop did not dismiss the menu");
+  await navbarToggle.click();
+  await navbarMenu.getByRole("link", { name: "Patterns" }).click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed") failures.push("Navbar did not close after navigation selection");
+
   const dropdownToggle = page.locator("#actions-toggle");
   const dropdownMenu = page.locator("#actions-menu");
   await dropdownToggle.focus();
@@ -278,7 +296,7 @@ try {
   if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -292,7 +310,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 19) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 20) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
@@ -306,6 +324,11 @@ try {
   await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
   const desktopSidebar = desktopPage.locator("#navigation-sidebar");
   const desktopToggle = desktopPage.locator("#sidebar-toggle");
+  const desktopNavbar = desktopPage.locator("#primary-navbar");
+  const desktopNavbarToggle = desktopPage.locator("#navbar-toggle");
+  if (await desktopNavbar.getAttribute("data-bs-state") !== "open" || await desktopNavbar.getAttribute("role") !== null || await desktopNavbarToggle.getAttribute("aria-expanded") !== "true") {
+    failures.push("Navbar did not initialize as inline desktop navigation");
+  }
   if (await desktopSidebar.getAttribute("data-bs-state") !== "expanded" || await desktopToggle.getAttribute("aria-expanded") !== "true") {
     failures.push("Sidebar did not initialize expanded on desktop");
   }

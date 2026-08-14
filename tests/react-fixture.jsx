@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -17,6 +17,21 @@ function LoadingButtonExample() {
         <span className="bs-spinner bs-btn-spinner" aria-hidden="true" />
       </button>
     </section>
+  );
+}
+
+function NavbarExample() {
+  const navbar = useNavbar({ id: "react-navbar" });
+  return (
+    <header className="bs-navbar" aria-label="React navbar example">
+      <span className="bs-navbar-brand">Boobstrap</span>
+      <button id="react-navbar-toggle" className="bs-navbar-toggle" aria-label="Toggle React navigation" {...navbar.getTriggerProps()}>☰</button>
+      <div className="bs-navbar-menu" aria-label="React navigation" {...navbar.getMenuProps()}>
+        <nav className="bs-navbar-nav" aria-label="React primary"><a className="bs-navbar-link" href="#react-heading" data-bs-navbar-close>Components</a></nav>
+        <button className="bs-btn bs-btn-secondary" {...navbar.getDismissProps()}>Close navigation</button>
+      </div>
+      <button className="bs-navbar-backdrop" aria-label="Close React navigation" {...navbar.getDismissProps()} />
+    </header>
   );
 }
 
@@ -144,6 +159,7 @@ function App() {
   return (
     <>
       <LoadingButtonExample />
+      <NavbarExample />
       <CollapseExample />
       <ControlledCollapseExample />
       <DialogExample />

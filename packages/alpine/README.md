@@ -31,7 +31,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsNavbar`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
 
 ## Dialog or drawer
 

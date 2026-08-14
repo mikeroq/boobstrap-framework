@@ -70,6 +70,19 @@ export interface DialogResult {
 
 export function useDialog(options?: DialogOptions): DialogResult;
 
+export interface NavbarResult {
+  open: boolean;
+  menuId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+  getMenuProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getDismissProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+}
+
+export function useNavbar(options?: CollapseOptions): NavbarResult;
+
 export interface ComboboxOption {
   value: string;
   label: string;

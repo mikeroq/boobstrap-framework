@@ -31,6 +31,12 @@
 .bs-dialog-lg { --bs-dialog-width: 48rem; }
 .bs-dialog-xl { --bs-dialog-width: 64rem; }
 
+.bs-alert-dialog { --bs-dialog-width: 30rem; }
+.bs-alert-dialog .bs-dialog-header { grid-template-areas: "icon title close" "icon description close"; grid-template-columns: auto minmax(0, 1fr) auto; }
+.bs-alert-dialog-icon { grid-area: icon; display: inline-grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; color: var(--bs-color-warning); background: color-mix(in srgb, var(--bs-color-warning) 14%, transparent); border-radius: 50%; }
+.bs-alert-dialog-danger .bs-alert-dialog-icon { color: var(--bs-color-danger); background: color-mix(in srgb, var(--bs-color-danger) 14%, transparent); }
+.bs-alert-dialog-success .bs-alert-dialog-icon { color: var(--bs-color-success); background: color-mix(in srgb, var(--bs-color-success) 14%, transparent); }
+
 .bs-dialog-height-sm { block-size: min(24rem, var(--bs-dialog-max-height)); }
 .bs-dialog-height-lg { block-size: min(48rem, var(--bs-dialog-max-height)); }
 

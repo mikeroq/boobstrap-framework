@@ -52,6 +52,14 @@ try {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.reactReady === true);
 
+  const navbarToggle = page.locator("#react-navbar-toggle");
+  const navbarMenu = page.locator("#react-navbar");
+  await navbarToggle.click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "open") failures.push("navbar did not open");
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => document.querySelector("#react-navbar").dataset.bsState === "closed");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push("navbar did not close and restore focus");
+
   const loadingButton = page.locator("#react-loading-button");
   await loadingButton.click();
   await page.waitForFunction(() => document.querySelector("#react-loading-button").dataset.bsState === "loading");
@@ -147,7 +155,7 @@ try {
   if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
 
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 

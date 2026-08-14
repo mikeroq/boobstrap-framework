@@ -41,6 +41,13 @@ try {
   page.on("pageerror", (error) => consoleErrors.push(error.message));
   await page.goto(`http://127.0.0.1:${server.address().port}`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.vueReady === true);
+  const navbarToggle = page.locator("#vue-navbar-toggle");
+  const navbarMenu = page.locator("#vue-navbar");
+  await navbarToggle.click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "open") failures.push("navbar did not open");
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => document.querySelector("#vue-navbar").dataset.bsState === "closed");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push("navbar did not close and restore focus");
   await page.locator("#vue-loading").click();
   await page.waitForFunction(() => document.querySelector("#vue-loading").dataset.bsState === "loading");
   await page.waitForFunction(() => document.querySelector("#vue-loading").dataset.bsState === "idle");
@@ -79,7 +86,7 @@ try {
   if (await page.locator("#vue-popover").isHidden()) failures.push("popover did not show");
   await page.locator("h1, main").first().click({ position: { x: 2, y: 2 } });
   const eventNames = await page.evaluate(() => window.bsEvents.filter((event) => event.adapter === "vue").map((event) => event.name));
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
   const dimensions = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   if (dimensions.scrollWidth > dimensions.clientWidth + 1) failures.push("horizontal overflow");
   const accessibility = await new AxeBuilder({ page }).analyze();

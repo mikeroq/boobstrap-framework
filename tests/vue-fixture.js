@@ -1,5 +1,5 @@
 import { createApp, h, onMounted } from "vue";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -13,6 +13,7 @@ createApp({
     const collapse = useCollapse({ id: "vue-details" });
     const dialog = useDialog({ id: "vue-dialog" });
     const dropdown = useDropdown({ id: "vue-menu" });
+    const navbar = useNavbar({ id: "vue-navbar" });
     const combobox = useCombobox({ id: "vue-role", options: [{ value: "designer", label: "Designer" }, { value: "engineer", label: "Engineer" }] });
     const tabs = useTabs({ defaultSelectedId: "vue-profile-tab" });
     const toast = useToast({ duration: 180 });
@@ -22,6 +23,12 @@ createApp({
 
     return () => h("main", { class: "bs-container bs-section bs-stack bs-gap-6" }, [
       h("h1", "Vue adapter contract"),
+      h("header", { class: "bs-navbar", "aria-label": "Vue navbar example" }, [
+        h("span", { class: "bs-navbar-brand" }, "Boobstrap"),
+        h("button", navbar.getTriggerProps({ id: "vue-navbar-toggle", class: "bs-navbar-toggle", "aria-label": "Toggle Vue navigation" }), "☰"),
+        h("div", navbar.getMenuProps({ class: "bs-navbar-menu", "aria-label": "Vue navigation" }), [h("a", { class: "bs-navbar-link", href: "#vue-loading", "data-bs-navbar-close": "" }, "Components"), h("button", navbar.getDismissProps({ class: "bs-btn bs-btn-secondary" }), "Close navigation")]),
+        h("button", navbar.getDismissProps({ class: "bs-navbar-backdrop", "aria-label": "Close Vue navigation" })),
+      ]),
       h("button", button.getButtonProps({ id: "vue-loading", class: "bs-btn bs-btn-primary", onClick: () => setTimeout(() => button.stop("async-test"), 100) }), [h("span", { class: "bs-btn-label" }, "Save"), h("span", { class: "bs-spinner bs-btn-spinner", "aria-hidden": "true" })]),
       h("button", collapse.getTriggerProps({ id: "vue-collapse-toggle", class: "bs-btn bs-btn-secondary" }), "Details"),
       h("div", collapse.getPanelProps({ id: "vue-details", class: "bs-collapse bs-card bs-card-body" }), "Vue details"),

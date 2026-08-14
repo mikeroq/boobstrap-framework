@@ -7,6 +7,7 @@
 @import "./components/card.css";
 @import "./components/dialog.css";
 @import "./components/badge.css";
+@import "./components/avatar.css";
 @import "./components/form.css";
 @import "./components/alert.css";
 @import "./components/accordion.css";
@@ -17,6 +18,7 @@
 @import "./components/code.css";
 @import "./components/table.css";
 @import "./components/list.css";
+@import "./components/empty.css";
 @import "./components/interactions.css";
 @import "./components/floating.css";
 @import "./integrations/datatables.css";

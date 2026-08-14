@@ -4,6 +4,7 @@ export { useCollapse } from "./collapse.js";
 export { useCombobox } from "./combobox.js";
 export { useDialog } from "./dialog.js";
 export { useDropdown } from "./dropdown.js";
+export { useNavbar } from "./navbar.js";
 export { usePopover } from "./popover.js";
 export { useTabs } from "./tabs.js";
 export { useToast } from "./toast.js";

@@ -13,6 +13,16 @@
   </head>
   <body>
     <main>
+      <section class="bs-navbar" x-data="bsNavbar" aria-label="Alpine navbar example">
+        <span class="bs-navbar-brand">Boobstrap</span>
+        <button class="bs-navbar-toggle" id="alpine-navbar-toggle" type="button" x-bind="trigger" aria-controls="alpine-navbar" aria-label="Toggle Alpine navigation">☰</button>
+        <div class="bs-navbar-menu" id="alpine-navbar" x-ref="navbar" x-bind="menu" aria-label="Alpine navigation">
+          <nav class="bs-navbar-nav" aria-label="Alpine primary"><a class="bs-navbar-link" href="#alpine-heading" data-bs-navbar-close>Components</a></nav>
+          <button class="bs-btn bs-btn-secondary" type="button" x-bind="dismiss">Close navigation</button>
+        </div>
+        <button class="bs-navbar-backdrop" type="button" x-bind="dismiss" aria-label="Close Alpine navigation"></button>
+      </section>
+
       <section aria-label="Alpine loading button example">
         <button
           class="bs-btn bs-btn-primary"

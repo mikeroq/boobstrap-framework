@@ -1,4 +1,4 @@
-import boobstrap, { accordion, button, collapse, combobox, dialog, dropdown, popover, tabs, toast, tooltip, type AccordionProvider, type AlpineLike } from "@boobstrap/alpine";
+import boobstrap, { accordion, button, collapse, combobox, dialog, dropdown, navbar, popover, tabs, toast, tooltip, type AccordionProvider, type AlpineLike } from "@boobstrap/alpine";
 
 const Alpine: AlpineLike = { data: (_name, _provider) => {} };
 boobstrap(Alpine);
@@ -10,6 +10,7 @@ collapse(false).toggle();
 combobox({ options: [] }).hide();
 dialog(false).show();
 dropdown(false).hide();
+navbar(false).toggle();
 popover(false, { placement: "top" }).show();
 tabs("profile").activate("security");
 toast(false, { duration: 500, autohide: true }).show();

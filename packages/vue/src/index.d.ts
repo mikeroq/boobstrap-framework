@@ -59,6 +59,14 @@ export interface DialogResult extends Omit<CollapseResult, "panelId" | "getPanel
 
 export function useDialog(options?: OpenOptions): DialogResult;
 
+export interface NavbarResult extends Omit<CollapseResult, "panelId" | "getPanelProps"> {
+  menuId: string;
+  getMenuProps: (props?: ElementProps) => ElementProps;
+  getDismissProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useNavbar(options?: OpenOptions): NavbarResult;
+
 export interface DropdownTransitionOptions { reason?: string; sourceEvent?: Event; focusIndex?: number; restoreFocus?: boolean; }
 export interface DropdownResult {
   open: ComputedRef<boolean>;

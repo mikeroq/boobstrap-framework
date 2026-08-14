@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const accordion = useAccordion({ defaultOpenIds: ["one"] });
@@ -24,6 +24,7 @@ export function ReactAdapterTypeFixture() {
   });
   const dropdown = useDropdown({ defaultOpen: false });
   const dialog = useDialog({ id: "typed-dialog", defaultOpen: false });
+  const navbar = useNavbar({ id: "typed-navbar" });
   const combobox = useCombobox({
     options: [{ value: "engineer", label: "Engineer" }],
     defaultValue: "engineer",
@@ -41,6 +42,7 @@ export function ReactAdapterTypeFixture() {
   button.stop("type-test");
   dropdown.hide({ restoreFocus: true, reason: "type-test" });
   dialog.show("type-test");
+  navbar.toggle("type-test");
   tabs.activate("typed-profile-tab");
   toast.show("type-test");
   tooltip.hide("type-test");
@@ -64,6 +66,8 @@ export function ReactAdapterTypeFixture() {
         <div className="bs-dialog-body">Typed dialog</div>
         <button {...dialog.getDismissProps()}>Close</button>
       </dialog>
+
+      <button {...navbar.getTriggerProps()}>Navigation</button><div {...navbar.getMenuProps()}><button {...navbar.getDismissProps()}>Close</button></div>
 
       <div className="bs-combobox" {...combobox.getRootProps()}>
         <input className="bs-combobox-input" {...combobox.getInputProps()} />

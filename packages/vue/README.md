@@ -20,4 +20,4 @@ const details = useCollapse({ id: "details" });
 </template>
 ```
 
-The package exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. State options accept either plain controlled values or Vue refs for `v-model`-style ownership. Lifecycle events use the same cancelable `bs:*` contract as Boobstrap JS, Alpine, and React.
+The package exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useNavbar`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. State options accept either plain controlled values or Vue refs for `v-model`-style ownership. Lifecycle events use the same cancelable `bs:*` contract as Boobstrap JS, Alpine, and React.

@@ -18,6 +18,7 @@ const assets = new Map([
   ["/adapter/combobox.js", await readFile(new URL("../packages/alpine/src/combobox.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
   ["/adapter/dialog.js", await readFile(new URL("../packages/alpine/src/dialog.js", import.meta.url))],
+  ["/adapter/navbar.js", await readFile(new URL("../packages/alpine/src/navbar.js", import.meta.url))],
   ["/adapter/popover.js", await readFile(new URL("../packages/alpine/src/popover.js", import.meta.url))],
   ["/adapter/shared.js", await readFile(new URL("../packages/alpine/src/shared.js", import.meta.url))],
   ["/adapter/tabs.js", await readFile(new URL("../packages/alpine/src/tabs.js", import.meta.url))],
@@ -59,6 +60,13 @@ try {
     page.on("pageerror", (error) => consoleErrors.push(error.message));
     await page.goto(`${baseUrl}/${build}`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => window.alpineReady === true);
+
+    const navbarToggle = page.locator("#alpine-navbar-toggle");
+    const navbarMenu = page.locator("#alpine-navbar");
+    await navbarToggle.click();
+    if (await navbarMenu.getAttribute("data-bs-state") !== "open") failures.push(`${build}: navbar did not open`);
+    await page.keyboard.press("Escape");
+    if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push(`${build}: navbar did not close and restore focus`);
 
     const loadingButton = page.locator("#alpine-loading-button");
     await loadingButton.click();
@@ -146,7 +154,7 @@ try {
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:popover:hidden"));
 
     const events = await page.evaluate(() => window.bsEvents);
-    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
       if (!events.some((event) => event.name === name && event.adapter === "alpine")) failures.push(`${build}: missing ${name}`);
     }
 

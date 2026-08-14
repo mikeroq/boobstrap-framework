@@ -48,7 +48,7 @@ Imports have no DOM side effects. Initialization is explicit, accepts a `Documen
 ## Shared state and event rules
 
 - Initial state must be understandable from semantic HTML before initialization.
-- Closed or inactive content uses the native `hidden` attribute.
+- Closed or inactive content uses the native `hidden` attribute when it leaves layout entirely. Responsive menus use `data-bs-state` plus mobile `inert` because the same content remains visible on desktop.
 - Controllers reflect public visual state through `data-bs-state`.
 - Triggers keep `aria-expanded` or `aria-selected` synchronized with visible state.
 - Before-events are cancelable. Calling `preventDefault()` prevents the state transition.
@@ -216,6 +216,41 @@ dialog.destroy();
 ```
 
 Events: cancelable `bs:dialog:show` and `bs:dialog:hide`; completed `bs:dialog:shown` and `bs:dialog:hidden`. The drawer API and events are intentionally identical because placement is a CSS presentation choice.
+
+Use `.bs-alert-dialog` with the same controller for short confirmations that interrupt a destructive or consequential action. Set `role="alertdialog"`, provide an accessible title and description, and set `data-bs-dialog-close-on-backdrop="false"` so an accidental outside click cannot confirm or discard the decision.
+
+## Responsive navbar
+
+The navbar controller turns `.bs-navbar-menu` into an off-canvas dialog at the mobile breakpoint while leaving the same content inline on larger screens. Put `data-bs-navbar` and a unique `id` on the menu, connect its toggle and backdrop with `aria-controls`, and add `data-bs-navbar-close` to navigation targets that should close the mobile menu after selection.
+
+```html
+<header class="bs-navbar">
+  <a class="bs-navbar-brand" href="/">Acme</a>
+  <button class="bs-navbar-toggle" type="button" data-bs-toggle="navbar" aria-controls="primary-nav" aria-label="Toggle navigation">☰</button>
+  <div class="bs-navbar-menu" id="primary-nav" data-bs-navbar data-bs-state="closed" aria-label="Primary navigation">
+    <nav class="bs-navbar-nav" aria-label="Primary">
+      <a class="bs-navbar-link" href="/products" data-bs-navbar-close>Products</a>
+      <a class="bs-navbar-link" href="/pricing" data-bs-navbar-close>Pricing</a>
+    </nav>
+    <div class="bs-navbar-actions"><a class="bs-btn bs-btn-primary" href="/signup">Get started</a></div>
+  </div>
+</header>
+<button class="bs-navbar-backdrop" type="button" data-bs-navbar-dismiss aria-controls="primary-nav" aria-label="Close navigation"></button>
+```
+
+Below `48rem` by default, the controller traps focus, closes on `Escape`, backdrop, explicit dismiss, or `data-bs-navbar-close`, restores focus, and locks background scrolling. Override the behavior breakpoint with `data-bs-navbar-media`. On desktop the menu returns to ordinary document flow and its temporary dialog attributes are removed.
+
+```js
+import { Navbar } from "@boobstrap/boobstrap/js/navbar";
+
+const navbar = Navbar.getOrCreateInstance(document.querySelector("[data-bs-navbar]"));
+navbar.show();
+navbar.hide();
+navbar.toggle();
+navbar.destroy();
+```
+
+Events: cancelable `bs:navbar:show` and `bs:navbar:hide`; completed `bs:navbar:shown` and `bs:navbar:hidden`.
 
 ## Sidebar
 
@@ -476,7 +511,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsNavbar`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
 
 ### Alpine loading button
 
@@ -586,7 +621,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 ```
 
 The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.
@@ -679,7 +714,7 @@ npm install @boobstrap/boobstrap @boobstrap/vue vue
 ```vue
 <script setup>
 import "@boobstrap/boobstrap";
-import { useCollapse } from "@boobstrap/vue";
+import { useCollapse, useNavbar } from "@boobstrap/vue";
 
 const details = useCollapse({ id: "details" });
 </script>
@@ -690,4 +725,4 @@ const details = useCollapse({ id: "details" });
 </template>
 ```
 
-The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
+The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useNavbar`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
