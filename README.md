@@ -8,7 +8,7 @@ Boobstrap is a lightweight, class-based CSS framework for polished interfaces wi
 
 ## Starter template
 
-Start from the responsive [Vite starter](examples/starter), which imports Boobstrap from npm and includes theme customization, components, forms, inline SVG icons, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs#starter).
+Start from the responsive [Vite starter](examples/starter), which imports Boobstrap and the recommended Lucide icon set from npm and includes theme customization, components, forms, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs#starter).
 
 ## Install
 
@@ -35,29 +35,27 @@ import "@boobstrap/boobstrap/dist/boobstrap.css";
 
 You can also copy `dist/boobstrap.css` from the package into your own assets and link it normally.
 
-## Icons (optional)
+## Icons
 
-Boobstrap does not bundle an icon library or JavaScript runtime. Add the sizing utilities to any inline SVG from your preferred library:
-
-```html
-<svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true">
-  <path d="M12 3v18m9-9H3" />
-</svg>
-```
-
-For a ready-made icon set, install [Lucide](https://lucide.dev/), then initialize only the icons your application uses:
+Use [Lucide](https://lucide.dev/) as the default icon set for Boobstrap projects. Boobstrap remains CSS-only, so Lucide is an opt-in application dependency:
 
 ```bash
 npm install lucide
 ```
 
-```js
-import { createIcons, icons } from "lucide";
+Import only the icons the page uses, then apply Boobstrap's sizing classes to the markers Lucide replaces:
 
-createIcons({ icons });
+```html
+<i data-lucide="plus" class="bs-icon bs-icon-lg" aria-hidden="true"></i>
 ```
 
-Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and can be used with any SVG icon source.
+```js
+import { Plus, createIcons } from "lucide";
+
+createIcons({ icons: { Plus } });
+```
+
+Other SVG icon sources remain compatible when a project needs them, but Boobstrap documentation and starters use Lucide consistently.
 
 ## Optional JavaScript
 

@@ -405,6 +405,8 @@ Recommended arrangements:
 
 Icons should be outlined, rounded, geometric, and simple enough to work at 16 pixels.
 
+Use Lucide as the recommended default icon set in Boobstrap documentation, examples, and starters. Import only the icons in use, mark decorative icons with `aria-hidden="true"`, and apply the `.bs-icon` sizing utilities to Lucide's generated SVG elements. Other SVG icon sources remain compatible with the CSS framework.
+
 ```css
 --bs-icon-sm: 1rem;
 --bs-icon-md: 1.25rem;

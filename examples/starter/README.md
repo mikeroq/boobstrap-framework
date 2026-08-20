@@ -1,6 +1,6 @@
 # Boobstrap starter
 
-A minimal Vite project that imports Boobstrap from npm and demonstrates theme tokens, responsive layout, components, forms, and dependency-free inline SVG icons.
+A minimal Vite project that imports Boobstrap and the recommended Lucide icon set from npm, then demonstrates theme tokens, responsive layout, components, and forms.
 
 ## Start with your package manager
 
@@ -43,4 +43,4 @@ npm run validate
 
 It rebuilds the project, confirms that Vite emitted the page assets, and verifies that the bundled CSS contains both Boobstrap and the starter's theme customization.
 
-Boobstrap is CSS-only. The icons in this starter are inline SVG, so no icon package or runtime is required. You can replace them with any SVG icon set you prefer.
+Boobstrap remains CSS-only and library-agnostic. This starter uses Lucide as the recommended icon set, imports only the six icons it needs, and applies Boobstrap’s <code>.bs-icon</code> sizing classes to the generated SVG elements.
