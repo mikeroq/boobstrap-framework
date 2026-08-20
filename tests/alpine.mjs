@@ -149,6 +149,9 @@ try {
     if (await page.locator("#alpine-tooltip").isHidden() || !await page.locator("#alpine-tooltip-trigger").getAttribute("aria-describedby")) failures.push(`${build}: tooltip did not show with its description`);
     await page.locator("#alpine-popover-trigger").click();
     if (await page.locator("#alpine-popover").isHidden()) failures.push(`${build}: popover did not show`);
+    await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+    await page.locator("#alpine-popover").waitFor({ state: "hidden" });
+    await page.locator("#alpine-popover-trigger").click();
     await page.locator("#alpine-heading").click();
     if (await page.locator("#alpine-popover").isVisible()) failures.push(`${build}: popover did not dismiss outside`);
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:popover:hidden"));

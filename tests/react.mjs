@@ -151,6 +151,9 @@ try {
   if (await page.locator("#react-tooltip").isHidden() || !await page.locator("#react-tooltip-trigger").getAttribute("aria-describedby")) failures.push("tooltip did not show with its description");
   await page.locator("#react-popover-trigger").click();
   if (await page.locator("#react-popover").isHidden()) failures.push("popover did not show");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  await page.locator("#react-popover").waitFor({ state: "hidden" });
+  await page.locator("#react-popover-trigger").click();
   await page.locator("#react-heading").click();
   if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
 

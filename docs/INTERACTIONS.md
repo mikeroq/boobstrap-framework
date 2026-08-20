@@ -199,7 +199,7 @@ Dialogs and drawers share one native `<dialog>` behavior contract. Use `.bs-dial
 </dialog>
 ```
 
-The header, description, close button, and footer are optional. The body uses `overflow: auto`; constrained dialogs and full-height drawers keep their header and footer visible while only the body scrolls. Modal widths are `.bs-dialog-sm`, `.bs-dialog-lg`, and `.bs-dialog-xl`; heights are `.bs-dialog-height-sm`, `.bs-dialog-height-lg`, and `.bs-dialog-fullscreen`. Drawer widths are `.bs-drawer-sm`, `.bs-drawer-lg`, and `.bs-drawer-xl`. Override `--bs-dialog-width`, `--bs-dialog-max-height`, or `--bs-drawer-width` at the component boundary for a product-specific size.
+The header, description, close button, and footer are optional. Headers without a description collapse to one row rather than reserving description space. The body uses `overflow: auto`; constrained dialogs and full-height drawers keep their header and footer visible while only the body scrolls. Modal widths are `.bs-dialog-sm`, `.bs-dialog-lg`, and `.bs-dialog-xl`; heights are `.bs-dialog-height-sm`, `.bs-dialog-height-lg`, and `.bs-dialog-fullscreen`. Drawer widths are `.bs-drawer-sm`, `.bs-drawer-lg`, and `.bs-drawer-xl`. Override `--bs-dialog-width`, `--bs-dialog-max-height`, or `--bs-drawer-width` at the component boundary for a product-specific size.
 
 Backdrop clicks dismiss by default. Set `data-bs-dialog-close-on-backdrop="false"` when an outside pointer must not discard work. `Escape` remains available, and applications should always provide at least one explicit dismiss path. Native modal semantics contain focus and make background content inert; the controller synchronizes triggers, locks document scrolling, emits lifecycle events, and restores focus.
 
@@ -445,7 +445,7 @@ Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, an
 <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" hidden>Security settings</div>
 ```
 
-Tabs use automatic activation. Horizontal tablists support Left/Right; vertical tablists support Up/Down. Both support `Home` and `End`, skip disabled tabs, maintain roving `tabindex`, and synchronize their panels.
+Tabs use automatic activation. Horizontal tablists support Left/Right; vertical tablists support Up/Down. Both support `Home` and `End`, skip disabled tabs, maintain roving `tabindex`, and synchronize their panels. The default underline spans each tab's full inline size, while horizontal overflow remains touch-scrollable without exposing an extra scrollbar.
 
 Public API: `activate(tab)` and `destroy()`.
 
@@ -477,7 +477,7 @@ Public API: `show()`, `hide()`, and `destroy()`. Events are cancelable `bs:toast
 <button class="bs-btn" type="button" data-bs-popover="Use one behavior layer per component." data-bs-title="Integration guidance">Guidance</button>
 ```
 
-Tooltips are brief, non-interactive descriptions shown by hover or focus and dismissed by pointer exit, blur, or `Escape`. Popovers are click-triggered non-modal dialogs that may contain a title and body; they dismiss on an outside pointer or `Escape`. Both support `top`, `bottom`, `start`, and `end`, automatically flip when the requested placement would leave the viewport, and synchronize accessible relationships.
+Tooltips are brief, non-interactive descriptions shown by hover or focus and dismissed by pointer exit, blur, or `Escape`. Popovers are click-triggered non-modal dialogs that may contain a title and body; they dismiss on an outside pointer, page scroll, or `Escape`. Both support `top`, `bottom`, `start`, and `end`, automatically flip when the requested placement would leave the viewport, and synchronize accessible relationships.
 
 Public APIs expose `show()`, `hide()`, and `destroy()`; popovers also expose `toggle()`. Lifecycle events use `bs:tooltip:*` and `bs:popover:*` with cancelable `show` / `hide` and completed `shown` / `hidden` actions.
 

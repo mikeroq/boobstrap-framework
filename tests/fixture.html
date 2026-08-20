@@ -46,7 +46,7 @@
             </div>
           </article>
         </div>
-        <article class="bs-card bs-card-raised bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
+        <article class="bs-card bs-card-raised bs-card-separated bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
           <header class="bs-card-header">
             <h3 class="bs-card-title" id="structured-card-title">Workspace usage</h3>
             <p class="bs-card-description">Review current storage and manage plan capacity.</p>
@@ -134,11 +134,22 @@
             <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" /><span class="bs-check-label">Yearly</span></label>
             <label class="bs-check bs-switch"><input class="bs-check-input" type="checkbox" name="alerts" /><span class="bs-check-label">Security alerts</span></label>
           </fieldset>
+          <div class="bs-form-row">
+            <label class="bs-label" for="volume">Volume</label>
+            <input class="bs-range" id="volume" type="range" value="65" />
+            <label class="bs-label" for="accent">Accent color</label>
+            <input class="bs-color" id="accent" type="color" value="#d83c87" />
+          </div>
+          <div class="bs-scrollbar" data-test-scrollbar tabindex="0" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Scrollable theme preview</div></div>
         </form>
       </section>
 
       <section aria-labelledby="feedback-title" class="bs-mt-8 bs-stack bs-gap-4">
         <h2 id="feedback-title">Feedback</h2>
+        <div class="bs-dialog" data-test-descriptionless-dialog style="display: flex; position: static; inline-size: 100%">
+          <header class="bs-dialog-header"><h3 class="bs-dialog-title">Compact header</h3><button class="bs-dialog-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-dialog-body">A header without a description does not reserve an empty row.</div>
+        </div>
         <div class="bs-alert bs-alert-primary" role="status"><span><strong class="bs-alert-title">Primary alert</strong>Useful contextual information.</span></div>
         <div class="bs-alert bs-alert-success" role="status"><span><strong class="bs-alert-title">Success alert</strong>The operation completed successfully.</span></div>
         <div class="bs-progress bs-progress-lg" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="68" data-test-progress><div class="bs-progress-bar bs-progress-success bs-progress-striped bs-progress-animated" style="width: 68%">68%</div></div>
@@ -150,13 +161,14 @@
         <h2 id="code-title">Code sample</h2>
         <div class="bs-code-window">
           <div class="bs-code-header"><span>example.html</span><button class="bs-code-action" type="button">Copy</button></div>
-          <div class="bs-code-tabs" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
+          <div class="bs-code-tabs bs-code-tabs-underline" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
           <pre class="bs-code-body bs-m-0"><span class="bs-code-tag">&lt;button</span> <span class="bs-code-attribute">class</span>=<span class="bs-code-string">"bs-btn"</span><span class="bs-code-tag">&gt;</span>Ship<span class="bs-code-tag">&lt;/button&gt;</span></pre>
         </div>
       </section>
 
       <section aria-labelledby="tabs-title" class="bs-mt-8">
         <h2 id="tabs-title">Tab variants</h2>
+        <div class="bs-tabs" role="tablist" aria-label="Default tabs"><button class="bs-tab" role="tab" type="button" aria-selected="true">Overview</button><button class="bs-tab" role="tab" type="button" aria-selected="false">Activity</button></div>
         <div class="bs-tabs bs-tabs-pills" role="tablist" aria-label="Package manager"><button class="bs-tab" role="tab" type="button" aria-selected="true">npm</button><button class="bs-tab" role="tab" type="button" aria-selected="false">pnpm</button></div>
         <div class="bs-tabs bs-tabs-contained bs-mt-4" role="tablist" aria-label="Framework"><button class="bs-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-tab" role="tab" type="button" aria-selected="false">React</button></div>
         <div class="bs-tab-panel bs-tab-panel-contained"><code class="bs-code-inline">npm install @boobstrap/boobstrap</code></div>

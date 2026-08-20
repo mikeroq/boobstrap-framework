@@ -32,6 +32,7 @@ export function popover(options = {}) {
     },
     panel: {
       role: "dialog",
+      ["@scroll.window"](event) { this.hide("scroll", event); },
       ["@click.outside"](event) {
         if (!this.triggerElement().contains(event.target)) this.hide("outside", event);
       },

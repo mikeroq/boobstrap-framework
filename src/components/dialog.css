@@ -32,7 +32,8 @@
 .bs-dialog-xl { --bs-dialog-width: 64rem; }
 
 .bs-alert-dialog { --bs-dialog-width: 30rem; }
-.bs-alert-dialog .bs-dialog-header { grid-template-areas: "icon title close" "icon description close"; grid-template-columns: auto minmax(0, 1fr) auto; }
+.bs-alert-dialog .bs-dialog-header { grid-template-areas: "icon title close"; grid-template-columns: auto minmax(0, 1fr) auto; }
+.bs-alert-dialog .bs-dialog-header:has(> .bs-dialog-description:not(:empty)) { grid-template-areas: "icon title close" "icon description close"; }
 .bs-alert-dialog-icon { grid-area: icon; display: inline-grid; inline-size: 2.5rem; block-size: 2.5rem; place-items: center; color: var(--bs-color-warning); background: color-mix(in srgb, var(--bs-color-warning) 14%, transparent); border-radius: 50%; }
 .bs-alert-dialog-danger .bs-alert-dialog-icon { color: var(--bs-color-danger); background: color-mix(in srgb, var(--bs-color-danger) 14%, transparent); }
 .bs-alert-dialog-success .bs-alert-dialog-icon { color: var(--bs-color-success); background: color-mix(in srgb, var(--bs-color-success) 14%, transparent); }
@@ -52,14 +53,21 @@
   display: grid;
   flex: 0 0 auto;
   grid-template-areas:
-    "title close"
-    "description close";
+    "title close";
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--bs-space-1) var(--bs-space-4);
   align-items: start;
-  padding: var(--bs-space-5) var(--bs-space-6);
+  padding: var(--bs-space-4) var(--bs-space-5);
   border-block-end: 1px solid var(--bs-color-border);
 }
+
+:is(.bs-dialog-header, .bs-drawer-header):has(> :is(.bs-dialog-description, .bs-drawer-description):not(:empty)) {
+  grid-template-areas:
+    "title close"
+    "description close";
+}
+
+:is(.bs-dialog-description, .bs-drawer-description):empty { display: none; }
 
 .bs-dialog-title,
 .bs-drawer-title {
@@ -109,7 +117,7 @@
 .bs-drawer-body {
   min-block-size: 0;
   flex: 1 1 auto;
-  padding: var(--bs-space-6);
+  padding: var(--bs-space-4) var(--bs-space-5);
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -123,7 +131,7 @@
   gap: var(--bs-space-3);
   align-items: center;
   justify-content: flex-end;
-  padding: var(--bs-space-4) var(--bs-space-6);
+  padding: var(--bs-space-4) var(--bs-space-5);
   background: var(--bs-color-surface-raised);
   border-block-start: 1px solid var(--bs-color-border);
 }

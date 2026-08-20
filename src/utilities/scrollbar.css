@@ -1,0 +1,24 @@
+:where(.bs-scrollbar, [data-bs-scrollbars="themed"], [data-bs-scrollbars="themed"] *) {
+  scrollbar-color: var(--bs-scrollbar-thumb) var(--bs-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+:where(.bs-scrollbar, [data-bs-scrollbars="themed"], [data-bs-scrollbars="themed"] *)::-webkit-scrollbar {
+  width: var(--bs-scrollbar-size);
+  height: var(--bs-scrollbar-size);
+}
+
+:where(.bs-scrollbar, [data-bs-scrollbars="themed"], [data-bs-scrollbars="themed"] *)::-webkit-scrollbar-track {
+  background: var(--bs-scrollbar-track);
+}
+
+:where(.bs-scrollbar, [data-bs-scrollbars="themed"], [data-bs-scrollbars="themed"] *)::-webkit-scrollbar-thumb {
+  background: var(--bs-scrollbar-thumb);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: var(--bs-radius-pill);
+}
+
+:where(.bs-scrollbar, [data-bs-scrollbars="themed"], [data-bs-scrollbars="themed"] *)::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bs-scrollbar-thumb-hover);
+}

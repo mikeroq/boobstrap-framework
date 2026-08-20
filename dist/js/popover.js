@@ -21,6 +21,9 @@ export class Popover {
       if (event.key !== "Escape") return;
       if (this.hide({ reason: "escape", sourceEvent: event })) this.element.focus();
     };
+    this.onScroll = (event) => {
+      this.hide({ reason: "scroll", sourceEvent: event });
+    };
 
     element.addEventListener("click", this.onToggle);
     element.addEventListener("keydown", this.onKeydown);
@@ -76,6 +79,7 @@ export class Popover {
     this.stopPositioning = autoPosition(this.element, this.panel, this.element.dataset.bsPlacement ?? "bottom");
     this.document.addEventListener("pointerdown", this.onDocumentPointer);
     this.document.addEventListener("keydown", this.onKeydown);
+    this.document.defaultView?.addEventListener("scroll", this.onScroll, true);
     setState(this.element, "shown");
     emit(this.element, "bs:popover:shown", detail);
     return true;
@@ -91,6 +95,7 @@ export class Popover {
     this.stopPositioning = null;
     this.document.removeEventListener("pointerdown", this.onDocumentPointer);
     this.document.removeEventListener("keydown", this.onKeydown);
+    this.document.defaultView?.removeEventListener("scroll", this.onScroll, true);
     setState(this.element, "hidden");
     emit(this.element, "bs:popover:hidden", detail);
     return true;

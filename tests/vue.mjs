@@ -84,6 +84,9 @@ try {
   if (await page.locator("#vue-tooltip").isHidden()) failures.push("tooltip did not show");
   await page.locator("#vue-popover-trigger").click();
   if (await page.locator("#vue-popover").isHidden()) failures.push("popover did not show");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  await page.locator("#vue-popover").waitFor({ state: "hidden" });
+  await page.locator("#vue-popover-trigger").click();
   await page.locator("h1, main").first().click({ position: { x: 2, y: 2 } });
   const eventNames = await page.evaluate(() => window.bsEvents.filter((event) => event.adapter === "vue").map((event) => event.name));
   for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
