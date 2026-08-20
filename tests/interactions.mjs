@@ -292,6 +292,9 @@ try {
   await popoverTrigger.click();
   const popover = page.locator(".bs-popover");
   if (!await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "true" || await popover.getAttribute("role") !== "dialog") failures.push("Popover did not show with synchronized accessible state");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  if (await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "false") failures.push("Popover did not dismiss on page scroll");
+  await popoverTrigger.click();
   await page.locator("h1").click();
   if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
 

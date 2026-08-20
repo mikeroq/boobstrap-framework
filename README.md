@@ -149,10 +149,10 @@ const details = useCollapse({ id: "details" });
 
 ## What ships
 
-- Composable dark/light modes, five color palettes, and rounded/square radius presets
+- Composable dark/light modes, five color palettes, small/normal/large radius scales, and square corners
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
-- Buttons, cards, badges, comprehensive form controls, alerts, and code windows
+- Buttons, cards with optional separated regions, badges, comprehensive form controls, alerts, and code windows with pill or underline tabs
 - Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
 - A composable sidebar shell with groups, nested menus, badges, loading states, mobile drawers, and desktop collapse modes
@@ -161,10 +161,10 @@ const details = useCollapse({ id: "details" });
 - Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
 - A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
 - Determinate, striped, animated, and indeterminate progress indicators with semantic variants and reduced-motion behavior
-- Toast regions, anchored tooltips, and accessible popovers with optional controllers
+- Toast regions, anchored tooltips, and accessible popovers that dismiss on outside interaction, page scroll, or `Escape`
 - Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, tabs, toast, tooltip, and popover controllers
 - Official Alpine, React, and Vue adapters with framework-owned state
-- Display, flex, sizing, positioning, spacing, typography, and responsive breakpoint utilities
+- Display, flex, sizing, positioning, spacing, typography, responsive breakpoint, and opt-in themed-scrollbar utilities
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
 The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs). The reference is derived from the compiled package used by the site.
@@ -177,15 +177,17 @@ Dark mode, the rose palette, and rounded corners are the defaults. Mode, palette
 <html
   data-bs-theme="light"
   data-bs-palette="blue"
-  data-bs-radius="square"
+  data-bs-radius="small"
+  data-bs-scrollbars="themed"
 >
 ```
 
 - `data-bs-theme`: `dark` or `light`
 - `data-bs-palette`: `rose`, `violet`, `blue`, `teal`, or `amber`
-- `data-bs-radius`: `rounded` or `square`
+- `data-bs-radius`: `small`, `normal`, `large`, `rounded` (an alias for `normal`), or `square`
+- `data-bs-scrollbars`: set `themed` to style scrollbars throughout that subtree; use `.bs-scrollbar` for one scroll container
 
-Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. The radius presets remap the complete `--bs-radius-*` scale while leaving intrinsic circles such as radio controls and status dots circular.
+Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. Radius presets remap the complete `--bs-radius-*` scale. The scrollbar opt-in consumes theme-aware `--bs-scrollbar-*` tokens and leaves native scrollbar behavior intact.
 
 Preset attributes are optional. Override semantic tokens after importing Boobstrap when a product needs a custom system:
 
@@ -196,6 +198,7 @@ Preset attributes are optional. Override semantic tokens after importing Boobstr
   --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(109 74 255 / 30%);
   --bs-radius-md: 0.5rem;
+  --bs-scrollbar-thumb: rgb(109 74 255 / 55%);
 }
 ```
 

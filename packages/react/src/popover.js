@@ -38,13 +38,14 @@ export function usePopover(options = {}) {
     const onPointerDown = (event) => {
       if (!triggerRef.current?.contains(event.target) && !panelRef.current?.contains(event.target)) hide("outside", event);
     };
+    const onScroll = (event) => hide("scroll", event);
     ownerDocument?.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
+    window.addEventListener("scroll", onScroll, true);
     return () => {
       ownerDocument?.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("scroll", onScroll, true);
     };
   }, [hide, open, options.placement]);
 

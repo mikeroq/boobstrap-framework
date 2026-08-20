@@ -64,6 +64,22 @@
   padding: var(--bs-card-padding-block) var(--bs-card-padding-inline);
 }
 
+.bs-card-separated > .bs-card-header {
+  padding-block-end: var(--bs-card-padding-block);
+  border-block-end: 1px solid var(--bs-color-border);
+}
+
+.bs-card-separated > .bs-card-header + :is(.bs-card-content, .bs-card-body),
+.bs-card-separated > :is(.bs-card-content, .bs-card-body) + .bs-card-footer,
+.bs-card-separated > .bs-card-header + .bs-card-footer {
+  padding-block-start: var(--bs-card-padding-block);
+}
+
+.bs-card-separated > :is(.bs-card-content, .bs-card-body) + .bs-card-footer,
+.bs-card-separated > .bs-card-header + .bs-card-footer {
+  border-block-start: 1px solid var(--bs-color-border);
+}
+
 .bs-card-subtle {
   background: color-mix(in srgb, var(--bs-color-surface) 72%, transparent);
   border-radius: var(--bs-radius-lg);

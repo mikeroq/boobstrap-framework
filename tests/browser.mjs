@@ -74,6 +74,14 @@ try {
         const progress = document.querySelector("[data-test-progress]");
         const progressBar = progress.querySelector(".bs-progress-bar");
         const responsiveUtility = document.querySelector("[data-test-responsive-utility]");
+        const primaryButton = document.querySelector(".bs-btn-primary");
+        const defaultTabs = document.querySelector('[aria-label="Default tabs"]');
+        const defaultTab = defaultTabs.querySelector(".bs-tab");
+        const codeTab = document.querySelector(".bs-code-tabs-underline .bs-code-tab[aria-selected=\"true\"]");
+        const scrollbar = document.querySelector("[data-test-scrollbar]");
+        const compactDialog = document.querySelector("[data-test-descriptionless-dialog]");
+        const compactDialogHeader = compactDialog.querySelector(".bs-dialog-header");
+        const compactDialogBody = compactDialog.querySelector(".bs-dialog-body");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -112,6 +120,20 @@ try {
           progressBackground: getComputedStyle(progressBar).backgroundColor,
           progressHeight: progress.getBoundingClientRect().height,
           responsiveDirection: getComputedStyle(responsiveUtility).flexDirection,
+          primaryButtonShadow: getComputedStyle(primaryButton).boxShadow,
+          primaryButtonTransform: getComputedStyle(primaryButton).transform,
+          cardHeaderBorder: getComputedStyle(cardHeader).borderBottomColor,
+          cardFooterBorder: getComputedStyle(cardFooter).borderTopColor,
+          tabsOverflowY: getComputedStyle(defaultTabs).overflowY,
+          tabsScrollbarWidth: getComputedStyle(defaultTabs).scrollbarWidth,
+          tabIndicatorStart: getComputedStyle(defaultTab, "::after").left,
+          tabIndicatorEnd: getComputedStyle(defaultTab, "::after").right,
+          codeTabRadius: getComputedStyle(codeTab).borderRadius,
+          codeTabIndicator: getComputedStyle(codeTab, "::after").backgroundColor,
+          scrollbarColor: getComputedStyle(scrollbar).scrollbarColor,
+          dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
+          dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
+          dialogBodyPadding: getComputedStyle(compactDialogBody).paddingTop,
         };
       });
 
@@ -134,6 +156,12 @@ try {
       if (metrics.cardContentPaddingInline === "0px" || metrics.cardContentPaddingInline !== metrics.cardFooterPaddingInline) failures.push(`${theme}/${viewport.name}: card content and footer spacing did not share the region contract`);
       if (Math.abs(metrics.progressRatio - 0.68) > 0.03 || metrics.progressBackground === "rgba(0, 0, 0, 0)" || metrics.progressHeight < 14) failures.push(`${theme}/${viewport.name}: progress indicator contract did not resolve`);
       if (metrics.responsiveDirection !== (viewport.name === "mobile" ? "column" : "row")) failures.push(`${theme}/${viewport.name}: responsive flex direction utility did not apply`);
+      if (metrics.primaryButtonShadow !== "none" || metrics.primaryButtonTransform !== "none") failures.push(`${theme}/${viewport.name}: primary button retained glow or movement`);
+      if ([metrics.cardHeaderBorder, metrics.cardFooterBorder].some((value) => value === "rgba(0, 0, 0, 0)")) failures.push(`${theme}/${viewport.name}: separated card regions do not expose dividers`);
+      if (metrics.tabsOverflowY !== "hidden" || metrics.tabsScrollbarWidth !== "none" || Number.parseFloat(metrics.tabIndicatorStart) !== 0 || Number.parseFloat(metrics.tabIndicatorEnd) !== 0) failures.push(`${theme}/${viewport.name}: default tabs retain inset indicators or visible scrollbars`);
+      if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
+      if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: themed scrollbar utility did not resolve`);
+      if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 16 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains an empty row or excessive vertical padding`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
@@ -149,11 +177,23 @@ try {
       });
       if (inputFocus.boxShadow === "none") failures.push(`${theme}/${viewport.name}: focused input has no visible focus ring`);
 
+      const primaryButton = page.locator(".bs-btn-primary").first();
+      await primaryButton.hover();
+      const primaryHover = await primaryButton.evaluate((element) => ({ boxShadow: getComputedStyle(element).boxShadow, transform: getComputedStyle(element).transform }));
+      if (primaryHover.boxShadow !== "none" || primaryHover.transform !== "none") failures.push(`${theme}/${viewport.name}: primary button hover retained glow or movement`);
+
       const formMetrics = await page.evaluate(() => {
         const small = document.querySelector("#small-input").getBoundingClientRect();
         const large = document.querySelector("#large-input").getBoundingClientRect();
         const group = document.querySelector("[data-test-input-group]");
         const icon = document.querySelector("[data-test-input-icon]").getBoundingClientRect();
+        const groupStyles = [...group.children].map((element) => getComputedStyle(element));
+        const radio = document.querySelector('.bs-check-input[type="radio"]');
+        const radioLabel = radio.nextElementSibling;
+        const radioRect = radio.getBoundingClientRect();
+        const radioLabelRect = radioLabel.getBoundingClientRect();
+        const switchInput = document.querySelector(".bs-switch .bs-check-input");
+        const color = document.querySelector(".bs-color");
         return {
           smallHeight: small.height,
           largeHeight: large.height,
@@ -161,12 +201,21 @@ try {
           groupGap: group.children[1].getBoundingClientRect().left - group.children[0].getBoundingClientRect().right,
           iconWidth: icon.width,
           checkboxAppearance: getComputedStyle(document.querySelector('.bs-check-input[type="checkbox"]')).appearance,
+          groupFontSizes: groupStyles.map((style) => style.fontSize),
+          radioCenterDelta: Math.abs((radioRect.top + (radioRect.height / 2)) - (radioLabelRect.top + (radioLabelRect.height / 2))),
+          switchBackgroundPosition: getComputedStyle(switchInput).backgroundPositionX,
+          switchBackgroundSize: getComputedStyle(switchInput).backgroundSize,
+          colorSwatchRadius: getComputedStyle(color, "::-webkit-color-swatch").borderRadius,
         };
       });
       if (formMetrics.smallHeight >= formMetrics.largeHeight) failures.push(`${theme}/${viewport.name}: form size modifiers are not ordered`);
       if (formMetrics.groupDisplay !== "flex" || Math.abs(formMetrics.groupGap) > 2) failures.push(`${theme}/${viewport.name}: input group controls are not attached`);
       if (formMetrics.iconWidth <= 0) failures.push(`${theme}/${viewport.name}: input icon did not render`);
       if (formMetrics.checkboxAppearance !== "none") failures.push(`${theme}/${viewport.name}: checkbox styling did not apply`);
+      if (new Set(formMetrics.groupFontSizes).size !== 1) failures.push(`${theme}/${viewport.name}: input-group add-ons do not share input typography`);
+      if (formMetrics.radioCenterDelta > 1) failures.push(`${theme}/${viewport.name}: radio and label are not vertically centered`);
+      if (Number.parseFloat(formMetrics.switchBackgroundPosition) > 3 || formMetrics.switchBackgroundSize === "auto") failures.push(`${theme}/${viewport.name}: off switch thumb is not aligned to the start edge`);
+      if (Number.parseFloat(formMetrics.colorSwatchRadius) <= 0) failures.push(`${theme}/${viewport.name}: native color swatch does not inherit a rounded shape`);
 
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {
@@ -212,6 +261,8 @@ try {
       resolvedPalettes.add(`${paletteMetrics.background}|${paletteMetrics.primary}`);
       if (!paletteMetrics.focusRing || paletteMetrics.buttonBackground === "none") failures.push(`${theme}/${palette}: palette tokens did not resolve through components`);
       if (paletteMetrics.buttonColor === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${palette}: primary contrast color did not resolve`);
+      const contrastChannels = paletteMetrics.buttonColor.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? [];
+      if (contrastChannels.length !== 3 || contrastChannels.some((channel) => channel < 240)) failures.push(`${theme}/${palette}: primary button contrast is not light text (${paletteMetrics.buttonColor})`);
 
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {
@@ -227,12 +278,15 @@ try {
   const radiusPage = await radiusContext.newPage();
   await radiusPage.goto(baseUrl, { waitUntil: "networkidle" });
   const radiusMetrics = {};
-  for (const radius of ["rounded", "square"]) {
+  for (const radius of ["small", "normal", "large", "rounded", "square"]) {
     radiusMetrics[radius] = await radiusPage.evaluate((activeRadius) => {
       document.documentElement.dataset.bsRadius = activeRadius;
       return [".bs-card", ".bs-btn", ".bs-input", ".bs-tabs-pills"].map((selector) => getComputedStyle(document.querySelector(selector)).borderRadius);
     }, radius);
   }
+  if (Number.parseFloat(radiusMetrics.small[0]) >= Number.parseFloat(radiusMetrics.normal[0])
+    || Number.parseFloat(radiusMetrics.normal[0]) >= Number.parseFloat(radiusMetrics.large[0])) failures.push("Small, normal, and large radius presets are not ordered");
+  if (radiusMetrics.rounded.some((value, index) => value !== radiusMetrics.normal[index])) failures.push("Rounded radius alias does not match normal corners");
   if (radiusMetrics.rounded.some((value) => Number.parseFloat(value) <= 0)) failures.push("Rounded radius preset did not retain component corners");
   if (radiusMetrics.square.some((value) => Number.parseFloat(value) !== 0)) failures.push("Square radius preset did not remove component corners");
   await radiusContext.close();

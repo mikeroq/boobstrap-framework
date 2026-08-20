@@ -8,11 +8,12 @@ export function usePopover(options = {}) {
   const [open, setOpen] = useControllableState(options, "open", "defaultOpen", "onOpenChange", false);
   const update = () => positionFloating(triggerRef.value, panelRef.value, options.placement ?? "bottom");
   const onDocumentPointer = (event) => { if (!triggerRef.value?.contains(event.target) && !panelRef.value?.contains(event.target)) hide("outside", event); };
+  const onScroll = (event) => hide("scroll", event);
   watch(open, (nextOpen) => { if (nextOpen) queueMicrotask(update); });
   onBeforeUnmount(() => {
     triggerRef.value?.ownerDocument.removeEventListener("pointerdown", onDocumentPointer);
     window.removeEventListener("resize", update);
-    window.removeEventListener("scroll", update, true);
+    window.removeEventListener("scroll", onScroll, true);
   });
   const transition = (nextOpen, reason = "api", sourceEvent) => {
     if (nextOpen === open.value) return false;
@@ -20,8 +21,8 @@ export function usePopover(options = {}) {
     if (!emit(triggerRef.value, `bs:popover:${nextOpen ? "show" : "hide"}`, detail, true)) return false;
     const changed = setOpen(nextOpen, detail);
     const ownerDocument = triggerRef.value?.ownerDocument;
-    if (nextOpen) { ownerDocument?.addEventListener("pointerdown", onDocumentPointer); window.addEventListener("resize", update); window.addEventListener("scroll", update, true); }
-    else { ownerDocument?.removeEventListener("pointerdown", onDocumentPointer); window.removeEventListener("resize", update); window.removeEventListener("scroll", update, true); }
+    if (nextOpen) { ownerDocument?.addEventListener("pointerdown", onDocumentPointer); window.addEventListener("resize", update); window.addEventListener("scroll", onScroll, true); }
+    else { ownerDocument?.removeEventListener("pointerdown", onDocumentPointer); window.removeEventListener("resize", update); window.removeEventListener("scroll", onScroll, true); }
     queueMicrotask(() => emit(triggerRef.value, `bs:popover:${nextOpen ? "shown" : "hidden"}`, detail));
     return changed;
   };
