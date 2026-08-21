@@ -236,8 +236,16 @@ try {
     display: getComputedStyle(element).display,
     firstEnd: element.children[0].getBoundingClientRect().right,
     secondStart: element.children[1].getBoundingClientRect().left,
+    triggerEndRadius: [
+      getComputedStyle(element.children[1]).borderStartEndRadius,
+      getComputedStyle(element.children[1]).borderEndEndRadius,
+    ].map(Number.parseFloat),
+    menuEnd: element.children[2].getBoundingClientRect().right,
+    groupEnd: element.getBoundingClientRect().right,
   }));
   if (splitMetrics.display !== "inline-flex" || Math.abs(splitMetrics.firstEnd - splitMetrics.secondStart) > 2) failures.push("Split dropdown buttons are not attached");
+  if (splitMetrics.triggerEndRadius.some((radius) => radius <= 0)) failures.push(`Split dropdown trigger is missing its end radius (${JSON.stringify(splitMetrics.triggerEndRadius)})`);
+  if (Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd) > 1) failures.push(`End-aligned split dropdown menu is offset by ${Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd)}px`);
 
   const profileTab = page.locator("#profile-tab");
   const securityTab = page.locator("#security-tab");
