@@ -208,7 +208,7 @@ Use pink for emphasis rather than everywhere.
 
 Rose remains the Boobstrap brand default. Product interfaces may select an accessible preset with `data-bs-palette="rose|violet|blue|teal|amber"`. Palette presets remap semantic color, focus, gradient, and shadow tokens; components must consume those tokens rather than hard-coded brand colors.
 
-Color mode remains independent through `data-bs-theme="dark|light"`. Shape is independently selectable through `data-bs-radius="small|normal|large|rounded|square"`; `rounded` remains an alias for the normal scale, while the square preset remaps the radius scale to zero. Theme-aware scrollbars are opt-in through `.bs-scrollbar` or `data-bs-scrollbars="themed"` so applications retain control over native browser presentation.
+Color mode remains independent through `data-bs-theme="dark|light"`. Shape is independently selectable through `data-bs-radius="small|normal|large|rounded|square"`; `rounded` remains an alias for the normal scale, while the square preset remaps the radius scale—including scrollbar thumbs—to zero. Theme-aware scrollbars are the default. Applications can restore browser-native scrollbars on the document or a subtree with `data-bs-scrollbars="native"`, then use `.bs-scrollbar` for an individual themed exception.
 
 ## 4. Typography
 

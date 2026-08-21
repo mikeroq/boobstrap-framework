@@ -75,13 +75,21 @@ try {
         const progressBar = progress.querySelector(".bs-progress-bar");
         const responsiveUtility = document.querySelector("[data-test-responsive-utility]");
         const primaryButton = document.querySelector(".bs-btn-primary");
+        const buttonIcon = primaryButton.querySelector("[data-test-button-icon]").getBoundingClientRect();
+        const primaryButtonRect = primaryButton.getBoundingClientRect();
         const defaultTabs = document.querySelector('[aria-label="Default tabs"]');
         const defaultTab = defaultTabs.querySelector(".bs-tab");
-        const codeTab = document.querySelector(".bs-code-tabs-underline .bs-code-tab[aria-selected=\"true\"]");
+        const codeTabs = document.querySelector(".bs-code-tabs-underline");
+        const codeTab = codeTabs.querySelector(".bs-code-tab[aria-selected=\"true\"]");
         const scrollbar = document.querySelector("[data-test-scrollbar]");
+        const nativeScrollbar = document.querySelector("[data-test-native-scrollbar]");
         const compactDialog = document.querySelector("[data-test-descriptionless-dialog]");
         const compactDialogHeader = compactDialog.querySelector(".bs-dialog-header");
         const compactDialogBody = compactDialog.querySelector(".bs-dialog-body");
+        const compactDialogTitle = compactDialog.querySelector(".bs-dialog-title").getBoundingClientRect();
+        const compactDialogClose = compactDialog.querySelector(".bs-dialog-close").getBoundingClientRect();
+        const describedDialogHeader = document.querySelector("[data-test-described-dialog] .bs-dialog-header");
+        const compactDrawerHeader = document.querySelector("[data-test-descriptionless-drawer] .bs-drawer-header");
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -122,6 +130,9 @@ try {
           responsiveDirection: getComputedStyle(responsiveUtility).flexDirection,
           primaryButtonShadow: getComputedStyle(primaryButton).boxShadow,
           primaryButtonTransform: getComputedStyle(primaryButton).transform,
+          primaryButtonBackground: getComputedStyle(primaryButton).backgroundColor,
+          primaryButtonTransitionProperties: getComputedStyle(primaryButton).transitionProperty.split(", "),
+          buttonIconCenterDelta: Math.abs((buttonIcon.top + (buttonIcon.height / 2)) - (primaryButtonRect.top + (primaryButtonRect.height / 2))),
           cardHeaderBorder: getComputedStyle(cardHeader).borderBottomColor,
           cardFooterBorder: getComputedStyle(cardFooter).borderTopColor,
           tabsOverflowY: getComputedStyle(defaultTabs).overflowY,
@@ -130,9 +141,21 @@ try {
           tabIndicatorEnd: getComputedStyle(defaultTab, "::after").right,
           codeTabRadius: getComputedStyle(codeTab).borderRadius,
           codeTabIndicator: getComputedStyle(codeTab, "::after").backgroundColor,
+          codeTabsOverflowY: getComputedStyle(codeTabs).overflowY,
+          codeTabsScrollbarWidth: getComputedStyle(codeTabs).scrollbarWidth,
+          codeTabsPaddingLeft: getComputedStyle(codeTabs).paddingLeft,
           scrollbarColor: getComputedStyle(scrollbar).scrollbarColor,
+          nativeScrollbarColor: getComputedStyle(nativeScrollbar).scrollbarColor,
           dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
           dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
+          dialogHeaderPaddingBottom: getComputedStyle(compactDialogHeader).paddingBottom,
+          dialogHeaderAlignment: getComputedStyle(compactDialogHeader).alignItems,
+          dialogTitleCloseCenterDelta: Math.abs((compactDialogTitle.top + (compactDialogTitle.height / 2)) - (compactDialogClose.top + (compactDialogClose.height / 2))),
+          describedDialogHeaderRows: getComputedStyle(describedDialogHeader).gridTemplateRows.split(" ").length,
+          describedDialogHeaderPaddingTop: getComputedStyle(describedDialogHeader).paddingTop,
+          describedDialogHeaderPaddingBottom: getComputedStyle(describedDialogHeader).paddingBottom,
+          drawerHeaderRows: getComputedStyle(compactDrawerHeader).gridTemplateRows.split(" ").length,
+          drawerHeaderAlignment: getComputedStyle(compactDrawerHeader).alignItems,
           dialogBodyPadding: getComputedStyle(compactDialogBody).paddingTop,
         };
       });
@@ -157,11 +180,17 @@ try {
       if (Math.abs(metrics.progressRatio - 0.68) > 0.03 || metrics.progressBackground === "rgba(0, 0, 0, 0)" || metrics.progressHeight < 14) failures.push(`${theme}/${viewport.name}: progress indicator contract did not resolve`);
       if (metrics.responsiveDirection !== (viewport.name === "mobile" ? "column" : "row")) failures.push(`${theme}/${viewport.name}: responsive flex direction utility did not apply`);
       if (metrics.primaryButtonShadow !== "none" || metrics.primaryButtonTransform !== "none") failures.push(`${theme}/${viewport.name}: primary button retained glow or movement`);
+      if (metrics.primaryButtonBackground === "rgba(0, 0, 0, 0)" || metrics.primaryButtonTransitionProperties.includes("background")) failures.push(`${theme}/${viewport.name}: primary button can transition through a transparent hover frame`);
+      if (metrics.buttonIconCenterDelta > 1) failures.push(`${theme}/${viewport.name}: button icon and label are not vertically centered (${metrics.buttonIconCenterDelta}px)`);
       if ([metrics.cardHeaderBorder, metrics.cardFooterBorder].some((value) => value === "rgba(0, 0, 0, 0)")) failures.push(`${theme}/${viewport.name}: separated card regions do not expose dividers`);
       if (metrics.tabsOverflowY !== "hidden" || metrics.tabsScrollbarWidth !== "none" || Number.parseFloat(metrics.tabIndicatorStart) !== 0 || Number.parseFloat(metrics.tabIndicatorEnd) !== 0) failures.push(`${theme}/${viewport.name}: default tabs retain inset indicators or visible scrollbars`);
       if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
-      if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: themed scrollbar utility did not resolve`);
-      if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 16 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains an empty row or excessive vertical padding`);
+      if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
+      if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: default themed scrollbar did not resolve`);
+      if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
+      if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
+      if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
+      if (metrics.drawerHeaderRows !== 1 || metrics.drawerHeaderAlignment !== "center") failures.push(`${theme}/${viewport.name}: drawer without description retains empty space or misaligned content`);
       if (consoleErrors.length) failures.push(`${theme}/${viewport.name}: ${consoleErrors.join("; ")}`);
 
       const expectedRatio = viewport.name === "mobile" ? 1 : 1 / 3;
@@ -179,8 +208,9 @@ try {
 
       const primaryButton = page.locator(".bs-btn-primary").first();
       await primaryButton.hover();
-      const primaryHover = await primaryButton.evaluate((element) => ({ boxShadow: getComputedStyle(element).boxShadow, transform: getComputedStyle(element).transform }));
+      const primaryHover = await primaryButton.evaluate((element) => ({ backgroundColor: getComputedStyle(element).backgroundColor, backgroundImage: getComputedStyle(element).backgroundImage, boxShadow: getComputedStyle(element).boxShadow, filter: getComputedStyle(element).filter, transform: getComputedStyle(element).transform }));
       if (primaryHover.boxShadow !== "none" || primaryHover.transform !== "none") failures.push(`${theme}/${viewport.name}: primary button hover retained glow or movement`);
+      if (primaryHover.backgroundColor === "rgba(0, 0, 0, 0)" || primaryHover.backgroundImage === "none" || primaryHover.filter === "none") failures.push(`${theme}/${viewport.name}: primary button hover lost its painted background or state feedback`);
 
       const formMetrics = await page.evaluate(() => {
         const small = document.querySelector("#small-input").getBoundingClientRect();
@@ -222,6 +252,7 @@ try {
           iconWidth: icon.width,
           checkboxAppearance: getComputedStyle(document.querySelector('.bs-check-input[type="checkbox"]')).appearance,
           groupFontSizes: groupStyles.map((style) => style.fontSize),
+          groupLineHeights: groupStyles.map((style) => style.lineHeight),
           checkboxCenterDelta: Math.abs((checkboxRect.top + (checkboxRect.height / 2)) - (checkboxLabelRect.top + (checkboxLabelRect.height / 2))),
           radioCenterDelta: Math.abs((radioRect.top + (radioRect.height / 2)) - (radioLabelRect.top + (radioLabelRect.height / 2))),
           switchBackgroundSize: getComputedStyle(switchInput).backgroundSize,
@@ -235,6 +266,7 @@ try {
       if (formMetrics.iconWidth <= 0) failures.push(`${theme}/${viewport.name}: input icon did not render`);
       if (formMetrics.checkboxAppearance !== "none") failures.push(`${theme}/${viewport.name}: checkbox styling did not apply`);
       if (new Set(formMetrics.groupFontSizes).size !== 1) failures.push(`${theme}/${viewport.name}: input-group add-ons do not share input typography`);
+      if (new Set(formMetrics.groupLineHeights).size !== 1) failures.push(`${theme}/${viewport.name}: input-group add-ons do not share the input baseline`);
       if (formMetrics.checkboxCenterDelta > 1) failures.push(`${theme}/${viewport.name}: checkbox and label are not vertically centered (${formMetrics.checkboxCenterDelta}px)`);
       if (formMetrics.radioCenterDelta > 1) failures.push(`${theme}/${viewport.name}: radio and label are not vertically centered`);
       if (!Number.isFinite(formMetrics.switchUncheckedStartInset) || formMetrics.switchUncheckedStartInset < 0 || formMetrics.switchUncheckedStartInset > 3 || formMetrics.switchBackgroundSize === "auto") failures.push(`${theme}/${viewport.name}: unchecked switch thumb is not aligned to logical start (${formMetrics.switchUncheckedStartInset}px)`);
@@ -302,17 +334,20 @@ try {
   const radiusPage = await radiusContext.newPage();
   await radiusPage.goto(baseUrl, { waitUntil: "networkidle" });
   const radiusMetrics = {};
+  const scrollbarRadiusMetrics = {};
   for (const radius of ["small", "normal", "large", "rounded", "square"]) {
     radiusMetrics[radius] = await radiusPage.evaluate((activeRadius) => {
       document.documentElement.dataset.bsRadius = activeRadius;
       return [".bs-card", ".bs-btn", ".bs-input", ".bs-tabs-pills"].map((selector) => getComputedStyle(document.querySelector(selector)).borderRadius);
     }, radius);
+    scrollbarRadiusMetrics[radius] = await radiusPage.locator("[data-test-scrollbar]").evaluate((element) => getComputedStyle(element, "::-webkit-scrollbar-thumb").borderRadius);
   }
   if (Number.parseFloat(radiusMetrics.small[0]) >= Number.parseFloat(radiusMetrics.normal[0])
     || Number.parseFloat(radiusMetrics.normal[0]) >= Number.parseFloat(radiusMetrics.large[0])) failures.push("Small, normal, and large radius presets are not ordered");
   if (radiusMetrics.rounded.some((value, index) => value !== radiusMetrics.normal[index])) failures.push("Rounded radius alias does not match normal corners");
   if (radiusMetrics.rounded.some((value) => Number.parseFloat(value) <= 0)) failures.push("Rounded radius preset did not retain component corners");
   if (radiusMetrics.square.some((value) => Number.parseFloat(value) !== 0)) failures.push("Square radius preset did not remove component corners");
+  if (browserName === "chromium" && Number.parseFloat(scrollbarRadiusMetrics.square) !== 0) failures.push("Square radius preset did not remove scrollbar thumb corners");
   await radiusContext.close();
 
   const motionContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });

@@ -16,7 +16,7 @@
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
-  transition: color var(--bs-duration-normal) var(--bs-ease-standard), background var(--bs-duration-normal) var(--bs-ease-standard), border-color var(--bs-duration-normal) var(--bs-ease-standard), box-shadow var(--bs-duration-normal) var(--bs-ease-standard);
+  transition: color var(--bs-duration-normal) var(--bs-ease-standard), background-color var(--bs-duration-normal) var(--bs-ease-standard), border-color var(--bs-duration-normal) var(--bs-ease-standard), box-shadow var(--bs-duration-normal) var(--bs-ease-standard), filter var(--bs-duration-normal) var(--bs-ease-standard);
 }
 
 .bs-btn > .bs-icon {
@@ -34,21 +34,27 @@
 
 .bs-btn-primary {
   color: var(--bs-color-primary-contrast);
-  background: var(--bs-gradient-brand);
+  background-color: var(--bs-color-primary);
+  background-image: var(--bs-gradient-brand);
   border-color: rgb(255 255 255 / 8%);
   box-shadow: none;
+  filter: none;
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
-  background: var(--bs-color-primary-hover);
+  background-color: var(--bs-color-primary-hover);
+  background-image: var(--bs-gradient-brand);
   box-shadow: none;
+  filter: brightness(1.08) saturate(1.04);
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
 .bs-btn-primary.bs-btn-active,
 .bs-btn-primary[aria-pressed="true"] {
-  background: var(--bs-color-primary-active);
+  background-color: var(--bs-color-primary-active);
+  background-image: var(--bs-gradient-brand);
   box-shadow: none;
+  filter: brightness(0.94);
 }
 
 .bs-btn-secondary {
