@@ -182,7 +182,7 @@ Dark mode, the rose palette, and rounded corners are the defaults. Mode, palette
 - `data-bs-theme`: `dark` or `light`
 - `data-bs-palette`: `rose`, `violet`, `blue`, `teal`, or `amber`
 - `data-bs-radius`: `small`, `normal`, `large`, `rounded` (an alias for `normal`), or `square`
-- `data-bs-scrollbars`: scrollbars are themed by default; set `native` on the document or a subtree to opt out. Use `.bs-scrollbar` to opt one scroll container back in.
+- `data-bs-scrollbars`: component and element scroll regions are themed by default, while the document's own scrollbar stays platform-native so page layout and viewport overlays (dialogs, drawers) are never displaced. Set `native` on a subtree to opt out, use `.bs-scrollbar` to opt one scroll container back in, and set `themed` on `<html>` to opt the document scrollbar in explicitly.
 
 Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. Radius presets remap the complete `--bs-radius-*` scale, including scrollbar thumb corners, so `data-bs-radius="square"` also produces square scrollbar thumbs. The default scrollbar treatment consumes the theme-aware `--bs-scrollbar-*` tokens. The existing `data-bs-scrollbars="themed"` value remains compatible, but is no longer required.
 
