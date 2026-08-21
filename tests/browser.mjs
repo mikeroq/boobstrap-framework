@@ -164,6 +164,11 @@ try {
           componentScrollbarWidths: [sidebarScrollbar, table, dataTable, compactDialogBody].map((element) => getComputedStyle(element).scrollbarWidth),
           sidebarScrollbarThumbBackground: getComputedStyle(sidebarScrollbar, "::-webkit-scrollbar-thumb").backgroundColor,
           nativeScrollbarColor: getComputedStyle(nativeScrollbar).scrollbarColor,
+          rootScrollbarColor: getComputedStyle(document.documentElement).scrollbarColor,
+          rootScrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+          bodyScrollbarColor: getComputedStyle(document.body).scrollbarColor,
+          bodyScrollbarWidth: getComputedStyle(document.body).scrollbarWidth,
+          bodyScrollbarThumbBackground: getComputedStyle(document.body, "::-webkit-scrollbar-thumb").backgroundColor,
           dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
           dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
           dialogHeaderPaddingBottom: getComputedStyle(compactDialogHeader).paddingBottom,
@@ -203,7 +208,7 @@ try {
       if ([metrics.cardHeaderBorder, metrics.cardFooterBorder].some((value) => value === "rgba(0, 0, 0, 0)")) failures.push(`${theme}/${viewport.name}: separated card regions do not expose dividers`);
       if (metrics.tabsOverflowY !== "hidden" || metrics.tabsScrollbarWidth !== "none" || Number.parseFloat(metrics.tabIndicatorStart) !== 0 || Number.parseFloat(metrics.tabIndicatorEnd) !== 0) failures.push(`${theme}/${viewport.name}: default tabs retain inset indicators or visible scrollbars`);
       if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
-      if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
+      if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 16) failures.push(`${theme}/${viewport.name}: underline code tabs lost their inline inset or expose a visible scrollbar`);
       if (metrics.supportsWebkitScrollbar) {
         if (metrics.scrollbarColor !== "auto" || metrics.scrollbarWidth !== "auto" || !metrics.scrollbarThumbBackground || metrics.scrollbarThumbBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: WebKit themed scrollbar renderer did not resolve`);
       } else if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto" || !metrics.scrollbarWidth || metrics.scrollbarWidth === "auto") failures.push(`${theme}/${viewport.name}: standard themed scrollbar renderer did not resolve`);
@@ -215,6 +220,7 @@ try {
       if (metrics.componentScrollbarWidths.some((width) => width !== expectedComponentScrollbarWidth)
         || (metrics.supportsWebkitScrollbar && (!metrics.sidebarScrollbarThumbBackground || metrics.sidebarScrollbarThumbBackground === "rgba(0, 0, 0, 0)"))) failures.push(`${theme}/${viewport.name}: component scroll regions override the themed scrollbar renderer`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
+      if (metrics.supportsWebkitScrollbar ? (metrics.bodyScrollbarThumbBackground !== "rgba(0, 0, 0, 0)") : (metrics.bodyScrollbarWidth !== "auto" || metrics.rootScrollbarWidth !== "auto" || metrics.bodyScrollbarColor !== "auto" || metrics.rootScrollbarColor !== "auto")) failures.push(`${theme}/${viewport.name}: document root scrollbar escaped the platform-native contract`);
       if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
       if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
       if (metrics.drawerHeaderRows !== 1 || metrics.drawerHeaderAlignment !== "center") failures.push(`${theme}/${viewport.name}: drawer without description retains empty space or misaligned content`);

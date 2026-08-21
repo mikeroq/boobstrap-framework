@@ -3,31 +3,85 @@
   scrollbar-width: auto;
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar) {
+/* The document root keeps the platform scrollbar: styling the root forces
+   classic scrollbars on overlay platforms and displaces viewport-fixed
+   overlays such as drawers. Component scroll regions are themed by default;
+   opt the root back in with data-bs-scrollbars="themed" or .bs-scrollbar. */
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+) {
   scrollbar-color: var(--bs-scrollbar-thumb) var(--bs-scrollbar-track);
   scrollbar-width: thin;
 }
 
 /* Non-auto standard properties override WebKit pseudo-elements in Chromium. */
 @supports selector(::-webkit-scrollbar) and (not (-moz-appearance: none)) {
-  :where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar) {
+  :where(
+    :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+    .bs-scrollbar,
+    [data-bs-scrollbars="themed"],
+    [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+  ) {
     scrollbar-color: auto;
     scrollbar-width: auto;
   }
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar {
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar {
   width: var(--bs-scrollbar-size);
   height: var(--bs-scrollbar-size);
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:single-button,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:double-button,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:vertical:decrement,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:vertical:increment,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:horizontal:decrement,
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:horizontal:increment {
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:single-button,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:double-button,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:vertical:decrement,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:vertical:increment,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:horizontal:decrement,
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-button:horizontal:increment {
   appearance: none;
   min-width: 0;
   min-height: 0;
@@ -40,17 +94,32 @@
   border: 0;
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-track {
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-track {
   background: var(--bs-scrollbar-track);
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-thumb {
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-thumb {
   background: var(--bs-scrollbar-thumb);
   background-clip: padding-box;
   border: 3px solid transparent;
   border-radius: var(--bs-radius-pill);
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-thumb:hover {
+:where(
+  :not(html, body, [data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *),
+  .bs-scrollbar,
+  [data-bs-scrollbars="themed"],
+  [data-bs-scrollbars="themed"] :not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *)
+)::-webkit-scrollbar-thumb:hover {
   background-color: var(--bs-scrollbar-thumb-hover);
 }
