@@ -30,6 +30,17 @@ const controlColors = new Map();
 const palettes = ["rose", "violet", "blue", "teal", "amber"];
 
 try {
+  const baselineContext = await browser.newContext({ viewport: { width: 800, height: 900 } });
+  const baselinePage = await baselineContext.newPage();
+  await baselinePage.goto("about:blank");
+  const rootScrollbarBaseline = await baselinePage.evaluate(() => ({
+    htmlScrollbarColor: getComputedStyle(document.documentElement).scrollbarColor,
+    htmlScrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+    bodyScrollbarColor: getComputedStyle(document.body).scrollbarColor,
+    bodyScrollbarWidth: getComputedStyle(document.body).scrollbarWidth,
+  }));
+  await baselineContext.close();
+
   for (const theme of ["dark", "light"]) {
     for (const viewport of [
       { name: "mobile", width: 390, height: 844 },
@@ -220,7 +231,12 @@ try {
       if (metrics.componentScrollbarWidths.some((width) => width !== expectedComponentScrollbarWidth)
         || (metrics.supportsWebkitScrollbar && (!metrics.sidebarScrollbarThumbBackground || metrics.sidebarScrollbarThumbBackground === "rgba(0, 0, 0, 0)"))) failures.push(`${theme}/${viewport.name}: component scroll regions override the themed scrollbar renderer`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
-      if (metrics.supportsWebkitScrollbar ? (metrics.bodyScrollbarThumbBackground !== "rgba(0, 0, 0, 0)") : (metrics.bodyScrollbarWidth !== "auto" || metrics.rootScrollbarWidth !== "auto" || metrics.bodyScrollbarColor !== "auto" || metrics.rootScrollbarColor !== "auto")) failures.push(`${theme}/${viewport.name}: document root scrollbar escaped the platform-native contract`);
+      if (metrics.supportsWebkitScrollbar ? (metrics.bodyScrollbarThumbBackground !== "rgba(0, 0, 0, 0)") : (
+        metrics.rootScrollbarColor !== rootScrollbarBaseline.htmlScrollbarColor ||
+        metrics.rootScrollbarWidth !== rootScrollbarBaseline.htmlScrollbarWidth ||
+        metrics.bodyScrollbarColor !== rootScrollbarBaseline.bodyScrollbarColor ||
+        metrics.bodyScrollbarWidth !== rootScrollbarBaseline.bodyScrollbarWidth
+      )) failures.push(`${theme}/${viewport.name}: document root scrollbar escaped the platform-native contract (root ${metrics.rootScrollbarColor}/${metrics.rootScrollbarWidth}, body ${metrics.bodyScrollbarColor}/${metrics.bodyScrollbarWidth}; expected engine baseline ${rootScrollbarBaseline.htmlScrollbarColor}/${rootScrollbarBaseline.htmlScrollbarWidth} on root and ${rootScrollbarBaseline.bodyScrollbarColor}/${rootScrollbarBaseline.bodyScrollbarWidth} on body)`);
       if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
       if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
       if (metrics.drawerHeaderRows !== 1 || metrics.drawerHeaderAlignment !== "center") failures.push(`${theme}/${viewport.name}: drawer without description retains empty space or misaligned content`);
