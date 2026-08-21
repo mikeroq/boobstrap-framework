@@ -147,7 +147,10 @@ try {
           codeTabsOverflowY: getComputedStyle(codeTabs).overflowY,
           codeTabsScrollbarWidth: getComputedStyle(codeTabs).scrollbarWidth,
           codeTabsPaddingLeft: getComputedStyle(codeTabs).paddingLeft,
+          supportsWebkitScrollbar: CSS.supports("selector(::-webkit-scrollbar)"),
           scrollbarColor: getComputedStyle(scrollbar).scrollbarColor,
+          scrollbarWidth: getComputedStyle(scrollbar).scrollbarWidth,
+          scrollbarThumbBackground: getComputedStyle(scrollbar, "::-webkit-scrollbar-thumb").backgroundColor,
           scrollbarButtonDisplay: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").display,
           scrollbarButtonWidth: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").width,
           scrollbarButtonHeight: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").height,
@@ -198,7 +201,9 @@ try {
       if (metrics.tabsOverflowY !== "hidden" || metrics.tabsScrollbarWidth !== "none" || Number.parseFloat(metrics.tabIndicatorStart) !== 0 || Number.parseFloat(metrics.tabIndicatorEnd) !== 0) failures.push(`${theme}/${viewport.name}: default tabs retain inset indicators or visible scrollbars`);
       if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
       if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
-      if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: default themed scrollbar did not resolve`);
+      if (metrics.supportsWebkitScrollbar) {
+        if (metrics.scrollbarColor !== "auto" || metrics.scrollbarWidth !== "auto" || !metrics.scrollbarThumbBackground || metrics.scrollbarThumbBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: WebKit themed scrollbar renderer did not resolve`);
+      } else if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto" || metrics.scrollbarWidth !== "thin") failures.push(`${theme}/${viewport.name}: standard themed scrollbar renderer did not resolve`);
       if (metrics.scrollbarButtonDisplay !== "none"
         || [metrics.scrollbarButtonWidth, metrics.scrollbarButtonHeight, metrics.scrollbarButtonMinWidth, metrics.scrollbarButtonMinHeight, metrics.scrollbarButtonBorder, metrics.scrollbarButtonPadding].some((value) => Number.parseFloat(value) !== 0)
         || metrics.scrollbarButtonBackground !== "none"

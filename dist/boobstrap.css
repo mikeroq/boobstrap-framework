@@ -4034,6 +4034,14 @@ body.bs-dialog-open { overflow: hidden; }
   scrollbar-width: thin;
 }
 
+/* Non-auto standard properties override WebKit pseudo-elements in Chromium. */
+@supports selector(::-webkit-scrollbar) {
+  :where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar) {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+  }
+}
+
 :where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar {
   width: var(--bs-scrollbar-size);
   height: var(--bs-scrollbar-size);
