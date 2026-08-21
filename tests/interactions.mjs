@@ -280,9 +280,11 @@ try {
 
   const otpInputs = page.locator("[data-bs-otp-input]");
   const pasteOtp = (value) => otpInputs.first().evaluate((input, pastedValue) => {
-    const clipboardData = new DataTransfer();
-    clipboardData.setData("text/plain", pastedValue);
-    input.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData }));
+    const pasteEvent = new Event("paste", { bubbles: true, cancelable: true });
+    Object.defineProperty(pasteEvent, "clipboardData", {
+      value: { getData: () => pastedValue },
+    });
+    input.dispatchEvent(pasteEvent);
   }, value);
   await pasteOtp("1234567");
   const rejectedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
