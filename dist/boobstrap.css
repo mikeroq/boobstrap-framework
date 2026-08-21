@@ -999,6 +999,31 @@ abbr[title] {
   background: color-mix(in srgb, var(--bs-color-primary) 12%, transparent);
 }
 
+.bs-btn-danger {
+  color: var(--bs-color-primary-contrast);
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  border-color: rgb(255 255 255 / 8%);
+  box-shadow: none;
+  filter: none;
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(1.08) saturate(1.04);
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
+.bs-btn-danger.bs-btn-active,
+.bs-btn-danger[aria-pressed="true"] {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(0.94);
+}
+
 .bs-btn-icon {
   width: 2.75rem;
   padding-inline: 0;
@@ -1455,11 +1480,24 @@ body.bs-dialog-open { overflow: hidden; }
   font-weight: 550;
 }
 
-.bs-badge-primary {
-  color: var(--bs-color-primary-hover);
-  background: color-mix(in srgb, var(--bs-color-primary) 9%, transparent);
+.bs-badge-primary,
+.bs-badge-info,
+.bs-badge-success,
+.bs-badge-warning,
+.bs-badge-danger {
+  background: color-mix(in srgb, var(--bs-badge-accent, var(--bs-color-primary)) 9%, transparent);
   border-color: var(--bs-color-border-strong);
 }
+
+.bs-badge-primary { color: var(--bs-color-primary-hover); --bs-badge-accent: var(--bs-color-primary); }
+.bs-badge-info,
+.bs-badge-success,
+.bs-badge-warning,
+.bs-badge-danger { color: var(--bs-color-text); }
+.bs-badge-info { --bs-badge-accent: var(--bs-color-info); }
+.bs-badge-success { --bs-badge-accent: var(--bs-color-success); }
+.bs-badge-warning { --bs-badge-accent: var(--bs-color-warning); }
+.bs-badge-danger { --bs-badge-accent: var(--bs-color-danger); }
 
 .bs-avatar {
   --bs-avatar-size: 2.5rem;
@@ -2003,15 +2041,19 @@ body.bs-dialog-open { overflow: hidden; }
   font-weight: 650;
 }
 
-.bs-alert-primary {
-  background: color-mix(in srgb, var(--bs-color-primary) 8%, transparent);
-  border-color: color-mix(in srgb, var(--bs-color-primary) 24%, transparent);
+.bs-alert-primary,
+.bs-alert-info,
+.bs-alert-success,
+.bs-alert-warning,
+.bs-alert-danger {
+  background: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 24%, transparent);
 }
 
-.bs-alert-success {
-  background: rgb(54 179 126 / 8%);
-  border-color: rgb(54 179 126 / 25%);
-}
+.bs-alert-info { --bs-alert-accent: var(--bs-color-info); }
+.bs-alert-success { --bs-alert-accent: var(--bs-color-success); }
+.bs-alert-warning { --bs-alert-accent: var(--bs-color-warning); }
+.bs-alert-danger { --bs-alert-accent: var(--bs-color-danger); }
 
 .bs-accordion {
   overflow: hidden;

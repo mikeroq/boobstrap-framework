@@ -18,9 +18,13 @@
     <main class="visual-page">
       <section class="visual-region" data-visual="controls" aria-label="Controls">
         <div class="bs-stack bs-gap-4">
-          <div class="bs-flex bs-flex-wrap bs-gap-3"><button class="bs-btn bs-btn-primary">Primary</button><button class="bs-btn bs-btn-secondary">Secondary</button><span class="bs-badge bs-badge-primary">New</span></div>
+          <div class="bs-flex bs-flex-wrap bs-gap-3"><button class="bs-btn bs-btn-primary">Primary</button><button class="bs-btn bs-btn-secondary">Secondary</button><button class="bs-btn bs-btn-danger">Delete</button><span class="bs-badge bs-badge-primary">New</span><span class="bs-badge bs-badge-info">Info</span><span class="bs-badge bs-badge-success">Live</span><span class="bs-badge bs-badge-warning">Beta</span><span class="bs-badge bs-badge-danger">Down</span></div>
           <label class="bs-label" for="visual-input">Workspace</label><input class="bs-input" id="visual-input" value="Acme studio" />
+          <div class="bs-alert bs-alert-primary"><strong class="bs-alert-title">Heads up</strong> Primary alert content.</div>
+          <div class="bs-alert bs-alert-info"><strong class="bs-alert-title">Info</strong> Informational alert content.</div>
           <div class="bs-alert bs-alert-success"><strong class="bs-alert-title">Saved</strong> Changes are live.</div>
+          <div class="bs-alert bs-alert-warning"><strong class="bs-alert-title">Watch out</strong> Warning alert content.</div>
+          <div class="bs-alert bs-alert-danger"><strong class="bs-alert-title">Failed</strong> Danger alert content.</div>
         </div>
       </section>
       <section class="visual-region" data-visual="accordion" aria-label="Accordion">
@@ -48,6 +52,7 @@
         <div class="bs-avatar-group" aria-label="Project members"><span class="bs-avatar"><span class="bs-avatar-fallback">AR</span><span class="bs-avatar-status"></span></span><span class="bs-avatar"><span class="bs-avatar-fallback">MK</span></span><span class="bs-avatar bs-avatar-excess"><span class="bs-avatar-fallback">+3</span></span></div>
         <ul class="bs-list-group bs-mt-4"><li class="bs-list-group-item"><span class="bs-avatar bs-avatar-sm"><span class="bs-avatar-fallback">A</span></span><span class="bs-list-group-content"><strong class="bs-list-group-title">Design system</strong><span class="bs-list-group-description">Updated two minutes ago</span></span><span class="bs-list-group-trailing">Ready</span></li><li class="bs-list-group-item" aria-current="true"><span class="bs-list-group-content"><strong class="bs-list-group-title">Documentation</strong><span class="bs-list-group-description">Current workspace</span></span></li></ul>
         <div class="bs-empty bs-empty-compact"><span class="bs-empty-icon" aria-hidden="true">＋</span><h3 class="bs-empty-title">No saved views</h3><p class="bs-empty-description">Create a view to keep useful filters close.</p><div class="bs-empty-actions"><button class="bs-btn bs-btn-primary">Create view</button></div></div>
+        <div class="bs-flex bs-flex-wrap bs-gap-2 bs-mt-4"><span class="bs-badge bs-badge-info">Info</span><span class="bs-badge bs-badge-success">Success</span><span class="bs-badge bs-badge-warning">Warning</span><span class="bs-badge bs-badge-danger">Danger</span></div>
         <div class="bs-dialog bs-alert-dialog bs-alert-dialog-danger bs-mt-4" style="display:flex;position:static;inline-size:100%"><header class="bs-dialog-header"><span class="bs-alert-dialog-icon" aria-hidden="true">!</span><h3 class="bs-dialog-title">Delete workspace?</h3><p class="bs-dialog-description">This action cannot be undone.</p></header><footer class="bs-dialog-footer"><button class="bs-btn bs-btn-secondary">Cancel</button><button class="bs-btn bs-btn-primary">Delete</button></footer></div>
       </section>
       <section class="visual-region" data-visual="grid" aria-label="Grid">

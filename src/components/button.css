@@ -95,6 +95,31 @@
   background: color-mix(in srgb, var(--bs-color-primary) 12%, transparent);
 }
 
+.bs-btn-danger {
+  color: var(--bs-color-primary-contrast);
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  border-color: rgb(255 255 255 / 8%);
+  box-shadow: none;
+  filter: none;
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(1.08) saturate(1.04);
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
+.bs-btn-danger.bs-btn-active,
+.bs-btn-danger[aria-pressed="true"] {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(0.94);
+}
+
 .bs-btn-icon {
   width: 2.75rem;
   padding-inline: 0;
