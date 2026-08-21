@@ -322,6 +322,35 @@ try {
       if (!Number.isFinite(formMetrics.switchCheckedEndInset) || formMetrics.switchCheckedEndInset < 0 || formMetrics.switchCheckedEndInset > 3) failures.push(`${theme}/${viewport.name}: checked switch thumb is not aligned to logical end (${formMetrics.switchCheckedEndInset}px)`);
       if (Number.parseFloat(formMetrics.colorSwatchRadius) <= 0) failures.push(`${theme}/${viewport.name}: native color swatch does not inherit a rounded shape`);
 
+      const validationMetrics = await page.evaluate(() => {
+        const resolve = (id) => {
+          const element = document.getElementById(id);
+          return element ? getComputedStyle(element).borderColor : "";
+        };
+        return {
+          default: resolve("validation-default"),
+          ariaFalse: resolve("validation-aria-false"),
+          classValid: resolve("validation-class-valid"),
+          ariaTrue: resolve("validation-aria-true"),
+          classInvalid: resolve("validation-class-invalid"),
+        };
+      });
+      const successColor = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--bs-color-success").trim());
+      const dangerColor = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--bs-color-danger").trim());
+      const toRgb = (token) => {
+        const stripped = token.replace(/^#/, "");
+        if (stripped.length !== 6) return null;
+        const value = Number.parseInt(stripped, 16);
+        return `rgb(${(value >> 16) & 0xff}, ${(value >> 8) & 0xff}, ${value & 0xff})`;
+      };
+      const expectedSuccess = toRgb(successColor);
+      const expectedDanger = toRgb(dangerColor);
+      if (validationMetrics.default === expectedSuccess) failures.push(`${theme}/${viewport.name}: untouched input should not display the success border`);
+      if (validationMetrics.ariaFalse === expectedSuccess) failures.push(`${theme}/${viewport.name}: aria-invalid="false" must not produce a success border`);
+      if (validationMetrics.classValid !== expectedSuccess) failures.push(`${theme}/${viewport.name}: .bs-is-valid should resolve to the success border (expected ${expectedSuccess}, received ${validationMetrics.classValid})`);
+      if (validationMetrics.ariaTrue !== expectedDanger) failures.push(`${theme}/${viewport.name}: aria-invalid="true" should resolve to the danger border (expected ${expectedDanger}, received ${validationMetrics.ariaTrue})`);
+      if (validationMetrics.classInvalid !== expectedDanger) failures.push(`${theme}/${viewport.name}: .bs-is-invalid should resolve to the danger border (expected ${expectedDanger}, received ${validationMetrics.classInvalid})`);
+
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {
         failures.push(`${theme}/${viewport.name}: Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);

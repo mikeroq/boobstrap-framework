@@ -598,6 +598,20 @@ Use Lucide as the recommended default icon set in Boobstrap documentation, examp
 }
 ```
 
+### Validation contract
+
+Boobstrap distinguishes **explicit validation** from **implicit ARIA state**. The framework exposes two state-bearing classes that change border and focus-ring color, plus one ARIA attribute selector that mirrors the explicit invalid state for assistive technology:
+
+| Selector                          | Meaning                                            |
+|-----------------------------------|----------------------------------------------------|
+| `.bs-is-valid`                    | The application has positively validated the field. |
+| `.bs-is-invalid`                  | The application has negatively validated the field. |
+| `[aria-invalid="true"]` on `.bs-input`, `.bs-select`, or `.bs-textarea` | Mirrors `.bs-is-invalid` for ARIA-aware consumers. |
+
+`aria-invalid="false"` does **not** trigger any state styling. Many accessibility-first form libraries (React Hook Form, Final Form, and similar) set `aria-invalid="false"` on every input they manage as the default; treating that as "this control is valid" would render every untouched Boobstrap input with a green border, which is misleading. `aria-invalid="false"` is treated as "no information" — the field uses the same neutral border as an input without any ARIA attribute.
+
+The deliberate positive-validation API is the `.bs-is-valid` class; we intentionally do not ship a `data-bs-valid` attribute selector because it would duplicate the class API without adding selector capabilities CSS would need.
+
 ## 13. Alerts
 
 ```css

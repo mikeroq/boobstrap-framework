@@ -429,6 +429,16 @@ The optional JS bundle also initializes three small progressive-enhancement help
 
 Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, and `/otp`. Their completed events are `bs:password:toggled`, `bs:mask:change`, `bs:otp:change`, and `bs:otp:complete`.
 
+### Validation contract
+
+Form state styling distinguishes **explicit validation** (set by the application when validation runs) from **implicit ARIA state** (announced by assistive technology). The selectors that change border and focus-ring color are:
+
+- `.bs-is-valid` — explicit positive validation.
+- `.bs-is-invalid` — explicit negative validation.
+- `[aria-invalid="true"]` on `.bs-input`, `.bs-select`, or `.bs-textarea` — mirrors `.bs-is-invalid` so the same visual signal is produced whether the application uses a class or an ARIA attribute to mark the field.
+
+`aria-invalid="false"` does not change border color. Many accessibility-first form libraries set `aria-invalid="false"` on every input they manage as the default, so styling on that attribute alone would render every untouched input with a green border. `aria-invalid="false"` is treated as "no information"; the field uses the same neutral border as an input without any ARIA attribute. Applications that want to mark a field positively validated should toggle the `.bs-is-valid` class explicitly.
+
 ## Tabs
 
 ```html
