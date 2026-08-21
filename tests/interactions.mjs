@@ -236,8 +236,16 @@ try {
     display: getComputedStyle(element).display,
     firstEnd: element.children[0].getBoundingClientRect().right,
     secondStart: element.children[1].getBoundingClientRect().left,
+    triggerEndRadius: [
+      getComputedStyle(element.children[1]).borderStartEndRadius,
+      getComputedStyle(element.children[1]).borderEndEndRadius,
+    ].map(Number.parseFloat),
+    menuEnd: element.children[2].getBoundingClientRect().right,
+    groupEnd: element.getBoundingClientRect().right,
   }));
   if (splitMetrics.display !== "inline-flex" || Math.abs(splitMetrics.firstEnd - splitMetrics.secondStart) > 2) failures.push("Split dropdown buttons are not attached");
+  if (splitMetrics.triggerEndRadius.some((radius) => radius <= 0)) failures.push(`Split dropdown trigger is missing its end radius (${JSON.stringify(splitMetrics.triggerEndRadius)})`);
+  if (Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd) > 1) failures.push(`End-aligned split dropdown menu is offset by ${Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd)}px`);
 
   const profileTab = page.locator("#profile-tab");
   const securityTab = page.locator("#security-tab");
@@ -271,8 +279,27 @@ try {
   if (await phoneInput.inputValue() !== "(415) 555-0123") failures.push(`Input mask produced ${await phoneInput.inputValue()}`);
 
   const otpInputs = page.locator("[data-bs-otp-input]");
-  for (let index = 0; index < 6; index += 1) await otpInputs.nth(index).fill(String(index + 1));
-  if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
+  const pasteOtp = (value) => otpInputs.first().evaluate((input, pastedValue) => {
+    const pasteEvent = new Event("paste", { bubbles: true, cancelable: true });
+    Object.defineProperty(pasteEvent, "clipboardData", {
+      value: { getData: () => pastedValue },
+    });
+    input.dispatchEvent(pasteEvent);
+  }, value);
+  await pasteOtp("1234567");
+  const rejectedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (rejectedOtp.inputs.some(Boolean) || rejectedOtp.value !== "" || rejectedOtp.state !== "empty") failures.push(`OTP overlength paste was not rejected atomically (${JSON.stringify(rejectedOtp)})`);
+  await pasteOtp("123456");
+  const acceptedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (acceptedOtp.inputs.join("") !== "123456" || acceptedOtp.value !== "123456" || acceptedOtp.state !== "complete") failures.push(`OTP did not accept and synchronize its exact six-digit paste (${JSON.stringify(acceptedOtp)})`);
 
   const toast = page.locator("#save-toast");
   await page.locator("#toast-toggle").click();

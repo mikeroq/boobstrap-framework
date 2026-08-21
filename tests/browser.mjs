@@ -188,11 +188,31 @@ try {
         const group = document.querySelector("[data-test-input-group]");
         const icon = document.querySelector("[data-test-input-icon]").getBoundingClientRect();
         const groupStyles = [...group.children].map((element) => getComputedStyle(element));
+        const checkbox = document.querySelector('.bs-check:not(.bs-switch) .bs-check-input[type="checkbox"]');
+        const checkboxLabel = checkbox.nextElementSibling;
+        const checkboxRect = checkbox.getBoundingClientRect();
+        const checkboxLabelRect = checkboxLabel.getBoundingClientRect();
         const radio = document.querySelector('.bs-check-input[type="radio"]');
         const radioLabel = radio.nextElementSibling;
         const radioRect = radio.getBoundingClientRect();
         const radioLabelRect = radioLabel.getBoundingClientRect();
         const switchInput = document.querySelector(".bs-switch .bs-check-input");
+        switchInput.style.transition = "none";
+        const switchPosition = () => {
+          const styles = getComputedStyle(switchInput);
+          const availableWidth = switchInput.clientWidth - Number.parseFloat(styles.backgroundSize);
+          const position = styles.backgroundPositionX;
+          const offset = position.startsWith("calc(100%")
+            ? availableWidth - Number.parseFloat(position.match(/-\s*([\d.]+)px/)?.[1] ?? "0")
+            : position.endsWith("%")
+              ? availableWidth * Number.parseFloat(position) / 100
+              : Number.parseFloat(position);
+          return { availableWidth, offset };
+        };
+        switchInput.checked = false;
+        const uncheckedSwitch = switchPosition();
+        switchInput.checked = true;
+        const checkedSwitch = switchPosition();
         const color = document.querySelector(".bs-color");
         return {
           smallHeight: small.height,
@@ -202,9 +222,11 @@ try {
           iconWidth: icon.width,
           checkboxAppearance: getComputedStyle(document.querySelector('.bs-check-input[type="checkbox"]')).appearance,
           groupFontSizes: groupStyles.map((style) => style.fontSize),
+          checkboxCenterDelta: Math.abs((checkboxRect.top + (checkboxRect.height / 2)) - (checkboxLabelRect.top + (checkboxLabelRect.height / 2))),
           radioCenterDelta: Math.abs((radioRect.top + (radioRect.height / 2)) - (radioLabelRect.top + (radioLabelRect.height / 2))),
-          switchBackgroundPosition: getComputedStyle(switchInput).backgroundPositionX,
           switchBackgroundSize: getComputedStyle(switchInput).backgroundSize,
+          switchUncheckedStartInset: uncheckedSwitch.offset,
+          switchCheckedEndInset: checkedSwitch.availableWidth - checkedSwitch.offset,
           colorSwatchRadius: getComputedStyle(color, "::-webkit-color-swatch").borderRadius,
         };
       });
@@ -213,8 +235,10 @@ try {
       if (formMetrics.iconWidth <= 0) failures.push(`${theme}/${viewport.name}: input icon did not render`);
       if (formMetrics.checkboxAppearance !== "none") failures.push(`${theme}/${viewport.name}: checkbox styling did not apply`);
       if (new Set(formMetrics.groupFontSizes).size !== 1) failures.push(`${theme}/${viewport.name}: input-group add-ons do not share input typography`);
+      if (formMetrics.checkboxCenterDelta > 1) failures.push(`${theme}/${viewport.name}: checkbox and label are not vertically centered (${formMetrics.checkboxCenterDelta}px)`);
       if (formMetrics.radioCenterDelta > 1) failures.push(`${theme}/${viewport.name}: radio and label are not vertically centered`);
-      if (Number.parseFloat(formMetrics.switchBackgroundPosition) > 3 || formMetrics.switchBackgroundSize === "auto") failures.push(`${theme}/${viewport.name}: off switch thumb is not aligned to the start edge`);
+      if (!Number.isFinite(formMetrics.switchUncheckedStartInset) || formMetrics.switchUncheckedStartInset < 0 || formMetrics.switchUncheckedStartInset > 3 || formMetrics.switchBackgroundSize === "auto") failures.push(`${theme}/${viewport.name}: unchecked switch thumb is not aligned to logical start (${formMetrics.switchUncheckedStartInset}px)`);
+      if (!Number.isFinite(formMetrics.switchCheckedEndInset) || formMetrics.switchCheckedEndInset < 0 || formMetrics.switchCheckedEndInset > 3) failures.push(`${theme}/${viewport.name}: checked switch thumb is not aligned to logical end (${formMetrics.switchCheckedEndInset}px)`);
       if (Number.parseFloat(formMetrics.colorSwatchRadius) <= 0) failures.push(`${theme}/${viewport.name}: native color swatch does not inherit a rounded shape`);
 
       const accessibility = await new AxeBuilder({ page }).analyze();

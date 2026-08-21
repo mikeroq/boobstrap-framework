@@ -855,6 +855,7 @@ abbr[title] {
 .bs-btn-group > .bs-btn + .bs-btn { margin-inline-start: -1px; }
 .bs-btn-group > .bs-btn:first-child { border-start-start-radius: var(--bs-radius-md); border-end-start-radius: var(--bs-radius-md); }
 .bs-btn-group > .bs-btn:last-child { border-start-end-radius: var(--bs-radius-md); border-end-end-radius: var(--bs-radius-md); }
+.bs-btn-group > .bs-btn-split { border-start-end-radius: var(--bs-radius-md); border-end-end-radius: var(--bs-radius-md); }
 .bs-btn-group > .bs-btn:focus-visible,
 .bs-btn-group > .bs-btn:hover { z-index: 1; }
 .bs-btn-group > .bs-btn:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover { transform: none; }

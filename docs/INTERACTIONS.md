@@ -425,7 +425,7 @@ The optional JS bundle also initializes three small progressive-enhancement help
 
 - `data-bs-password` coordinates a password input and `data-bs-password-toggle`, preserving focus and selection while reflecting `data-bs-state="visible|hidden"`.
 - `data-bs-mask="(999) 999-9999"` formats input as the user types. Mask tokens are `9` for a digit, `A` for a letter, and `*` for either.
-- `data-bs-otp` coordinates `.bs-otp-input` controls, distributes pasted codes, supports arrow and Backspace movement, and synchronizes `data-bs-otp-value`.
+- `data-bs-otp` coordinates `.bs-otp-input` controls, distributes pasted codes, supports arrow and Backspace movement, and synchronizes `data-bs-otp-value`. Paste is strict and atomic: after characters are filtered by `data-bs-otp-pattern`, a paste with more valid characters than the remaining inputs is rejected without changing any input, value, or state.
 
 Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, and `/otp`. Their completed events are `bs:password:toggled`, `bs:mask:change`, `bs:otp:change`, and `bs:otp:complete`.
 
