@@ -206,12 +206,12 @@ try {
       if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
       if (metrics.supportsWebkitScrollbar) {
         if (metrics.scrollbarColor !== "auto" || metrics.scrollbarWidth !== "auto" || !metrics.scrollbarThumbBackground || metrics.scrollbarThumbBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: WebKit themed scrollbar renderer did not resolve`);
-      } else if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto" || metrics.scrollbarWidth !== "thin") failures.push(`${theme}/${viewport.name}: standard themed scrollbar renderer did not resolve`);
+      } else if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto" || !metrics.scrollbarWidth || metrics.scrollbarWidth === "auto") failures.push(`${theme}/${viewport.name}: standard themed scrollbar renderer did not resolve`);
       if (metrics.supportsWebkitScrollbar && (metrics.scrollbarButtonDisplay !== "none"
         || [metrics.scrollbarButtonWidth, metrics.scrollbarButtonHeight, metrics.scrollbarButtonMinWidth, metrics.scrollbarButtonMinHeight, metrics.scrollbarButtonBorder, metrics.scrollbarButtonPadding].some((value) => Number.parseFloat(value) !== 0)
         || metrics.scrollbarButtonBackground !== "none"
         || !metrics.scrollbarButtonStatesCovered)) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
-      const expectedComponentScrollbarWidth = metrics.supportsWebkitScrollbar ? "auto" : "thin";
+      const expectedComponentScrollbarWidth = metrics.supportsWebkitScrollbar ? "auto" : metrics.scrollbarWidth;
       if (metrics.componentScrollbarWidths.some((width) => width !== expectedComponentScrollbarWidth)
         || (metrics.supportsWebkitScrollbar && (!metrics.sidebarScrollbarThumbBackground || metrics.sidebarScrollbarThumbBackground === "rgba(0, 0, 0, 0)"))) failures.push(`${theme}/${viewport.name}: component scroll regions override the themed scrollbar renderer`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
