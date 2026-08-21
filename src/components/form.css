@@ -273,11 +273,13 @@
   padding: 0.7rem 0.9rem;
   color: var(--bs-color-text-muted);
   font: inherit;
-  line-height: 1.2;
+  line-height: 1.35;
   white-space: nowrap;
   background: var(--bs-color-surface);
   border: 1px solid var(--bs-color-border);
 }
+
+.bs-input-group > .bs-btn { line-height: 1.35; }
 
 .bs-is-valid,
 .bs-input[aria-invalid="false"] { border-color: var(--bs-color-success); }

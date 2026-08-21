@@ -35,7 +35,7 @@
             <div class="bs-card-body">
               <h3 class="bs-card-title">Card one</h3>
               <p class="bs-card-text">Full width on mobile and four columns on large screens.</p>
-              <button class="bs-btn bs-btn-primary" type="button">Primary action</button>
+              <button class="bs-btn bs-btn-primary" type="button"><svg class="bs-icon" data-test-button-icon viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>Primary action</button>
             </div>
           </article>
           <article class="bs-card bs-card-raised bs-col-12 bs-col-lg-8">
@@ -140,7 +140,8 @@
             <label class="bs-label" for="accent">Accent color</label>
             <input class="bs-color" id="accent" type="color" value="#d83c87" />
           </div>
-          <div class="bs-scrollbar" data-test-scrollbar tabindex="0" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Scrollable theme preview</div></div>
+          <div data-test-scrollbar tabindex="0" aria-label="Themed scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Scrollable theme preview</div></div>
+          <div data-bs-scrollbars="native" data-test-native-scrollbar tabindex="0" aria-label="Native scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Native scrollbar preview</div></div>
         </form>
       </section>
 
@@ -149,6 +150,14 @@
         <div class="bs-dialog" data-test-descriptionless-dialog style="display: flex; position: static; inline-size: 100%">
           <header class="bs-dialog-header"><h3 class="bs-dialog-title">Compact header</h3><button class="bs-dialog-close" type="button" aria-label="Close">×</button></header>
           <div class="bs-dialog-body">A header without a description does not reserve an empty row.</div>
+        </div>
+        <div class="bs-dialog" data-test-described-dialog style="display: flex; position: static; inline-size: 100%">
+          <header class="bs-dialog-header"><h3 class="bs-dialog-title">Described header</h3><p class="bs-dialog-description">The description has a compact trailing edge.</p><button class="bs-dialog-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-dialog-body" tabindex="0">Dialog body.</div>
+        </div>
+        <div class="bs-drawer" data-test-descriptionless-drawer style="display: flex; position: static; inline-size: 100%; block-size: auto">
+          <header class="bs-drawer-header"><h3 class="bs-drawer-title">Compact drawer header</h3><button class="bs-drawer-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-drawer-body" tabindex="0">Drawer body.</div>
         </div>
         <div class="bs-alert bs-alert-primary" role="status"><span><strong class="bs-alert-title">Primary alert</strong>Useful contextual information.</span></div>
         <div class="bs-alert bs-alert-success" role="status"><span><strong class="bs-alert-title">Success alert</strong>The operation completed successfully.</span></div>
