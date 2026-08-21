@@ -384,7 +384,27 @@ box-shadow:
 }
 ```
 
+### Responsive scale
+
+Every breakpoint in the framework resolves through a single set of `--bs-breakpoint-*` tokens. Component media queries and responsive utilities (`bs-{sm,md,lg,xl,2xl}-*`) reference these tokens directly so the scale can be retargeted (or themed for a wider display) by reassigning one custom property. The `sm` step is the smallest breakpoint the responsive grid offers; below `sm` the layout is single-column.
+
+| Token | Value  | Use case                          |
+|-------|--------|-----------------------------------|
+| `--bs-breakpoint-sm`  | `40rem` | Phones in landscape, small tablets |
+| `--bs-breakpoint-md`  | `48rem` | Tablets, dense desktop forms       |
+| `--bs-breakpoint-lg`  | `64rem` | Standard desktops                  |
+| `--bs-breakpoint-xl`  | `76rem` | Wide desktops                      |
+| `--bs-breakpoint-2xl` | `90rem` | Ultra-wide displays                |
+
 ### Grid
+
+The 12-column grid is implemented with CSS Grid (`.bs-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }`). Span utilities compose across five breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`) using `--bs-breakpoint-*` tokens; each breakpoint also exposes `.bs-col-{bp}-auto` for content-sized columns. The grid is direction-neutral — `grid-column` and `grid-column-start` already work for both LTR and RTL contexts.
+
+Beyond spans, the grid offers:
+
+- `.bs-col-start-{1..12}` (and `.bs-col-start-{sm,md,lg,xl,2xl}-{1..12}`) — explicit `grid-column-start`.
+- `.bs-col-offset-{1..11}` (and `.bs-col-offset-{md,lg}-{1..11}`) — `grid-column-start: calc(<n> + 1)`, i.e. "skip N columns" before the span starts. Offsets are intentionally limited to `md` and `lg` to keep the responsive surface lean.
+- `.bs-gap-x-{step}` and `.bs-gap-y-{step}` — axis-specific gap helpers (steps 1, 2, 3, 4, 5, 6, 8, 10, 12). They live alongside `.bs-gap-*` in the spacing utilities.
 
 ```css
 .bs-grid {

@@ -32,10 +32,32 @@ async function bundle(file, stack = []) {
   return output + source.slice(cursor);
 }
 
+function inlineBreakpointTokens(css, tokens) {
+  // Custom properties are not substituted inside `@media` queries by current
+  // browsers (Chromium, Firefox, WebKit). To keep the source token-driven, we
+  // resolve `var(--bs-breakpoint-*)` references to their numeric values at
+  // bundle time. The bundled CSS will not contain `var(--bs-breakpoint-*)`
+  // inside media blocks; the contract test reads these tokens from the `:root`
+  // block, where they remain. If a downstream consumer overrides the tokens
+  // for a non-media-query use, that override still reaches them.
+  const mediaPattern = /@media[^{]+\{[\s\S]*?\n\}\n/g;
+  return css.replace(mediaPattern, (block) =>
+    block.replace(/var\(--bs-breakpoint-([a-z0-9-]+)\)/g, (match, name) => {
+      const value = tokens[name];
+      if (!value) throw new Error(`Unknown breakpoint token --bs-breakpoint-${name} referenced in a media query`);
+      return value;
+    }),
+  );
+}
+
 const packageJson = JSON.parse(await readFile(packageFile, "utf8"));
 const homepage = new URL(packageJson.homepage);
 const banner = `/* Boobstrap v${packageJson.version} | MIT License | ${homepage.hostname} */\n`;
-const css = await bundle(entry);
+const tokensSource = await readFile(join(root, "src", "base", "tokens.css"), "utf8");
+const breakpointTokens = Object.fromEntries(
+  [...tokensSource.matchAll(/--bs-breakpoint-([a-z0-9-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]),
+);
+const css = inlineBreakpointTokens(await bundle(entry), breakpointTokens);
 
 await mkdir(dirname(destination), { recursive: true });
 await writeFile(destination, `${banner}${css.trim()}\n`);

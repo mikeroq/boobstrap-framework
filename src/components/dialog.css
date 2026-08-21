@@ -170,7 +170,7 @@
 
 body.bs-dialog-open { overflow: hidden; }
 
-@media (max-width: 40rem) {
+@media (max-width: var(--bs-breakpoint-sm)) {
   .bs-dialog,
   .bs-dialog-sm,
   .bs-dialog-lg,

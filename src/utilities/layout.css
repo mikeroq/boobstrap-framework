@@ -25,7 +25,7 @@
 .bs-order-first { order: -1; }
 .bs-order-last { order: 9999; }
 
-@media (min-width: 40rem) {
+@media (min-width: var(--bs-breakpoint-sm)) {
   .bs-sm-block { display: block; }
   .bs-sm-inline-block { display: inline-block; }
   .bs-sm-flex { display: flex; }
@@ -48,7 +48,7 @@
   .bs-sm-order-last { order: 9999; }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: var(--bs-breakpoint-md)) {
   .bs-md-flex { display: flex; }
   .bs-md-inline-flex { display: inline-flex; }
   .bs-md-block { display: block; }
@@ -71,7 +71,7 @@
   .bs-md-order-last { order: 9999; }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: var(--bs-breakpoint-lg)) {
   .bs-lg-block { display: block; }
   .bs-lg-inline-block { display: inline-block; }
   .bs-lg-flex { display: flex; }

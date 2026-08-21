@@ -92,6 +92,12 @@
   --bs-container-xl: 76rem;
   --bs-container-2xl: 90rem;
 
+  --bs-breakpoint-sm: 40rem;
+  --bs-breakpoint-md: 48rem;
+  --bs-breakpoint-lg: 64rem;
+  --bs-breakpoint-xl: 76rem;
+  --bs-breakpoint-2xl: 90rem;
+
   --bs-duration-fast: 120ms;
   --bs-duration-normal: 200ms;
   --bs-duration-slow: 360ms;
