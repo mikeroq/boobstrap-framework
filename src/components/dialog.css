@@ -125,7 +125,6 @@
   padding: var(--bs-space-4) var(--bs-space-5);
   overflow: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 
 .bs-dialog-footer,

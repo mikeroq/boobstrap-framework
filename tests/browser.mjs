@@ -83,6 +83,7 @@ try {
         const codeTab = codeTabs.querySelector(".bs-code-tab[aria-selected=\"true\"]");
         const scrollbar = document.querySelector("[data-test-scrollbar]");
         const nativeScrollbar = document.querySelector("[data-test-native-scrollbar]");
+        const sidebarScrollbar = document.querySelector("[data-test-sidebar-scrollbar]");
         const compactDialog = document.querySelector("[data-test-descriptionless-dialog]");
         const compactDialogHeader = compactDialog.querySelector(".bs-dialog-header");
         const compactDialogBody = compactDialog.querySelector(".bs-dialog-body");
@@ -160,6 +161,8 @@ try {
           scrollbarButtonBorder: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").borderWidth,
           scrollbarButtonPadding: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").padding,
           scrollbarButtonStatesCovered: [":single-button", ":double-button", ":vertical:decrement", ":vertical:increment", ":horizontal:decrement", ":horizontal:increment"].every((state) => scrollbarButtonRule?.selectorText.includes(state)),
+          componentScrollbarWidths: [sidebarScrollbar, table, dataTable, compactDialogBody].map((element) => getComputedStyle(element).scrollbarWidth),
+          sidebarScrollbarThumbBackground: getComputedStyle(sidebarScrollbar, "::-webkit-scrollbar-thumb").backgroundColor,
           nativeScrollbarColor: getComputedStyle(nativeScrollbar).scrollbarColor,
           dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
           dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
@@ -208,6 +211,9 @@ try {
         || [metrics.scrollbarButtonWidth, metrics.scrollbarButtonHeight, metrics.scrollbarButtonMinWidth, metrics.scrollbarButtonMinHeight, metrics.scrollbarButtonBorder, metrics.scrollbarButtonPadding].some((value) => Number.parseFloat(value) !== 0)
         || metrics.scrollbarButtonBackground !== "none"
         || !metrics.scrollbarButtonStatesCovered) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
+      const expectedComponentScrollbarWidth = metrics.supportsWebkitScrollbar ? "auto" : "thin";
+      if (metrics.componentScrollbarWidths.some((width) => width !== expectedComponentScrollbarWidth)
+        || (metrics.supportsWebkitScrollbar && (!metrics.sidebarScrollbarThumbBackground || metrics.sidebarScrollbarThumbBackground === "rgba(0, 0, 0, 0)"))) failures.push(`${theme}/${viewport.name}: component scroll regions override the themed scrollbar renderer`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
       if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
       if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
