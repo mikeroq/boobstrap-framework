@@ -601,6 +601,105 @@ try {
       },
     },
   ];
+  const layoutAssertions = [
+    {
+      // 39rem sits just below the sm breakpoint (40rem = 640px), so every
+      // responsive display variant must still be inert.
+      viewport: { width: 624, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => ({
+          sm: getComputedStyle(document.querySelector("[data-test-layout-sm-flex]")).display,
+          md: getComputedStyle(document.querySelector("[data-test-layout-md-flex]")).display,
+          lg: getComputedStyle(document.querySelector("[data-test-layout-lg-flex]")).display,
+          mdHidden: getComputedStyle(document.querySelector("[data-test-layout-md-hidden]")).display,
+        }));
+        if (metrics.sm !== "none") failures.push(`layout/624: bs-sm-flex should not apply below 40rem, received ${metrics.sm}`);
+        if (metrics.md !== "none") failures.push(`layout/624: bs-md-flex should not apply below 48rem, received ${metrics.md}`);
+        if (metrics.lg !== "none") failures.push(`layout/624: bs-lg-flex should not apply below 64rem, received ${metrics.lg}`);
+        if (metrics.mdHidden !== "block") failures.push(`layout/624: bs-md-hidden should not apply below 48rem, received ${metrics.mdHidden}`);
+      },
+    },
+    {
+      // 40rem = 640px is the sm boundary; min-width is inclusive so sm applies
+      // here while md (48rem) and lg (64rem) must not.
+      viewport: { width: 640, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => ({
+          sm: getComputedStyle(document.querySelector("[data-test-layout-sm-flex]")).display,
+          md: getComputedStyle(document.querySelector("[data-test-layout-md-flex]")).display,
+          lg: getComputedStyle(document.querySelector("[data-test-layout-lg-flex]")).display,
+        }));
+        if (metrics.sm !== "flex") failures.push(`layout/640: bs-sm-flex should apply at the 40rem boundary, received ${metrics.sm}`);
+        if (metrics.md !== "none") failures.push(`layout/640: bs-md-flex should not apply below 48rem, received ${metrics.md}`);
+        if (metrics.lg !== "none") failures.push(`layout/640: bs-lg-flex should not apply below 64rem, received ${metrics.lg}`);
+      },
+    },
+    {
+      // 48rem = 768px is the md boundary.
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => ({
+          md: getComputedStyle(document.querySelector("[data-test-layout-md-flex]")).display,
+          lg: getComputedStyle(document.querySelector("[data-test-layout-lg-flex]")).display,
+          mdHidden: getComputedStyle(document.querySelector("[data-test-layout-md-hidden]")).display,
+        }));
+        if (metrics.md !== "flex") failures.push(`layout/768: bs-md-flex should apply at the 48rem boundary, received ${metrics.md}`);
+        if (metrics.lg !== "none") failures.push(`layout/768: bs-lg-flex should not apply below 64rem, received ${metrics.lg}`);
+        if (metrics.mdHidden !== "none") failures.push(`layout/768: bs-md-hidden should apply at the 48rem boundary, received ${metrics.mdHidden}`);
+      },
+    },
+    {
+      // 64rem = 1024px is the lg boundary; all three variants are active here.
+      viewport: { width: 1024, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => ({
+          sm: getComputedStyle(document.querySelector("[data-test-layout-sm-flex]")).display,
+          md: getComputedStyle(document.querySelector("[data-test-layout-md-flex]")).display,
+          lg: getComputedStyle(document.querySelector("[data-test-layout-lg-flex]")).display,
+          inlineGrid: getComputedStyle(document.querySelector("[data-test-layout-inline-grid]")).display,
+        }));
+        if (metrics.sm !== "flex") failures.push(`layout/1024: bs-sm-flex should apply above 40rem, received ${metrics.sm}`);
+        if (metrics.md !== "flex") failures.push(`layout/1024: bs-md-flex should apply above 48rem, received ${metrics.md}`);
+        if (metrics.lg !== "flex") failures.push(`layout/1024: bs-lg-flex should apply at the 64rem boundary, received ${metrics.lg}`);
+        if (metrics.inlineGrid !== "inline-grid") failures.push(`layout/1024: bs-inline-grid should set display:inline-grid, received ${metrics.inlineGrid}`);
+      },
+    },
+    {
+      viewport: { width: 1024, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const truncate = document.querySelector("[data-test-layout-truncate]");
+          const style = getComputedStyle(truncate);
+          const square = document.querySelector("[data-test-layout-aspect-square]").getBoundingClientRect();
+          const video = document.querySelector("[data-test-layout-aspect-video]").getBoundingClientRect();
+          return {
+            overflow: style.overflow,
+            textOverflow: style.textOverflow,
+            whiteSpace: style.whiteSpace,
+            scrollWidth: truncate.scrollWidth,
+            clientWidth: truncate.clientWidth,
+            objectFit: getComputedStyle(document.querySelector("[data-test-layout-object-cover]")).objectFit,
+            squareWidth: square.width,
+            squareHeight: square.height,
+            videoWidth: video.width,
+            videoHeight: video.height,
+          };
+        });
+        if (metrics.overflow !== "hidden") failures.push(`layout/1024: bs-truncate should set overflow:hidden, received ${metrics.overflow}`);
+        if (metrics.textOverflow !== "ellipsis") failures.push(`layout/1024: bs-truncate should set text-overflow:ellipsis, received ${metrics.textOverflow}`);
+        if (metrics.whiteSpace !== "nowrap") failures.push(`layout/1024: bs-truncate should set white-space:nowrap, received ${metrics.whiteSpace}`);
+        // A truncated single line overflows its box, so the scroll width must
+        // exceed the client width for the ellipsis to be observable.
+        if (metrics.scrollWidth <= metrics.clientWidth) failures.push(`layout/1024: bs-truncate content should overflow (scrollWidth ${metrics.scrollWidth}px vs clientWidth ${metrics.clientWidth}px)`);
+        if (metrics.objectFit !== "cover") failures.push(`layout/1024: bs-object-cover should set object-fit:cover, received ${metrics.objectFit}`);
+        // aspect-ratio: 1 / 1 on a 120px-wide box resolves to a 120px height.
+        if (Math.abs(metrics.squareWidth - metrics.squareHeight) > 1) failures.push(`layout/1024: bs-aspect-square should be 1:1, received ${metrics.squareWidth}x${metrics.squareHeight}`);
+        // aspect-ratio: 16 / 9 on a 160px-wide box resolves to a 90px height.
+        const expectedVideoHeight = metrics.videoWidth * 9 / 16;
+        if (Math.abs(metrics.videoHeight - expectedVideoHeight) > 1) failures.push(`layout/1024: bs-aspect-video should be 16:9, expected ~${expectedVideoHeight}px height, received ${metrics.videoHeight}px`);
+      },
+    },
+  ];
   for (const assertion of spacingAssertions) {
     const context = await browser.newContext({ viewport: assertion.viewport });
     const page = await context.newPage();
@@ -609,6 +708,13 @@ try {
     await context.close();
   }
   for (const assertion of gridAssertions) {
+    const context = await browser.newContext({ viewport: assertion.viewport });
+    const page = await context.newPage();
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await assertion.run(page);
+    await context.close();
+  }
+  for (const assertion of layoutAssertions) {
     const context = await browser.newContext({ viewport: assertion.viewport });
     const page = await context.newPage();
     await page.goto(baseUrl, { waitUntil: "networkidle" });
@@ -624,5 +730,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Browser contract passed in ${browserName}: themes, palettes, radius presets, responsive grid, responsive spacing, focus, reduced motion, and Axe.`);
+  console.log(`Browser contract passed in ${browserName}: themes, palettes, radius presets, responsive grid, responsive spacing, responsive layout, focus, reduced motion, and Axe.`);
 }
