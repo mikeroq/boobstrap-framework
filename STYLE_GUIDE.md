@@ -307,6 +307,44 @@ Boobstrap uses a four-pixel base spacing system.
 --bs-space-32: 8rem;
 ```
 
+### Spacing utilities
+
+The spacing scale maps directly to utility classes. Every utility resolves through the `--bs-space-*` tokens above and emits a logical CSS property so layouts are RTL-correct by construction.
+
+| Step set | Steps                                                                                       |
+|----------|---------------------------------------------------------------------------------------------|
+| Default  | `0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32`                                            |
+
+| Property          | Class prefix  | CSS property                |
+|-------------------|---------------|-----------------------------|
+| Margin            | `.bs-m-`      | `margin`                    |
+| Margin top        | `.bs-mt-`     | `margin-block-start`        |
+| Margin bottom     | `.bs-mb-`     | `margin-block-end`          |
+| Margin start      | `.bs-ms-`     | `margin-inline-start`       |
+| Margin end        | `.bs-me-`     | `margin-inline-end`         |
+| Margin x (inline) | `.bs-mx-`     | `margin-inline`             |
+| Margin y (block)  | `.bs-my-`     | `margin-block`              |
+| Padding           | `.bs-p-`      | `padding`                   |
+| Padding top       | `.bs-pt-`     | `padding-block-start`       |
+| Padding bottom    | `.bs-pb-`     | `padding-block-end`         |
+| Padding start     | `.bs-ps-`     | `padding-inline-start`      |
+| Padding end       | `.bs-pe-`     | `padding-inline-end`        |
+| Padding x (inline)| `.bs-px-`     | `padding-inline`            |
+| Padding y (block) | `.bs-py-`     | `padding-block`             |
+
+Auto is a separate class, not a step. `.bs-mx-auto`, `.bs-ms-auto`, and `.bs-me-auto` exist for cases that need `margin: auto` on one axis. Padding has no auto classes because `auto` is not a meaningful padding value.
+
+`gap` is a sibling utility family that lives alongside the spacing utilities:
+
+- `.bs-gap-{step}` — `gap` shorthand (steps `1, 2, 3, 4, 5, 6, 8, 10, 12`).
+- `.bs-gap-x-{step}` — `column-gap` only (same step set).
+- `.bs-gap-y-{step}` — `row-gap` only (same step set).
+
+#### Responsive variants
+
+Responsive spacing variants are emitted at `md` (48rem) and `lg` (64rem) for the high-traffic composition surface (`m`, `mt`, `mb`, `mx`, `my`, `p`, `px`, `py`) plus the three gap helpers. The pattern mirrors the breakpoint naming used elsewhere in the framework: `.bs-md-mt-4`, `.bs-lg-py-6`, `.bs-md-gap-x-2`. Responsive variants cover the smaller step set (steps `1–12`); the largest steps (`16, 20, 24, 32`) are intentionally omitted because 4rem–8rem spacing at md/lg is rarely useful and bloats the API surface. The underlying breakpoint scale comes from the `--bs-breakpoint-*` tokens described below.
+
+
 ## 6. Borders and Radius
 
 ```css

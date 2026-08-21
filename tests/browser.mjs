@@ -545,6 +545,69 @@ try {
       },
     },
   ];
+  const spacingAssertions = [
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const plain = document.querySelector("[data-test-spacing-mt-base] > .bs-py-2:not(.bs-mt-4)").getBoundingClientRect();
+          const spaced = document.querySelector("[data-test-spacing-mt-base] > .bs-mt-4").getBoundingClientRect();
+          return { plainBottom: plain.bottom, spacedTop: spaced.top };
+        });
+        // bs-mt-4 sets margin-block-start: 1rem = 16px. The gap between the
+        // first sibling's bottom and the second sibling's top should equal
+        // that margin.
+        const gap = metrics.spacedTop - metrics.plainBottom;
+        if (Math.abs(gap - 16) > 2) failures.push(`spacing/768: bs-mt-4 should produce a ~16px block-start margin, received ${gap}px`);
+      },
+    },
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const plain = document.querySelector("[data-test-spacing-mt-md] > .bs-py-2:not(.bs-md-mt-8)").getBoundingClientRect();
+          const spaced = document.querySelector("[data-test-spacing-mt-md] > .bs-md-mt-8").getBoundingClientRect();
+          return { plainBottom: plain.bottom, spacedTop: spaced.top };
+        });
+        // bs-md-mt-8 sets margin-block-start: 2rem = 32px and the rule lives
+        // inside @media (min-width: 48rem), so 768px viewport exercises it.
+        const gap = metrics.spacedTop - metrics.plainBottom;
+        if (Math.abs(gap - 32) > 2) failures.push(`spacing/768: bs-md-mt-8 should produce a ~32px block-start margin, received ${gap}px`);
+      },
+    },
+    {
+      viewport: { width: 390, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const plain = document.querySelector("[data-test-spacing-mt-md] > .bs-py-2:not(.bs-md-mt-8)").getBoundingClientRect();
+          const spaced = document.querySelector("[data-test-spacing-mt-md] > .bs-md-mt-8").getBoundingClientRect();
+          return { plainBottom: plain.bottom, spacedTop: spaced.top };
+        });
+        // Below the md breakpoint the .bs-md-mt-8 rule must NOT apply — the
+        // gap between the two siblings collapses to whatever the surrounding
+        // container provides (typically 0).
+        const gap = metrics.spacedTop - metrics.plainBottom;
+        if (gap > 4) failures.push(`spacing/390: bs-md-mt-8 should not apply below the md breakpoint, received ${gap}px`);
+      },
+    },
+    {
+      viewport: { width: 1280, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-spacing-gap-x]");
+          return { columnGap: getComputedStyle(parent).columnGap };
+        });
+        if (Number.parseFloat(metrics.columnGap) !== 16) failures.push(`spacing/1280: bs-gap-x-4 should set column-gap to 16px, received ${metrics.columnGap}`);
+      },
+    },
+  ];
+  for (const assertion of spacingAssertions) {
+    const context = await browser.newContext({ viewport: assertion.viewport });
+    const page = await context.newPage();
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await assertion.run(page);
+    await context.close();
+  }
   for (const assertion of gridAssertions) {
     const context = await browser.newContext({ viewport: assertion.viewport });
     const page = await context.newPage();
@@ -561,5 +624,5 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Browser contract passed in ${browserName}: themes, palettes, radius presets, responsive grid, focus, reduced motion, and Axe.`);
+  console.log(`Browser contract passed in ${browserName}: themes, palettes, radius presets, responsive grid, responsive spacing, focus, reduced motion, and Axe.`);
 }
