@@ -279,8 +279,25 @@ try {
   if (await phoneInput.inputValue() !== "(415) 555-0123") failures.push(`Input mask produced ${await phoneInput.inputValue()}`);
 
   const otpInputs = page.locator("[data-bs-otp-input]");
-  for (let index = 0; index < 6; index += 1) await otpInputs.nth(index).fill(String(index + 1));
-  if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
+  const pasteOtp = (value) => otpInputs.first().evaluate((input, pastedValue) => {
+    const clipboardData = new DataTransfer();
+    clipboardData.setData("text/plain", pastedValue);
+    input.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData }));
+  }, value);
+  await pasteOtp("1234567");
+  const rejectedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (rejectedOtp.inputs.some(Boolean) || rejectedOtp.value !== "" || rejectedOtp.state !== "empty") failures.push(`OTP overlength paste was not rejected atomically (${JSON.stringify(rejectedOtp)})`);
+  await pasteOtp("123456");
+  const acceptedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (acceptedOtp.inputs.join("") !== "123456" || acceptedOtp.value !== "123456" || acceptedOtp.state !== "complete") failures.push(`OTP did not accept and synchronize its exact six-digit paste (${JSON.stringify(acceptedOtp)})`);
 
   const toast = page.locator("#save-toast");
   await page.locator("#toast-toggle").click();
