@@ -148,7 +148,7 @@ try {
           codeTabsOverflowY: getComputedStyle(codeTabs).overflowY,
           codeTabsScrollbarWidth: getComputedStyle(codeTabs).scrollbarWidth,
           codeTabsPaddingLeft: getComputedStyle(codeTabs).paddingLeft,
-          supportsWebkitScrollbar: CSS.supports("selector(::-webkit-scrollbar)"),
+          supportsWebkitScrollbar: CSS.supports("selector(::-webkit-scrollbar)") && !CSS.supports("-moz-appearance", "none"),
           scrollbarColor: getComputedStyle(scrollbar).scrollbarColor,
           scrollbarWidth: getComputedStyle(scrollbar).scrollbarWidth,
           scrollbarThumbBackground: getComputedStyle(scrollbar, "::-webkit-scrollbar-thumb").backgroundColor,
@@ -207,10 +207,10 @@ try {
       if (metrics.supportsWebkitScrollbar) {
         if (metrics.scrollbarColor !== "auto" || metrics.scrollbarWidth !== "auto" || !metrics.scrollbarThumbBackground || metrics.scrollbarThumbBackground === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: WebKit themed scrollbar renderer did not resolve`);
       } else if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto" || metrics.scrollbarWidth !== "thin") failures.push(`${theme}/${viewport.name}: standard themed scrollbar renderer did not resolve`);
-      if (metrics.scrollbarButtonDisplay !== "none"
+      if (metrics.supportsWebkitScrollbar && (metrics.scrollbarButtonDisplay !== "none"
         || [metrics.scrollbarButtonWidth, metrics.scrollbarButtonHeight, metrics.scrollbarButtonMinWidth, metrics.scrollbarButtonMinHeight, metrics.scrollbarButtonBorder, metrics.scrollbarButtonPadding].some((value) => Number.parseFloat(value) !== 0)
         || metrics.scrollbarButtonBackground !== "none"
-        || !metrics.scrollbarButtonStatesCovered) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
+        || !metrics.scrollbarButtonStatesCovered)) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
       const expectedComponentScrollbarWidth = metrics.supportsWebkitScrollbar ? "auto" : "thin";
       if (metrics.componentScrollbarWidths.some((width) => width !== expectedComponentScrollbarWidth)
         || (metrics.supportsWebkitScrollbar && (!metrics.sidebarScrollbarThumbBackground || metrics.sidebarScrollbarThumbBackground === "rgba(0, 0, 0, 0)"))) failures.push(`${theme}/${viewport.name}: component scroll regions override the themed scrollbar renderer`);

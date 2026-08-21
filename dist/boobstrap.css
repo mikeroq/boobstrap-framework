@@ -4030,7 +4030,7 @@ body.bs-dialog-open { overflow: hidden; }
 }
 
 /* Non-auto standard properties override WebKit pseudo-elements in Chromium. */
-@supports selector(::-webkit-scrollbar) {
+@supports selector(::-webkit-scrollbar) and (not (-moz-appearance: none)) {
   :where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar) {
     scrollbar-color: auto;
     scrollbar-width: auto;
