@@ -41,7 +41,6 @@
   background: var(--bs-color-surface);
   border: 1px solid var(--bs-color-border);
   border-radius: var(--bs-radius-md);
-  scrollbar-width: thin;
 }
 
 .bs-datatable .dt-layout-table > .dt-layout-cell:focus-visible {

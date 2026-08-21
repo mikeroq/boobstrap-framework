@@ -4,7 +4,6 @@
   background: var(--bs-color-surface);
   border: 1px solid var(--bs-color-border);
   border-radius: var(--bs-radius-md);
-  scrollbar-width: thin;
 }
 
 .bs-table-responsive:focus-visible {

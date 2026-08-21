@@ -318,7 +318,6 @@
   block-size: var(--bs-sidebar-height);
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 
 .bs-sidebar-layout {
@@ -370,7 +369,6 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--bs-space-3);
-  scrollbar-width: thin;
 }
 
 .bs-sidebar-separator {
