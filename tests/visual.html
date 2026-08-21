@@ -104,6 +104,25 @@
           <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
         </div>
       </section>
+      <section class="visual-region" data-visual="layout" aria-label="Layout utilities">
+        <h2>Layout</h2>
+        <div class="bs-flex bs-items-baseline bs-justify-between" data-layout-flex style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-3)">
+          <span class="bs-badge bs-badge-primary">items-baseline</span>
+          <span>justify-between</span>
+        </div>
+        <div class="bs-flex bs-gap-3 bs-mt-4" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-3)">
+          <span class="bs-shrink-0 bs-badge bs-badge-primary">shrink-0</span>
+          <span class="bs-grow bs-truncate" data-layout-truncate style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-2)">bs-grow with bs-truncate applied to an intentionally overlong sentence that must be clipped with an ellipsis</span>
+        </div>
+        <div class="bs-flex bs-gap-4 bs-mt-4">
+          <span class="bs-aspect-square bs-w-full" data-layout-aspect-square style="max-inline-size:96px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)"></span>
+          <span class="bs-aspect-video bs-w-full" data-layout-aspect-video style="max-inline-size:160px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)"></span>
+        </div>
+        <div class="bs-mt-4">
+          <svg class="bs-object-cover bs-aspect-square" data-layout-object-cover width="96" height="96" viewBox="0 0 40 20" preserveAspectRatio="none" role="img" aria-label="Object fit sample" style="inline-size:96px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)"><rect width="40" height="20" fill="var(--bs-color-primary)"></rect></svg>
+        </div>
+        <p class="bs-break-words bs-mt-4" data-layout-break-words style="inline-size:180px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-2)">Supercalifragilisticexpialidociousantidisestablishmentarianism</p>
+      </section>
     </main>
   </body>
 </html>

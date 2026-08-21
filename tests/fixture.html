@@ -82,6 +82,22 @@
           <div class="bs-py-2 bs-px-3" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">base</div>
           <div class="bs-py-2 bs-px-3 bs-md-mt-8" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">md-mt-8</div>
         </div>
+        <div data-test-layout-display class="bs-mt-4">
+          <div class="bs-hidden bs-sm-flex" data-test-layout-sm-flex>sm-flex</div>
+          <div class="bs-hidden bs-md-flex" data-test-layout-md-flex>md-flex</div>
+          <div class="bs-hidden bs-lg-flex" data-test-layout-lg-flex>lg-flex</div>
+          <div class="bs-block bs-md-hidden" data-test-layout-md-hidden>md-hidden</div>
+          <div class="bs-inline-grid" data-test-layout-inline-grid>inline-grid</div>
+        </div>
+        <div class="bs-flex bs-gap-3 bs-mt-4" data-test-layout-truncate-row style="inline-size:320px">
+          <span class="bs-shrink-0" data-test-layout-shrink-0 style="inline-size:80px">shrink-0</span>
+          <span class="bs-grow bs-truncate" data-test-layout-truncate>Truncation requires a single line that overflows its inline size by a wide margin.</span>
+        </div>
+        <div class="bs-mt-4">
+          <span class="bs-aspect-square" data-test-layout-aspect-square style="display:block;inline-size:120px;border:1px solid var(--bs-color-border)"></span>
+          <span class="bs-aspect-video" data-test-layout-aspect-video style="display:block;inline-size:160px;border:1px solid var(--bs-color-border)"></span>
+          <img class="bs-object-cover" data-test-layout-object-cover alt="" width="80" height="40" style="inline-size:80px;block-size:80px" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Crect width='80' height='40' fill='%23d9468f'/%3E%3C/svg%3E" />
+        </div>
         <article class="bs-card bs-card-raised bs-card-separated bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
           <header class="bs-card-header">
             <h3 class="bs-card-title" id="structured-card-title">Workspace usage</h3>

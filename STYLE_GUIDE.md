@@ -459,6 +459,37 @@ Recommended arrangements:
 - Feature row: four equal columns
 - Mobile: one column
 
+### Layout utilities
+
+Layout utilities cover display, positioning, overflow, flex composition, sizing, text overflow, and media fit. They are single-purpose classes meant to compose with components rather than replace them.
+
+| Group | Classes |
+|-------|---------|
+| Display | `.bs-block`, `.bs-inline-block`, `.bs-flex`, `.bs-inline-flex`, `.bs-inline-grid`, `.bs-hidden`, `.bs-stack` |
+| Position | `.bs-static`, `.bs-relative`, `.bs-absolute`, `.bs-fixed`, `.bs-sticky` |
+| Overflow | `.bs-overflow-hidden`, `.bs-overflow-auto`, `.bs-overflow-x-auto`, `.bs-overflow-y-auto` |
+| Flex direction and wrap | `.bs-flex-row`, `.bs-flex-col`, `.bs-flex-wrap`, `.bs-flex-nowrap` |
+| Flex sizing | `.bs-flex-1`, `.bs-grow`, `.bs-grow-0`, `.bs-shrink`, `.bs-shrink-0` |
+| Align items | `.bs-items-start`, `.bs-items-center`, `.bs-items-end`, `.bs-items-baseline`, `.bs-items-stretch` |
+| Justify content | `.bs-justify-start`, `.bs-justify-center`, `.bs-justify-end`, `.bs-justify-between`, `.bs-justify-around`, `.bs-justify-evenly` |
+| Align self | `.bs-self-start`, `.bs-self-center`, `.bs-self-end`, `.bs-self-stretch` |
+| Order | `.bs-order-first`, `.bs-order-last` |
+| Sizing | `.bs-w-full`, `.bs-w-auto`, `.bs-max-w-full`, `.bs-min-w-0`, `.bs-h-full`, `.bs-h-auto`, `.bs-min-h-0`, `.bs-h-screen`, `.bs-min-h-screen` |
+| Text overflow | `.bs-truncate`, `.bs-whitespace-nowrap`, `.bs-break-words` |
+| Media | `.bs-aspect-square`, `.bs-aspect-video`, `.bs-object-cover`, `.bs-object-contain` |
+
+`.bs-h-screen` and `.bs-min-h-screen` declare `100vh` first and `100dvh` second. Browsers that understand the dynamic viewport unit use it so the height tracks a collapsing mobile URL bar; older browsers keep the `100vh` fallback.
+
+`.bs-min-w-0` and `.bs-min-h-0` exist for the common flex and grid overflow trap: a flex item defaults to `min-width: auto`, which prevents it from shrinking below its content. Pair `.bs-min-w-0` with `.bs-truncate` when the truncating element is a flex child.
+
+`.bs-break-words` uses `overflow-wrap: break-word`, which only breaks a word that cannot fit on its own line. It is the standard form; `word-break: break-word` is a legacy alias and is not emitted.
+
+#### Responsive layout variants
+
+Display, flex direction and wrap, align items, justify content, width, and order are available at `sm`, `md`, and `lg` as `.bs-{sm,md,lg}-{modifier}` — for example `.bs-md-flex`, `.bs-lg-justify-between`, `.bs-sm-w-full`. Each variant is a `min-width` media query, so it applies at the breakpoint and above.
+
+Position, overflow, sizing, text-overflow, aspect-ratio, and object-fit utilities are intentionally **not** responsive. These properties rarely need to change per breakpoint, and emitting variants for them would multiply the utility surface without improving layout composition.
+
 ## 9. Iconography
 
 Icons should be outlined, rounded, geometric, and simple enough to work at 16 pixels.
