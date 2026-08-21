@@ -395,6 +395,147 @@ try {
   const skeletonMotion = await motionPage.locator(".bs-skeleton-pulse").first().evaluate((element) => getComputedStyle(element).animationName);
   if (skeletonMotion !== "none") failures.push(`Reduced motion did not disable skeleton animation: ${skeletonMotion}`);
   await motionContext.close();
+
+  const gridAssertions = [
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]").getBoundingClientRect();
+          const md12 = document.querySelector("[data-test-grid-md-12]").getBoundingClientRect();
+          const start3 = document.querySelector("[data-test-grid-start-3]").getBoundingClientRect();
+          return {
+            parentLeft: parent.left,
+            parentWidth: parent.width,
+            md12Width: md12.width,
+            md12Left: md12.left,
+            start3Left: start3.left,
+          };
+        });
+        if (Math.abs(metrics.md12Width - metrics.parentWidth) > 1) failures.push(`grid/768: bs-col-md-12 should span full width, expected ~${metrics.parentWidth}px, received ${metrics.md12Width}px`);
+        if (Math.abs(metrics.md12Left - metrics.parentLeft) > 1) failures.push(`grid/768: bs-col-md-12 should align to start of grid`);
+      },
+    },
+    {
+      viewport: { width: 1280, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]");
+          const parentRect = parent.getBoundingClientRect();
+          const xl3 = document.querySelector("[data-test-grid-xl-3]").getBoundingClientRect();
+          const gap = Number.parseFloat(getComputedStyle(parent).columnGap);
+          return { parentWidth: parentRect.width, xl3Width: xl3.width, gap };
+        });
+        // 4 xl-3 children fill 12 columns, so the per-column width is
+        // (parentWidth - 11 gaps) / 12 and each xl-3 spans 3 of those columns.
+        const columnWidth = (metrics.parentWidth - metrics.gap * 11) / 12;
+        const expected = columnWidth * 3 + metrics.gap * 2;
+        if (Math.abs(metrics.xl3Width - expected) > 1) failures.push(`grid/1280: bs-col-xl-3 should span ~25% width, expected ~${expected}px, received ${metrics.xl3Width}px`);
+      },
+    },
+    {
+      viewport: { width: 1440, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]").getBoundingClientRect();
+          const auto = document.querySelector("[data-test-grid-2xl-auto]").getBoundingClientRect();
+          return { parentWidth: parent.width, autoWidth: auto.width };
+        });
+        if (metrics.autoWidth >= metrics.parentWidth - 1) failures.push(`grid/1440: bs-col-2xl-auto should size to content (${metrics.autoWidth}px), not fill container (${metrics.parentWidth}px)`);
+        if (metrics.autoWidth < 10) failures.push(`grid/1440: bs-col-2xl-auto collapsed to ${metrics.autoWidth}px`);
+      },
+    },
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]");
+          const parentRect = parent.getBoundingClientRect();
+          const start3 = document.querySelector("[data-test-grid-start-3]").getBoundingClientRect();
+          const gap = Number.parseFloat(getComputedStyle(parent).columnGap);
+          return {
+            parentLeft: parentRect.left,
+            parentWidth: parentRect.width,
+            start3Left: start3.left - parentRect.left,
+            gap,
+          };
+        });
+        // Column 3 line position from parent start: column-width + 1 gap.
+        // CSS Grid auto-places the item into the first row where column 3 is
+        // free, so the offset must be a positive multiple of (column + gap).
+        const columnWidth = (metrics.parentWidth - metrics.gap * 11) / 12;
+        const columnSpan = columnWidth + metrics.gap;
+        const remainder = metrics.start3Left - columnSpan;
+        const multiples = remainder / columnSpan;
+        const distanceFromMultiple = Math.abs(multiples - Math.round(multiples));
+        if (distanceFromMultiple * columnSpan > 2) failures.push(`grid/768: bs-col-start-3 should align to column 3 (offset multiple of ~${columnSpan}px), received offset ${metrics.start3Left}px (distance from multiple: ${distanceFromMultiple * columnSpan}px)`);
+      },
+    },
+    {
+      viewport: { width: 1280, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const gap = document.querySelector("[data-test-grid-gap]");
+          return {
+            columnGap: getComputedStyle(gap).columnGap,
+            rowGap: getComputedStyle(gap).rowGap,
+          };
+        });
+        if (Number.parseFloat(metrics.columnGap) !== 16) failures.push(`grid/1280: bs-gap-x-4 column-gap should be 16px, received ${metrics.columnGap}`);
+        if (Number.parseFloat(metrics.rowGap) !== 16) failures.push(`grid/1280: bs-gap-y-4 row-gap should be 16px, received ${metrics.rowGap}`);
+      },
+    },
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]");
+          const parentRect = parent.getBoundingClientRect();
+          const start2 = document.querySelector("[data-test-grid-md-start-2]").getBoundingClientRect();
+          const gap = Number.parseFloat(getComputedStyle(parent).columnGap);
+          return {
+            parentLeft: parentRect.left,
+            parentWidth: parentRect.width,
+            start2Left: start2.left - parentRect.left,
+            gap,
+          };
+        });
+        // bs-col-md-start-2 places the item at column 2.
+        const columnWidth = (metrics.parentWidth - metrics.gap * 11) / 12;
+        const columnSpan = columnWidth + metrics.gap;
+        const expected = columnSpan * 1;
+        if (Math.abs(metrics.start2Left - expected) > 2) failures.push(`grid/768: bs-col-md-start-2 should align to column 2 (offset ~${expected}px), received ${metrics.start2Left}px`);
+      },
+    },
+    {
+      viewport: { width: 768, height: 900 },
+      run: async (page) => {
+        const metrics = await page.evaluate(() => {
+          const parent = document.querySelector("[data-test-grid-responsive]");
+          const parentRect = parent.getBoundingClientRect();
+          const offset3 = document.querySelector("[data-test-grid-md-offset-3]").getBoundingClientRect();
+          const gap = Number.parseFloat(getComputedStyle(parent).columnGap);
+          return {
+            parentWidth: parentRect.width,
+            offset3Left: offset3.left - parentRect.left,
+            gap,
+          };
+        });
+        // bs-col-md-offset-3 sets grid-column-start: 4 (skip 3, then 4).
+        const columnWidth = (metrics.parentWidth - metrics.gap * 11) / 12;
+        const columnSpan = columnWidth + metrics.gap;
+        const expected = columnSpan * 3;
+        if (Math.abs(metrics.offset3Left - expected) > 2) failures.push(`grid/768: bs-col-md-offset-3 should skip 3 columns (offset ~${expected}px), received ${metrics.offset3Left}px`);
+      },
+    },
+  ];
+  for (const assertion of gridAssertions) {
+    const context = await browser.newContext({ viewport: assertion.viewport });
+    const page = await context.newPage();
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await assertion.run(page);
+    await context.close();
+  }
 } finally {
   await browser.close();
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));

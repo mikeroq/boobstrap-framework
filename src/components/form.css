@@ -489,6 +489,6 @@
 
 .bs-combobox-empty[hidden] { display: none; }
 
-@media (min-width: 40rem) {
+@media (min-width: var(--bs-breakpoint-sm)) {
   .bs-form-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

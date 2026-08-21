@@ -71,7 +71,7 @@
 .bs-banner-warning { --bs-banner-accent: var(--bs-color-warning); }
 .bs-banner-danger { --bs-banner-accent: var(--bs-color-danger); }
 
-@media (max-width: 39.999rem) {
+@media (max-width: calc(var(--bs-breakpoint-sm) - 0.001rem)) {
   .bs-banner-inner {
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: start;
