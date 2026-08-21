@@ -4039,10 +4039,23 @@ body.bs-dialog-open { overflow: hidden; }
   height: var(--bs-scrollbar-size);
 }
 
-:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button {
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:single-button,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:double-button,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:vertical:decrement,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:vertical:increment,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:horizontal:decrement,
+:where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-button:horizontal:increment {
+  appearance: none;
+  min-width: 0;
+  min-height: 0;
   display: none;
   width: 0;
   height: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
 }
 
 :where(:not([data-bs-scrollbars="native"], [data-bs-scrollbars="native"] *), .bs-scrollbar)::-webkit-scrollbar-track {

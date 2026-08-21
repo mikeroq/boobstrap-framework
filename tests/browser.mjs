@@ -90,6 +90,9 @@ try {
         const compactDialogClose = compactDialog.querySelector(".bs-dialog-close").getBoundingClientRect();
         const describedDialogHeader = document.querySelector("[data-test-described-dialog] .bs-dialog-header");
         const compactDrawerHeader = document.querySelector("[data-test-descriptionless-drawer] .bs-drawer-header");
+        const scrollbarButtonRule = [...document.styleSheets]
+          .flatMap((sheet) => [...sheet.cssRules])
+          .find((rule) => rule.selectorText?.includes("::-webkit-scrollbar-button:vertical:decrement"));
         return {
           background: getComputedStyle(document.body).backgroundColor,
           cardWidth: firstCard.getBoundingClientRect().width,
@@ -148,6 +151,12 @@ try {
           scrollbarButtonDisplay: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").display,
           scrollbarButtonWidth: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").width,
           scrollbarButtonHeight: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").height,
+          scrollbarButtonMinWidth: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").minWidth,
+          scrollbarButtonMinHeight: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").minHeight,
+          scrollbarButtonBackground: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").backgroundImage,
+          scrollbarButtonBorder: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").borderWidth,
+          scrollbarButtonPadding: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").padding,
+          scrollbarButtonStatesCovered: [":single-button", ":double-button", ":vertical:decrement", ":vertical:increment", ":horizontal:decrement", ":horizontal:increment"].every((state) => scrollbarButtonRule?.selectorText.includes(state)),
           nativeScrollbarColor: getComputedStyle(nativeScrollbar).scrollbarColor,
           dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
           dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
@@ -190,7 +199,10 @@ try {
       if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
       if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
       if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: default themed scrollbar did not resolve`);
-      if (metrics.scrollbarButtonDisplay !== "none" || Number.parseFloat(metrics.scrollbarButtonWidth) !== 0 || Number.parseFloat(metrics.scrollbarButtonHeight) !== 0) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
+      if (metrics.scrollbarButtonDisplay !== "none"
+        || [metrics.scrollbarButtonWidth, metrics.scrollbarButtonHeight, metrics.scrollbarButtonMinWidth, metrics.scrollbarButtonMinHeight, metrics.scrollbarButtonBorder, metrics.scrollbarButtonPadding].some((value) => Number.parseFloat(value) !== 0)
+        || metrics.scrollbarButtonBackground !== "none"
+        || !metrics.scrollbarButtonStatesCovered) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
       if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
       if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
