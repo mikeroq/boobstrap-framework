@@ -145,6 +145,9 @@ try {
           codeTabsScrollbarWidth: getComputedStyle(codeTabs).scrollbarWidth,
           codeTabsPaddingLeft: getComputedStyle(codeTabs).paddingLeft,
           scrollbarColor: getComputedStyle(scrollbar).scrollbarColor,
+          scrollbarButtonDisplay: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").display,
+          scrollbarButtonWidth: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").width,
+          scrollbarButtonHeight: getComputedStyle(scrollbar, "::-webkit-scrollbar-button").height,
           nativeScrollbarColor: getComputedStyle(nativeScrollbar).scrollbarColor,
           dialogHeaderRows: getComputedStyle(compactDialogHeader).gridTemplateRows.split(" ").length,
           dialogHeaderPadding: getComputedStyle(compactDialogHeader).paddingTop,
@@ -187,6 +190,7 @@ try {
       if (Number.parseFloat(metrics.codeTabRadius) !== 0 || metrics.codeTabIndicator === "rgba(0, 0, 0, 0)") failures.push(`${theme}/${viewport.name}: underline code-tab variant did not apply`);
       if (metrics.codeTabsOverflowY !== "hidden" || metrics.codeTabsScrollbarWidth !== "none" || Number.parseFloat(metrics.codeTabsPaddingLeft) !== 0) failures.push(`${theme}/${viewport.name}: code tabs retain inset spacing or a visible scrollbar`);
       if (!metrics.scrollbarColor || metrics.scrollbarColor === "auto") failures.push(`${theme}/${viewport.name}: default themed scrollbar did not resolve`);
+      if (metrics.scrollbarButtonDisplay !== "none" || Number.parseFloat(metrics.scrollbarButtonWidth) !== 0 || Number.parseFloat(metrics.scrollbarButtonHeight) !== 0) failures.push(`${theme}/${viewport.name}: themed scrollbar still exposes arrow buttons`);
       if (metrics.nativeScrollbarColor !== "auto") failures.push(`${theme}/${viewport.name}: native scrollbar opt-out did not restore browser styling`);
       if (metrics.dialogHeaderRows !== 1 || Number.parseFloat(metrics.dialogHeaderPadding) > 12 || metrics.dialogHeaderPadding !== metrics.dialogHeaderPaddingBottom || metrics.dialogHeaderAlignment !== "center" || metrics.dialogTitleCloseCenterDelta > 1 || Number.parseFloat(metrics.dialogBodyPadding) > 16) failures.push(`${theme}/${viewport.name}: dialog without description retains empty space or misaligned content`);
       if (metrics.describedDialogHeaderRows !== 2 || Number.parseFloat(metrics.describedDialogHeaderPaddingBottom) >= Number.parseFloat(metrics.describedDialogHeaderPaddingTop)) failures.push(`${theme}/${viewport.name}: described dialog header retains excessive trailing space`);
