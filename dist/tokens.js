@@ -696,7 +696,7 @@ export const tokens = Object.freeze({
       }
     },
     "size-lg": {
-      "$value": "3.35rem",
+      "$value": "{control.size-xl}",
       "$extensions": {
         "org.boobstrap.css-variable": "--bs-btn-size-lg"
       }
