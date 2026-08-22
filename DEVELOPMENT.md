@@ -39,3 +39,16 @@ Before promotion, review the public compatibility boundary and deprecation proce
 4. Update the website's `dev` branch to the published version and refresh its lockfile.
 5. Verify the website against that immutable package before promoting the website to `master`.
 6. Merge `master` back into `dev` in both repositories after release.
+
+## Distribution size budgets
+
+`npm run build` produces both `dist/boobstrap.css` and `dist/boobstrap.min.css` (with a source map). `npm run test:size` reads both artifacts, computes raw / gzip / brotli sizes, and compares them against the budgets defined in `scripts/verify-size.mjs`:
+
+| artifact             | raw budget | gzip budget | brotli budget |
+|----------------------|------------|-------------|---------------|
+| `boobstrap.css`      | 200 KB     | 30 KB       | 25 KB         |
+| `boobstrap.min.css`  | 150 KB     | 28 KB       | 23 KB         |
+
+The budgets are deliberately generous so they do not trip on routine work; the script exists to catch accidental regressions. The size check also writes `artifacts/sizes.txt` for trend tracking — commit that artifact alongside intentional size changes.
+
+The CI workflow runs `npm run test:size` after the CSS validator. Locally, run `node scripts/verify-size.mjs` (or the alias `npm run test:size`) any time you change source CSS or component rules. If a change legitimately exceeds a budget, raise the budget in the same PR and explain the regression in the commit message — never silently grow the bar.

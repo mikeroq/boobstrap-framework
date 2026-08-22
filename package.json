@@ -11,6 +11,8 @@
   ],
   "files": [
     "dist/boobstrap.css",
+    "dist/boobstrap.min.css",
+    "dist/boobstrap.min.css.map",
     "dist/boobstrap.js",
     "dist/boobstrap.d.ts",
     "dist/tokens.json",
@@ -27,6 +29,7 @@
   "exports": {
     ".": "./dist/boobstrap.css",
     "./css": "./dist/boobstrap.css",
+    "./min.css": "./dist/boobstrap.min.css",
     "./dist/boobstrap.css": "./dist/boobstrap.css",
     "./js": { "types": "./dist/boobstrap.d.ts", "default": "./dist/boobstrap.js" },
     "./js/accordion": { "types": "./dist/js/index.d.ts", "default": "./dist/js/accordion.js" },
@@ -50,12 +53,17 @@
   },
   "scripts": {
     "build": "node scripts/build-framework.mjs",
-    "test": "npm run build && npm run test:contract && npm run test:conformance && npm run test:docs && npm run test:css && npm run test:browser && npm run test:visual && npm run test:package && npm run test:starter",
+    "test": "npm run build && npm run test:contract && npm run test:conformance && npm run test:docs && npm run test:css && npm run test:size && npm run test:browser && npm run test:visual && npm run test:package && npm run test:starter",
     "test:contract": "node scripts/verify-framework.mjs",
+    "test:size": "node scripts/verify-size.mjs",
     "test:conformance": "node scripts/verify-interaction-contract.mjs",
     "test:docs": "node scripts/verify-docs.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs && node tests/rtl.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
+<<<<<<< HEAD
+    "test:browser": "node tests/browser.mjs && node tests/rtl.mjs && node tests/a11y.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
+=======
+    "test:browser": "node tests/browser.mjs && node tests/a11y.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
+>>>>>>> 249b185 (feat(a11y,dist): resilience tests and minified CSS with size budgets)
     "test:visual": "node tests/visual.mjs",
     "test:visual:update": "UPDATE_VISUAL=1 node tests/visual.mjs",
     "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs && node scripts/verify-react-package.mjs && node scripts/verify-vue-package.mjs && npm run test:types",

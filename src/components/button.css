@@ -23,6 +23,15 @@
   transition: color var(--bs-duration-normal) var(--bs-ease-standard), background-color var(--bs-duration-normal) var(--bs-ease-standard), border-color var(--bs-duration-normal) var(--bs-ease-standard), box-shadow var(--bs-duration-normal) var(--bs-ease-standard), filter var(--bs-duration-normal) var(--bs-ease-standard);
 }
 
+@media (forced-colors: active) {
+  .bs-btn,
+  .bs-btn-primary,
+  .bs-btn-secondary,
+  .bs-btn-ghost { forced-color-adjust: auto; }
+  .bs-btn-primary { background-image: none; border-color: ButtonText; }
+  .bs-btn-secondary { background: ButtonFace; border-color: ButtonText; color: ButtonText; }
+}
+
 .bs-btn > .bs-icon {
   display: block;
   flex: 0 0 auto;

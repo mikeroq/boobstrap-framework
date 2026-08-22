@@ -771,6 +771,34 @@ Recommended body width:
 max-width: 68ch;
 ```
 
+Recommended minimum viewport floor:
+
+```css
+html { min-width: 20rem; }
+```
+
+Boobstrap is targeted at application shells, not embedded widgets. The
+20rem minimum (`320px`) on `html` keeps the layout from collapsing into
+illegibility on the very narrow viewports produced by some error
+states, modal embeds, and iframe contexts. It also gives the framework
+a deterministic floor to design against — every responsive breakpoint,
+modal sizing, and sidebar drawer assumes at least 20rem is available.
+If you need to embed Boobstrap inside a narrower surface, scope the
+override with a wrapper class rather than removing the global rule:
+
+```css
+.embed-narrow { min-width: 0; }
+.embed-narrow .bs-sidebar,
+.embed-narrow .bs-navbar { /* reset the responsive behaviors */ }
+```
+
+Forced colors (Windows High Contrast) are also exercised by the
+browser test matrix. Components that override native chrome — buttons,
+selects, checkboxes, switches, range thumbs, and alerts — opt into
+`forced-color-adjust: auto` so users keep a recognizable OS shape and
+high-contrast palette. Select chevrons, switch knobs, and alert borders
+remain visible against the system palette.
+
 ## 18. Illustration and Imagery
 
 Preferred imagery:
