@@ -10,10 +10,31 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 ```
 
 React remains a peer dependency. The adapter does not import or initialize Boobstrap JS.
+
+## Supported hooks
+
+| hook          | core export |
+|---------------|-------------|
+| `useAccordion` | `Accordion` |
+| `useBanner`   | `Banner`    |
+| `useButton`   | `Button`    |
+| `useCollapse` | `Collapse`  |
+| `useCombobox` | `Combobox`  |
+| `useDialog`   | `Dialog`    |
+| `useDropdown` | `Dropdown`  |
+| `useInputMask` | `InputMask` |
+| `useNavbar`   | `Navbar`    |
+| `useOtp`      | `Otp`       |
+| `usePassword` | `Password`  |
+| `usePopover`  | `Popover`   |
+| `useSidebar`  | `Sidebar`   |
+| `useTabs`     | `Tabs`      |
+| `useToast`    | `Toast`     |
+| `useTooltip`  | `Tooltip`   |
 
 ## Loading button
 
@@ -34,6 +55,72 @@ function SaveButton() {
 ```
 
 Pass `loading` and `onLoadingChange` for controlled state, or `defaultLoading` for uncontrolled state. Set `autoStart: false` when the application calls `start()` itself.
+
+## Banner
+
+```jsx
+function PreviewBanner() {
+  const banner = useBanner({});
+  return (
+    <div className="bs-banner" {...banner.getBannerProps()}>
+      <div className="bs-banner-inner">
+        <strong className="bs-banner-title">Preview</strong>
+        <span className="bs-banner-message">Adapter-controlled dismiss.</span>
+        <button className="bs-banner-dismiss" type="button" {...banner.getDismissProps()}>×</button>
+      </div>
+    </div>
+  );
+}
+```
+
+`useBanner` returns `visible`, `show()`, `dismiss()`, plus `getBannerProps` and `getDismissProps` helpers.
+
+## Sidebar
+
+```jsx
+function AppShell() {
+  const sidebar = useSidebar({ id: "app-sidebar" });
+  return (
+    <>
+      <aside className="bs-sidebar bs-sidebar-start" id="app-sidebar" {...sidebar.getRootProps()}>
+        <div className="bs-sidebar-content">
+          <a className="bs-sidebar-menu-button" href="/dashboard">Dashboard</a>
+        </div>
+      </aside>
+      <button className="bs-sidebar-trigger" type="button" data-bs-toggle="sidebar" aria-controls="app-sidebar">☰</button>
+    </>
+  );
+}
+```
+
+`useSidebar` returns `open`, `show`, `hide`, `toggle`, `expand`, `collapse`, and `getRootProps`; both overlay and collapse modes share one hook.
+
+## Input mask, OTP, and password
+
+```jsx
+function AuthControls() {
+  const mask = useInputMask("(999) 999-9999");
+  const otp = useOtp();
+  const password = usePassword();
+  return (
+    <>
+      <input className="bs-input" {...mask.getInputProps()} />
+      <div {...otp.getRootProps()}>
+        <input className="bs-otp-input" {...otp.getInputProps(0)} />
+        <input className="bs-otp-input" {...otp.getInputProps(1)} />
+        <input className="bs-otp-input" {...otp.getInputProps(2)} />
+        <input className="bs-otp-input" {...otp.getInputProps(3)} />
+      </div>
+      <div {...password.getRootProps()}>
+        <input className="bs-input" type="password" {...password.getInputProps()} />
+        <button className="bs-btn" type="button" {...password.getToggleProps()}>Toggle</button>
+      </div>
+    </>
+  );
+}
+```
+
+The hooks preserve the controller contract: `useInputMask` formats as the user types, `useOtp` distributes focus across inputs and supports paste, and `usePassword` reflects `data-bs-state` while preserving focus and selection.
 
 ## Collapse
 

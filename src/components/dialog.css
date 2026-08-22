@@ -98,14 +98,6 @@
   grid-area: close;
   inline-size: 2.25rem;
   block-size: 2.25rem;
-  display: inline-grid;
-  padding: 0;
-  place-items: center;
-  color: var(--bs-color-text-muted);
-  background: transparent;
-  border: 0;
-  border-radius: var(--bs-radius-md);
-  cursor: pointer;
 }
 
 .bs-dialog-close:hover,

@@ -12,14 +12,19 @@ const assets = new Map([
   ["/dist/boobstrap.css", await readFile(new URL("../dist/boobstrap.css", import.meta.url))],
   ["/tests/alpine-fixture.js", await readFile(new URL("alpine-fixture.js", import.meta.url))],
   ["/adapter/accordion.js", await readFile(new URL("../packages/alpine/src/accordion.js", import.meta.url))],
+  ["/adapter/banner.js", await readFile(new URL("../packages/alpine/src/banner.js", import.meta.url))],
   ["/adapter/button.js", await readFile(new URL("../packages/alpine/src/button.js", import.meta.url))],
   ["/adapter/index.js", await readFile(new URL("../packages/alpine/src/index.js", import.meta.url))],
   ["/adapter/collapse.js", await readFile(new URL("../packages/alpine/src/collapse.js", import.meta.url))],
   ["/adapter/combobox.js", await readFile(new URL("../packages/alpine/src/combobox.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
   ["/adapter/dialog.js", await readFile(new URL("../packages/alpine/src/dialog.js", import.meta.url))],
+  ["/adapter/input-mask.js", await readFile(new URL("../packages/alpine/src/input-mask.js", import.meta.url))],
   ["/adapter/navbar.js", await readFile(new URL("../packages/alpine/src/navbar.js", import.meta.url))],
+  ["/adapter/otp.js", await readFile(new URL("../packages/alpine/src/otp.js", import.meta.url))],
+  ["/adapter/password.js", await readFile(new URL("../packages/alpine/src/password.js", import.meta.url))],
   ["/adapter/popover.js", await readFile(new URL("../packages/alpine/src/popover.js", import.meta.url))],
+  ["/adapter/sidebar.js", await readFile(new URL("../packages/alpine/src/sidebar.js", import.meta.url))],
   ["/adapter/shared.js", await readFile(new URL("../packages/alpine/src/shared.js", import.meta.url))],
   ["/adapter/tabs.js", await readFile(new URL("../packages/alpine/src/tabs.js", import.meta.url))],
   ["/adapter/toast.js", await readFile(new URL("../packages/alpine/src/toast.js", import.meta.url))],
@@ -156,8 +161,40 @@ try {
     if (await page.locator("#alpine-popover").isVisible()) failures.push(`${build}: popover did not dismiss outside`);
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:popover:hidden"));
 
+    const banner = page.locator("[data-test-banner] .bs-banner");
+    if (!await banner.isVisible()) failures.push(`${build}: banner did not initialize visible`);
+    await page.locator("#alpine-banner-dismiss").click();
+    await page.waitForFunction(() => document.querySelector("[data-test-banner] .bs-banner").hidden);
+    if (await banner.isVisible()) failures.push(`${build}: banner did not dismiss`);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:banner:dismissed" && event.adapter === "alpine"));
+
+    const maskInput = page.locator("#alpine-mask-input");
+    await maskInput.click();
+    await maskInput.fill("");
+    await maskInput.type("5125551234");
+    const maskValue = await maskInput.inputValue();
+    if (maskValue !== "(512) 555-1234") failures.push(`${build}: input mask did not format value (received ${maskValue})`);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:mask:change" && event.adapter === "alpine"));
+
+    const otpInputs = page.locator("[data-test-otp] .bs-otp-input");
+    await otpInputs.nth(0).fill("1");
+    await page.waitForFunction(() => document.querySelectorAll("[data-test-otp] .bs-otp-input")[1] === document.activeElement);
+    await page.keyboard.type("23");
+    await otpInputs.nth(3).fill("4");
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:otp:complete" && event.adapter === "alpine"));
+    const otpValue = await page.locator("[data-test-otp] [data-bs-otp-value]").inputValue();
+    if (otpValue !== "1234") failures.push(`${build}: otp value did not synchronize (received ${otpValue})`);
+
+    const passwordToggle = page.locator("[data-test-password] [data-bs-password-toggle]");
+    const passwordInput = page.locator("[data-test-password] [data-bs-password-input]");
+    const initialType = await passwordInput.getAttribute("type");
+    await passwordToggle.click();
+    const toggledType = await passwordInput.getAttribute("type");
+    if (initialType !== "password" || toggledType !== "text") failures.push(`${build}: password toggle did not flip input type (${initialType} -> ${toggledType})`);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:password:toggled" && event.adapter === "alpine"));
+
     const events = await page.evaluate(() => window.bsEvents);
-    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+    for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled"]) {
       if (!events.some((event) => event.name === name && event.adapter === "alpine")) failures.push(`${build}: missing ${name}`);
     }
 

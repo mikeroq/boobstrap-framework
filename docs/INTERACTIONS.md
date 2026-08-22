@@ -501,6 +501,31 @@ Tooltips are brief, non-interactive descriptions shown by hover or focus and dis
 
 Public APIs expose `show()`, `hide()`, and `destroy()`; popovers also expose `toggle()`. Lifecycle events use `bs:tooltip:*` and `bs:popover:*` with cancelable `show` / `hide` and completed `shown` / `hidden` actions.
 
+## Universal controllers
+
+Every Boobstrap controller is exposed by all behavior layers (core, Alpine, React, and Vue). There are no core-only controllers; the framework intentionally ships nothing that is framework-incompatible.
+
+| controller  | core    | alpine  | react        | vue        | notes |
+|-------------|---------|---------|--------------|------------|-------|
+| accordion   | `Accordion` | `accordion` | `useAccordion` | `useAccordion` | universal |
+| banner      | `Banner` | `banner` | `useBanner` | `useBanner` | universal |
+| button      | `Button` | `button` | `useButton` | `useButton` | universal |
+| collapse    | `Collapse` | `collapse` | `useCollapse` | `useCollapse` | universal |
+| combobox    | `Combobox` | `combobox` | `useCombobox` | `useCombobox` | universal |
+| dialog      | `Dialog` | `dialog` | `useDialog` | `useDialog` | universal |
+| dropdown    | `Dropdown` | `dropdown` | `useDropdown` | `useDropdown` | universal |
+| input-mask  | `InputMask` | `inputMask` | `useInputMask` | `useInputMask` | universal |
+| navbar      | `Navbar` | `navbar` | `useNavbar` | `useNavbar` | universal; responsive overlay |
+| otp         | `Otp` | `otp` | `useOtp` | `useOtp` | universal |
+| password    | `Password` | `password` | `usePassword` | `usePassword` | universal |
+| popover     | `Popover` | `popover` | `usePopover` | `usePopover` | universal |
+| sidebar     | `Sidebar` | `sidebar` | `useSidebar` | `useSidebar` | universal; responsive overlay + collapse |
+| tabs        | `Tabs` | `tabs` | `useTabs` | `useTabs` | universal |
+| toast       | `Toast` | `toast` | `useToast` | `useToast` | universal; autohide + pause |
+| tooltip     | `Tooltip` | `tooltip` | `useTooltip` | `useTooltip` | universal |
+
+The detailed lifecycle events for each controller live in their respective sections above; `src/js/interaction-contract.js` is the single source of truth for adapter mappings.
+
 ## Adapter requirements
 
 Official adapters must:

@@ -57,13 +57,7 @@
   display: inline-grid;
   width: 2rem;
   height: 2rem;
-  padding: 0;
-  place-items: center;
-  color: var(--bs-color-text-muted);
-  background: transparent;
-  border: 0;
   border-radius: var(--bs-radius-sm);
-  cursor: pointer;
 }
 
 .bs-toast-dismiss:hover { color: var(--bs-color-text); background: var(--bs-color-surface-hover); }

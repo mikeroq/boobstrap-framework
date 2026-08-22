@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
@@ -16,13 +16,18 @@ const requiredPaths = [
   "README.md",
   "package.json",
   "src/accordion.js",
+  "src/banner.js",
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
   "src/dropdown.js",
   "src/dialog.js",
+  "src/input-mask.js",
   "src/navbar.js",
+  "src/otp.js",
+  "src/password.js",
   "src/popover.js",
+  "src/sidebar.js",
   "src/index.d.ts",
   "src/index.js",
   "src/shared.js",
@@ -33,13 +38,18 @@ const requiredPaths = [
 
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "React package is missing required files");
 assert.equal(typeof useAccordion, "function");
+assert.equal(typeof useBanner, "function");
 assert.equal(typeof useButton, "function");
 assert.equal(typeof useCollapse, "function");
 assert.equal(typeof useCombobox, "function");
 assert.equal(typeof useDropdown, "function");
 assert.equal(typeof useDialog, "function");
+assert.equal(typeof useInputMask, "function");
 assert.equal(typeof useNavbar, "function");
+assert.equal(typeof useOtp, "function");
+assert.equal(typeof usePassword, "function");
 assert.equal(typeof usePopover, "function");
+assert.equal(typeof useSidebar, "function");
 assert.equal(typeof useTabs, "function");
 assert.equal(typeof useToast, "function");
 assert.equal(typeof useTooltip, "function");
@@ -77,4 +87,4 @@ assert.match(serverMarkup, /id="ssr-dialog"/);
 assert.match(serverMarkup, /id="ssr-navbar"/);
 assert.match(serverMarkup, /aria-controls="ssr-role"/);
 
-console.log(`Verified @boobstrap/react package contents, eleven hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/react package contents, sixteen hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);

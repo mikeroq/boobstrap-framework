@@ -1,11 +1,16 @@
 export { useAccordion } from "./accordion.js";
+export { useBanner } from "./banner.js";
 export { useButton } from "./button.js";
 export { useCollapse } from "./collapse.js";
 export { useCombobox } from "./combobox.js";
-export { useDropdown } from "./dropdown.js";
 export { useDialog } from "./dialog.js";
+export { useDropdown } from "./dropdown.js";
+export { useInputMask, formatMask } from "./input-mask.js";
 export { useNavbar } from "./navbar.js";
+export { useOtp } from "./otp.js";
+export { usePassword } from "./password.js";
 export { usePopover } from "./popover.js";
+export { useSidebar } from "./sidebar.js";
 export { useTabs } from "./tabs.js";
 export { useToast } from "./toast.js";
 export { useTooltip } from "./tooltip.js";

@@ -157,8 +157,40 @@ try {
   await page.locator("#react-heading").click();
   if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
 
+  const reactBanner = page.locator("#react-banner");
+  if (!await reactBanner.isVisible()) failures.push("banner did not initialize visible");
+  await page.locator("#react-banner-dismiss").click();
+  await page.waitForFunction(() => document.querySelector("#react-banner").hidden);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:banner:dismissed" && event.adapter === "react"));
+
+  const reactMaskInput = page.locator("#react-mask-input");
+  await reactMaskInput.click();
+  await reactMaskInput.fill("");
+  await reactMaskInput.type("5125551234");
+  const reactMaskValue = await reactMaskInput.inputValue();
+  if (reactMaskValue !== "(512) 555-1234") failures.push(`input mask did not format value (received ${reactMaskValue})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:mask:change" && event.adapter === "react"));
+
+  const reactOtpInputs = page.locator("[data-test-otp] .bs-otp-input");
+  await reactOtpInputs.nth(0).fill("1");
+  await page.waitForFunction(() => document.querySelectorAll("[data-test-otp] .bs-otp-input")[1] === document.activeElement);
+  await page.keyboard.type("23");
+  await reactOtpInputs.nth(3).fill("4");
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:otp:complete" && event.adapter === "react"));
+  const reactOtpValue = await page.locator("#react-otp-value").inputValue();
+  if (reactOtpValue !== "1234") failures.push(`otp value did not synchronize (received ${reactOtpValue})`);
+
+  const reactPasswordInput = page.locator("#react-password-input");
+  const reactPasswordToggle = page.locator("#react-password-toggle");
+  const reactInitialType = await reactPasswordInput.getAttribute("type");
+  await reactPasswordToggle.click();
+  await page.waitForFunction(() => document.querySelector("#react-password-input").type === "text");
+  const reactToggledType = await reactPasswordInput.getAttribute("type");
+  if (reactInitialType !== "password" || reactToggledType !== "text") failures.push(`password toggle did not flip input type (${reactInitialType} -> ${reactToggledType})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:password:toggled" && event.adapter === "react"));
+
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 
