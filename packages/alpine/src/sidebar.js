@@ -157,6 +157,10 @@ export function sidebar(options = {}) {
 
     handleKeydown(event) {
       if (this.shortcut && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === this.shortcut) {
+        const target = event.target;
+        const tag = target?.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) return;
+        if (this.document.querySelector("dialog[open]")) return;
         event.preventDefault();
         this.toggle({ reason: "shortcut", sourceEvent: event, restoreTarget: this.document.activeElement });
         return;
@@ -194,7 +198,14 @@ export function sidebar(options = {}) {
       this.media?.removeEventListener("change", this.onMediaChange);
       root.inert = false;
       delete root.dataset.bsOverlay;
-      this.document.body?.classList.remove("bs-sidebar-open");
+      if (this.originalRole === null) root.removeAttribute("role");
+      else root.setAttribute("role", this.originalRole);
+      root.removeAttribute("aria-modal");
+      root.removeAttribute("aria-hidden");
+      if (this.originalTabIndex === null) root.removeAttribute("tabindex");
+      else root.setAttribute("tabindex", this.originalTabIndex);
+      const hasOpenOverlay = Boolean(this.document.querySelector('[data-bs-sidebar][data-bs-overlay="open"]'));
+      this.document.body?.classList.toggle("bs-sidebar-open", hasOpenOverlay);
     },
   };
 }

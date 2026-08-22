@@ -27,6 +27,8 @@ export class Accordion {
 
   destroy() {
     this.element.removeEventListener("bs:collapse:show", this.onShow);
+    this.collapses.forEach((collapse) => collapse.destroy());
+    this.collapses = [];
     instances.delete(this.element);
   }
 }

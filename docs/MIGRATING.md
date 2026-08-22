@@ -103,3 +103,58 @@ Each controller has a component-level `@boobstrap/boobstrap/js/<name>` import an
 ### Forced-colors support
 
 Components that override native chrome — buttons, selects, checkboxes, switches, range thumbs, and alerts — opt into `forced-color-adjust: auto` so users keep a recognizable OS shape and high-contrast palette in Windows High Contrast mode. Select chevrons, switch knobs, and alert borders remain visible against the system palette. No application change is required; this is purely a CSS addition.
+
+## 0.7.0
+
+The 0.7.0 release hardens controller teardown, expands adapter parity, and adds a controlled-mode API to `usePassword`. Most consumers will see no behavioral change. The one consumer-visible API change is the addition of optional `visible`/`defaultVisible`/`onVisibleChange` options on `usePassword` (React), which is purely additive. There are no breaking changes in this release.
+
+### Adopting the hardened destroy paths
+
+Three controllers now clean up more thoroughly when their `destroy()` method is called:
+
+- `Dialog.destroy()` will no longer fire `bs:dialog:hidden` for a torn-down controller or restore focus to a stale target.
+- `Sidebar.destroy()` and `Navbar.destroy()` recompute the document open-class via `syncDocumentState()` instead of unconditionally removing it, so multi-instance sidebars and navbars no longer leak the open class. They also restore the original `role`, `aria-modal`, `aria-hidden`, and `tabindex` attributes captured at construction.
+- `Accordion.destroy()` now iterates and destroys each child `Collapse`.
+
+No action is required from consumers. The new behavior is safer for SPAs that mount and unmount these controllers as part of their router lifecycle.
+
+### Adopting controlled `usePassword`
+
+`usePassword` (React) now exposes `visible` as reactive state and accepts a controlled mode:
+
+```jsx
+const password = usePassword({
+  visible: showPassword,
+  onVisibleChange: (nextVisible) => setShowPassword(nextVisible),
+});
+```
+
+Existing uncontrolled usage (`usePassword()`) is unchanged. The hook still synchronizes labels via the `data-bs-password-show-label` and `data-bs-password-hide-label` dataset attributes. The visible state is now a `useState` value, so reading `password.visible` in render re-runs on every toggle — consumers who relied on the previous ref semantics can switch to the `onVisibleChange` callback for the same effect.
+
+### New `.bs-text-start` and `.bs-text-end` utilities
+
+Logical-property companions to the existing `.bs-text-left` / `.bs-text-right` aliases. Prefer the new utilities in RTL-aware code; the physical aliases remain for compatibility.
+
+```html
+<p class="bs-text-start">Aligned to the start edge (left in LTR, right in RTL).</p>
+<p class="bs-text-end">Aligned to the end edge.</p>
+```
+
+### TypeScript API surface
+
+- `Dialog.show`, `Dialog.hide`, and `Dialog.toggle` now accept `DialogTransitionOptions` (extends `FocusTransitionOptions` with `returnValue`). Existing `FocusTransitionOptions` call sites continue to compile.
+- `InputMask.format(options?)` now returns `boolean | string` (returns the formatted value when the input changed, otherwise `false`). Callers that previously cast the result to `string` should narrow on the boolean first.
+- `formatMask(value, pattern)` no longer declares a `placeholder?` parameter; the runtime never used it.
+
+### Component-local hooks added in 0.6
+
+These component-local tokens were documented in 0.6 but not all consumers will have noticed them; they remain part of the public surface:
+
+- `--bs-alert-accent`, `--bs-badge-accent`
+- `--bs-btn-block-size`, `--bs-btn-padding-inline`
+- `--bs-card-padding`
+- `--bs-dialog-width`, `--bs-dialog-max-height`, `--bs-drawer-width`
+- `--bs-control-bg`, `--bs-control-border`, `--bs-control-color`
+- `--bs-banner-bg`, `--bs-banner-border`, `--bs-banner-color`
+- `--bs-toast-bg`, `--bs-toast-border`, `--bs-toast-color`
+- `--bs-sidebar-offset`, `--bs-sidebar-height`, `--bs-sidebar-width`, `--bs-sidebar-width-mobile`, `--bs-sidebar-width-collapsed`, `--bs-sidebar-skeleton-width`

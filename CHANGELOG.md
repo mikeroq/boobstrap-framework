@@ -2,6 +2,26 @@
 
 Notable changes to Boobstrap are documented here. The project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) structure and the versioning policy in [docs/VERSIONING.md](docs/VERSIONING.md).
 
+## 0.7.0
+
+- **Fixed three destroy-path bugs.** `Dialog.destroy()` no longer fires `bs:dialog:hidden` for a torn-down controller or restores focus to a stale target (`src/js/dialog.js`). `Sidebar.destroy()` and `Navbar.destroy()` now recompute the body open-class via `syncDocumentState()` and restore the original `role`/`aria-modal`/`aria-hidden`/`tabindex` instead of unconditionally removing the class — multi-instance sidebars and navbars no longer leak the open class. `Accordion.destroy()` now iterates and destroys each child `Collapse` so sibling coordination isn't orphaned.
+- **Hardened `Combobox.destroy()`** to snapshot and restore the original `role`, `aria-autocomplete`, `aria-controls`, `autocomplete`, listbox `id`/`role`, and option `id`/`role` values so consumer-authored ARIA survives a teardown.
+- **Hardened `Tabs` keyboard navigation.** `handleKeydown` no longer focuses a disabled tab; all-disabled tablists no-op cleanly; arrow keys skip disabled siblings without re-focusing the active tab.
+- **Hardened `Toast` show/pause/resume.** `show()` clears any pending autohide timer and resets `remaining` so a `pointerenter`/`focusin` before the first `show()` cannot schedule a hide against a never-shown toast.
+- **Hardened sidebar shortcut handling.** The Ctrl/Cmd+B-style keyboard shortcut on `Sidebar` (vanilla, Alpine, React, Vue) now early-returns when the active element is `INPUT`/`TEXTAREA`/`SELECT`/contentEditable or when an open `<dialog>` is on top, so the shortcut cannot steal focus mid-typing.
+- **Added `data-bs-dialog-close-on-backdrop` support to `useDialog` (Vue).** The Vue adapter now matches the vanilla controller: backdrop clicks dismiss the dialog unless the consumer explicitly opts out.
+- **Added controlled-mode `usePassword` (React).** `usePassword` now exposes `visible` as reactive state via `useState` instead of a ref; new options `visible`, `defaultVisible`, and `onVisibleChange` allow consumers to control the visibility from outside the hook. Existing uncontrolled usage is unchanged.
+- **Promoted `usePassword` adapter parity.** All four surfaces now emit cancelable `bs:password:toggle` and post `bs:password:toggled` events with `adapter` detail; the React hook synchronizes labels via `data-bs-password-show-label` / `data-bs-password-hide-label` dataset attributes like its siblings.
+- **Added `DialogTransitionOptions` (TypeScript).** Extends `FocusTransitionOptions` with `returnValue` so `show`, `hide`, and `toggle` all accept the same dialog options shape.
+- **Corrected `InputMask.format()` and `formatMask` TypeScript signatures.** `format()` now returns `boolean | string` (it returns the formatted value when the input changed, otherwise `false`); `formatMask(value, pattern)` no longer declares an unused `placeholder?` parameter.
+- **Tightened focus styles.** Added explicit `:focus-visible` outlines for `.bs-navbar-link`, `.bs-navbar-toggle`, `.bs-nav-link`, `.bs-breadcrumb a`, `.bs-page-nav-link`, `.bs-pagination-link`, `.bs-sidebar-group-action`, `.bs-sidebar-menu-action`, `.bs-sidebar-trigger`, `.bs-sidebar-menu-button`, `.bs-sidebar-menu-sub-button`, and `.bs-sidebar-rail`. Replaced the bare `outline-offset` override on `.bs-table-responsive` with a self-contained `outline` declaration so the rule actually shows a ring.
+- **Added `.bs-text-start` and `.bs-text-end` utilities.** Logical-property companions to the existing `.bs-text-left`/`.bs-text-right` aliases; documented in the API contract.
+- **Aligned `--bs-btn-size-lg` with the form control size scale.** `--bs-btn-size-lg` now derives from `--bs-control-size-xl`, removing the previous 0.10 rem drift between LG buttons and LG form controls.
+- **RTL property cleanup.** Replaced remaining `border-bottom`, `padding-top`, `margin-bottom`, and `text-align: left` rules with `border-block-end`, `padding-block-start`, `margin-block-end`, and `text-align: start` in `code.css`, `list.css`, `table.css`, `card.css`, `alert.css`, and `utilities/typography.css`.
+- **Reduced-motion hardening.** Added explicit `@media (prefers-reduced-motion: reduce)` override for `.bs-spinner` so the single-frame flicker from the global `animation-iteration-count: 1` reset is no longer visible.
+- **Removed hard-coded `#fff` in form controls.** Indeterminate checkbox, radio dot, and switch thumb now use `var(--bs-color-primary-contrast)` so dark/light/palette variants stay consistent.
+- **Packaging fix.** `packages/alpine/package.json` now includes `LICENSE` and `README.md` in `files` so the published Alpine adapter ships the same license artifacts as React and Vue.
+
 ## 0.6.0
 
 - Completed the responsive 12-column grid with explicit start, offset, and auto utilities at `sm`, `md`, `lg`, `xl`, and `2xl`. The `sm` step is the smallest responsive breakpoint; below `sm` the layout is single-column. See [docs/MIGRATING.md](docs/MIGRATING.md) for the new breakpoint tokens.

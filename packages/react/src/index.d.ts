@@ -266,6 +266,9 @@ export interface OtpResult {
 export function useOtp(options?: OtpOptions): OtpResult;
 
 export interface PasswordOptions {
+  visible?: boolean;
+  defaultVisible?: boolean;
+  onVisibleChange?: (visible: boolean, detail: { adapter: "react"; visible: boolean }) => void;
   showLabel?: string;
   hideLabel?: string;
 }

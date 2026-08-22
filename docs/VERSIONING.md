@@ -27,7 +27,7 @@ When practical, an API is documented as deprecated for at least one minor releas
 | Alpine adapter | `alpinejs ^3.15.0`, `@alpinejs/csp ^3.15.0` |
 | React adapter | `react >=18.0.0 <20.0.0` |
 | Vue adapter | `vue >=3.5.0 <4.0.0` |
-| Official adapters and core | `@boobstrap/boobstrap ^0.5.0` |
+| Official adapters and core | `@boobstrap/boobstrap ^0.7.0` |
 
 Modern CSS custom properties, Grid, logical properties, `clamp()`, and modern color syntax are assumed. Vanilla modules and adapters are SSR-import safe; Alpine is exercised with its strict CSP build. This matrix states what CI proves, not a support-duration promise.
 

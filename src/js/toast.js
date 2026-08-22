@@ -11,7 +11,7 @@ export class Toast {
     this.triggers = [...this.document.querySelectorAll(controlledSelector(element.id))];
     this.dismissers = [...element.querySelectorAll("[data-bs-toast-dismiss]")];
     this.timer = null;
-    this.remaining = this.duration;
+    this.remaining = 0;
     this.startedAt = 0;
     this.hideTimer = null;
 
@@ -95,6 +95,8 @@ export class Toast {
     if (!emit(this.element, "bs:toast:show", detail, true)) return false;
     if (this.hideTimer) clearTimeout(this.hideTimer);
     this.hideTimer = null;
+    this.clearTimer();
+    this.remaining = 0;
     this.element.hidden = false;
     this.sync("showing");
     this.element.ownerDocument.defaultView.requestAnimationFrame(() => {

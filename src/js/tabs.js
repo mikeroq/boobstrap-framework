@@ -68,15 +68,17 @@ export class Tabs {
     const previousKey = vertical ? "ArrowUp" : "ArrowLeft";
     const nextKey = vertical ? "ArrowDown" : "ArrowRight";
     const enabledTabs = this.tabs.filter((tab) => tab.getAttribute("aria-disabled") !== "true");
+    if (!enabledTabs.length) return;
     const currentEnabledIndex = enabledTabs.indexOf(event.target);
     let nextIndex;
-    if (event.key === previousKey) nextIndex = currentEnabledIndex - 1;
-    if (event.key === nextKey) nextIndex = currentEnabledIndex + 1;
+    if (event.key === previousKey) nextIndex = currentEnabledIndex <= 0 ? enabledTabs.length - 1 : currentEnabledIndex - 1;
+    if (event.key === nextKey) nextIndex = currentEnabledIndex < 0 ? 0 : (currentEnabledIndex + 1) % enabledTabs.length;
     if (event.key === "Home") nextIndex = 0;
     if (event.key === "End") nextIndex = enabledTabs.length - 1;
     if (nextIndex === undefined) return;
     event.preventDefault();
-    const tab = enabledTabs[(nextIndex + enabledTabs.length) % enabledTabs.length];
+    const tab = enabledTabs[nextIndex];
+    if (!tab || tab === event.target) return;
     tab.focus();
     this.activate(tab);
   }
