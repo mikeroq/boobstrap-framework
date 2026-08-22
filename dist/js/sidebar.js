@@ -152,6 +152,7 @@ export class Sidebar {
 
   handleKeydown(event) {
     if (this.shortcut && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === this.shortcut) {
+      if (this.shouldIgnoreShortcut(event)) return;
       event.preventDefault();
       this.toggle({ reason: "shortcut", sourceEvent: event, restoreTarget: this.document.activeElement });
       return;
@@ -180,6 +181,14 @@ export class Sidebar {
     }
   }
 
+  shouldIgnoreShortcut(event) {
+    const target = event.target;
+    const tag = target?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) return true;
+    if (this.document.querySelector("dialog[open]")) return true;
+    return false;
+  }
+
   destroy() {
     this.triggers.forEach((trigger) => trigger.removeEventListener("click", this.onTrigger));
     this.dismissers.forEach((dismiss) => dismiss.removeEventListener("click", this.onDismiss));
@@ -188,7 +197,13 @@ export class Sidebar {
     this.media.removeEventListener("change", this.onMediaChange);
     this.element.inert = false;
     delete this.element.dataset.bsOverlay;
-    this.document.body?.classList.remove("bs-sidebar-open");
+    if (this.originalRole === null) this.element.removeAttribute("role");
+    else this.element.setAttribute("role", this.originalRole);
+    this.element.removeAttribute("aria-modal");
+    this.element.removeAttribute("aria-hidden");
+    if (this.originalTabIndex === null) this.element.removeAttribute("tabindex");
+    else this.element.setAttribute("tabindex", this.originalTabIndex);
+    this.syncDocumentState();
     instances.delete(this.element);
   }
 }

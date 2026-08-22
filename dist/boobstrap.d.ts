@@ -20,13 +20,14 @@ export class Collapse extends ElementController { constructor(element: HTMLEleme
 export function initCollapses(root?: Root): Collapse[];
 export class Combobox extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Combobox; readonly expanded: boolean; readonly options: HTMLElement[]; readonly visibleOptions: HTMLElement[]; show(): boolean; hide(options?: { force?: boolean }): boolean; toggle(): boolean; select(option: HTMLElement, options?: { sourceEvent?: Event }): boolean; reset(): void; }
 export function initComboboxes(root?: Root): Combobox[];
-export class Dialog extends ElementController<HTMLDialogElement> { constructor(element: HTMLDialogElement); static getOrCreateInstance(element: HTMLDialogElement): Dialog; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions & { returnValue?: string }): boolean; toggle(options?: FocusTransitionOptions): boolean; }
+export interface DialogTransitionOptions extends FocusTransitionOptions { returnValue?: string; }
+export class Dialog extends ElementController<HTMLDialogElement> { constructor(element: HTMLDialogElement); static getOrCreateInstance(element: HTMLDialogElement): Dialog; show(options?: DialogTransitionOptions): boolean; hide(options?: DialogTransitionOptions): boolean; toggle(options?: DialogTransitionOptions): boolean; }
 export function initDialogs(root?: Root): Dialog[];
 export interface DropdownOptions extends TransitionOptions { focusIndex?: number; restoreFocus?: boolean; }
 export class Dropdown extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Dropdown; readonly expanded: boolean; show(options?: DropdownOptions): boolean; hide(options?: DropdownOptions): boolean; toggle(options?: DropdownOptions): boolean; }
 export function initDropdowns(root?: Root): Dropdown[];
-export function formatMask(value: string, pattern: string, placeholder?: string): string;
-export class InputMask extends ElementController<HTMLInputElement> { constructor(element: HTMLInputElement); static getOrCreateInstance(element: HTMLInputElement): InputMask; format(options?: { silent?: boolean }): string; }
+export function formatMask(value: string, pattern: string): string;
+export class InputMask extends ElementController<HTMLInputElement> { constructor(element: HTMLInputElement); static getOrCreateInstance(element: HTMLInputElement): InputMask; format(options?: { silent?: boolean }): boolean | string; }
 export function initInputMasks(root?: Root): InputMask[];
 export class Navbar extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Navbar; readonly overlay: boolean; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions): boolean; toggle(options?: FocusTransitionOptions): boolean; }
 export function initNavbars(root?: Root): Navbar[];

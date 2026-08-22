@@ -15,6 +15,18 @@ export class Combobox {
     if (!this.input || !this.listbox) throw new Error("Combobox requires an input and a listbox.");
 
     nextId += 1;
+    this.original = {
+      listboxRole: this.listbox.getAttribute("role"),
+      listboxId: this.listbox.id,
+      inputRole: this.input.getAttribute("role"),
+      inputAriaAutocomplete: this.input.getAttribute("aria-autocomplete"),
+      inputAriaControls: this.input.getAttribute("aria-controls"),
+      inputAutocomplete: this.input.getAttribute("autocomplete"),
+      optionStates: this.options.map((option) => ({
+        id: option.id,
+        role: option.getAttribute("role"),
+      })),
+    };
     this.listbox.id ||= `bs-combobox-listbox-${nextId}`;
     this.listbox.setAttribute("role", "listbox");
     this.options.forEach((option, index) => {
@@ -211,6 +223,29 @@ export class Combobox {
     this.toggleElement?.removeEventListener("click", this.onToggleClick);
     this.element.ownerDocument.removeEventListener("pointerdown", this.onDocumentPointerdown);
     this.form?.removeEventListener("reset", this.onFormReset);
+    if (this.original) {
+      if (this.original.inputRole === null) this.input.removeAttribute("role");
+      else this.input.setAttribute("role", this.original.inputRole);
+      if (this.original.inputAriaAutocomplete === null) this.input.removeAttribute("aria-autocomplete");
+      else this.input.setAttribute("aria-autocomplete", this.original.inputAriaAutocomplete);
+      if (this.original.inputAriaControls === null) this.input.removeAttribute("aria-controls");
+      else this.input.setAttribute("aria-controls", this.original.inputAriaControls);
+      if (this.original.inputAutocomplete === null) this.input.removeAttribute("autocomplete");
+      else this.input.setAttribute("autocomplete", this.original.inputAutocomplete);
+      this.input.removeAttribute("aria-expanded");
+      if (this.original.listboxRole === null) this.listbox.removeAttribute("role");
+      else this.listbox.setAttribute("role", this.original.listboxRole);
+      if (this.original.listboxId === null) this.listbox.removeAttribute("id");
+      else this.listbox.id = this.original.listboxId;
+      this.options.forEach((option, index) => {
+        const state = this.original.optionStates[index];
+        if (!state) return;
+        if (state.id === null) option.removeAttribute("id");
+        else option.id = state.id;
+        if (state.role === null) option.removeAttribute("role");
+        else option.setAttribute("role", state.role);
+      });
+    }
     instances.delete(this.element);
   }
 }

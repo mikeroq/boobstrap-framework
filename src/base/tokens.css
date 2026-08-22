@@ -123,7 +123,7 @@
 
   --bs-btn-size-sm: var(--bs-control-size-sm);
   --bs-btn-size-md: var(--bs-control-size-md);
-  --bs-btn-size-lg: 3.35rem;
+  --bs-btn-size-lg: var(--bs-control-size-xl);
 
   --bs-overlay-backdrop: rgb(5 2 6 / 68%);
 }

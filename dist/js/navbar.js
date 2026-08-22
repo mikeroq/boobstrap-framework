@@ -150,7 +150,13 @@ export class Navbar {
     this.media.removeEventListener("change", this.onMediaChange);
     this.element.inert = false;
     delete this.element.dataset.bsOverlay;
-    this.document.body?.classList.remove("bs-navbar-open");
+    if (this.originalRole === null) this.element.removeAttribute("role");
+    else this.element.setAttribute("role", this.originalRole);
+    this.element.removeAttribute("aria-modal");
+    this.element.removeAttribute("aria-hidden");
+    if (this.originalTabIndex === null) this.element.removeAttribute("tabindex");
+    else this.element.setAttribute("tabindex", this.originalTabIndex);
+    this.syncDocumentState();
     instances.delete(this.element);
   }
 }

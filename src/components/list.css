@@ -9,11 +9,11 @@
   grid-template-columns: minmax(11rem, 0.8fr) minmax(0, 1.3fr);
   gap: var(--bs-space-4);
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--bs-color-border);
+  border-block-end: 1px solid var(--bs-color-border);
   font-size: var(--bs-font-size-sm);
 }
 
-.bs-reference-row:last-child { border-bottom: 0; }
+.bs-reference-row:last-child { border-block-end: 0; }
 .bs-reference-row:nth-child(even) { background: rgb(255 255 255 / 1.5%); }
 
 .bs-reference-name {
