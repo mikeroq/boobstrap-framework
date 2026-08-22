@@ -3,6 +3,7 @@ export { useBanner } from "./banner.js";
 export { useButton } from "./button.js";
 export { useCollapse } from "./collapse.js";
 export { useCombobox } from "./combobox.js";
+export { useCommandPalette } from "./command-palette.js";
 export { useDialog } from "./dialog.js";
 export { useDropdown } from "./dropdown.js";
 export { useInputMask, formatMask } from "./input-mask.js";

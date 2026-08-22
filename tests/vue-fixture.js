@@ -1,5 +1,5 @@
 import { createApp, h, onMounted } from "vue";
-import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
+import { useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -12,6 +12,7 @@ createApp({
     const button = useButton({ loadingLabel: "Saving changes" });
     const collapse = useCollapse({ id: "vue-details" });
     const dialog = useDialog({ id: "vue-dialog" });
+    const commandPalette = useCommandPalette({ id: "vue-command-palette", shortcut: "k" });
     const dropdown = useDropdown({ id: "vue-menu" });
     const navbar = useNavbar({ id: "vue-navbar" });
     const combobox = useCombobox({ id: "vue-role", options: [{ value: "designer", label: "Designer" }, { value: "engineer", label: "Engineer" }] });
@@ -103,6 +104,18 @@ createApp({
           h("p", { style: "min-block-size: 80vh" }, "Intermediate anchor so the active link can change."),
           h("h2", { id: "vue-scrollspy-details" }, "Details"),
           h("p", { style: "min-block-size: 80vh" }, "Detailed content so the final link can become active."),
+        ]),
+      ]),
+      h("section", { "aria-label": "Vue command palette example" }, [
+        h("button", { id: "vue-command-toggle", class: "bs-btn bs-btn-secondary", type: "button", onClick: () => commandPalette.toggle("trigger") }, "Open commands"),
+        h("dialog", commandPalette.getDialogProps({ id: "vue-command-palette", class: "bs-command-palette", "aria-label": "Vue commands" }), [
+          h("div", { class: "bs-command-palette-header" }, [
+            h("input", commandPalette.getInputProps({ id: "vue-command-input", class: "bs-command-palette-input", type: "search" })),
+          ]),
+          h("div", { class: "bs-command-palette-list", role: "listbox" }, [
+            h("div", { id: "vue-cmd-copy", class: "bs-command-palette-item", role: "option", hidden: Boolean(commandPalette.query.value && !commandPalette.query.value.toLowerCase().includes("copy")), onClick: () => commandPalette.select({ label: "Copy", value: "copy" }) }, "Copy"),
+            h("div", { id: "vue-cmd-delete", class: "bs-command-palette-item", role: "option", hidden: Boolean(commandPalette.query.value && !commandPalette.query.value.toLowerCase().includes("delete")), onClick: () => commandPalette.select({ label: "Delete", value: "delete" }) }, "Delete"),
+          ]),
         ]),
       ]),
     ]);

@@ -19,11 +19,49 @@ function declarations(body) {
   return Object.fromEntries([...body.matchAll(declarationPattern)].map((match) => [match[1], tokenValue(match[2])]));
 }
 
+function extractBlocks(cleanCss) {
+  const blocks = [];
+  let i = 0;
+  while (i < cleanCss.length) {
+    const openBrace = cleanCss.indexOf("{", i);
+    if (openBrace === -1) break;
+    const header = cleanCss.slice(i, openBrace).trim();
+    if (header.startsWith("@media")) {
+      let depth = 1;
+      let j = openBrace + 1;
+      while (j < cleanCss.length && depth > 0) {
+        if (cleanCss[j] === "{") depth++;
+        else if (cleanCss[j] === "}") depth--;
+        j++;
+      }
+      const mediaBody = cleanCss.slice(openBrace + 1, j - 1);
+      const inner = extractBlocks(mediaBody);
+      for (const b of inner) {
+        blocks.push({
+          selector: `${header} ${b.selector}`.trim(),
+          values: b.values,
+        });
+      }
+      i = j;
+    } else {
+      const closeBrace = cleanCss.indexOf("}", openBrace);
+      if (closeBrace === -1) break;
+      const body = cleanCss.slice(openBrace + 1, closeBrace);
+      if (header) {
+        blocks.push({
+          selector: header,
+          values: declarations(body),
+        });
+      }
+      i = closeBrace + 1;
+    }
+  }
+  return blocks;
+}
+
 export function parseTokenCss(css) {
-  const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
-    selector: match[1].replace(/\/\*[\s\S]*?\*\//g, "").trim(),
-    values: declarations(match[2]),
-  }));
+  const cleanCss = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const blocks = extractBlocks(cleanCss);
   const root = blocks.find(({ selector }) => selector.startsWith(":root,"));
   if (!root) throw new Error("Could not find root token block");
   const tokens = {};

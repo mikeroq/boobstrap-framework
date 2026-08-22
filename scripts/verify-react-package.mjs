@@ -3,10 +3,11 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
-const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
+const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const { stdout } = await execFileAsync(npmCmd, ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"], { shell: process.platform === "win32" });
 const jsonStart = stdout.indexOf("[");
 if (jsonStart === -1) throw new Error(`npm pack did not return JSON:\n${stdout}`);
 const [pack] = JSON.parse(stdout.slice(jsonStart));
@@ -20,6 +21,7 @@ const requiredPaths = [
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
+  "src/command-palette.js",
   "src/dropdown.js",
   "src/dialog.js",
   "src/input-mask.js",
@@ -43,6 +45,7 @@ assert.equal(typeof useBanner, "function");
 assert.equal(typeof useButton, "function");
 assert.equal(typeof useCollapse, "function");
 assert.equal(typeof useCombobox, "function");
+assert.equal(typeof useCommandPalette, "function");
 assert.equal(typeof useDropdown, "function");
 assert.equal(typeof useDialog, "function");
 assert.equal(typeof useInputMask, "function");

@@ -1,4 +1,4 @@
-const adapter = (alpine, react, vue) => ({ alpine, react, vue });
+const adapter = (alpine, react, vue, svelte = react) => ({ alpine, react, vue, svelte });
 
 export const interactionContract = Object.freeze({
   accordion: { core: { controller: "Accordion", initializer: "initAccordions", methods: ["destroy"] }, adapters: adapter("accordion", "useAccordion", "useAccordion"), capabilities: ["single-open", "always-open"], events: ["bs:collapse:show", "bs:collapse:shown", "bs:collapse:hide", "bs:collapse:hidden"] },
@@ -6,6 +6,7 @@ export const interactionContract = Object.freeze({
   button: { core: { controller: "Button", initializer: "initButtons", methods: ["start", "stop", "toggle", "destroy"] }, adapters: adapter("button", "useButton", "useButton"), events: ["bs:button:started", "bs:button:stopped"] },
   collapse: { core: { controller: "Collapse", initializer: "initCollapses", methods: ["show", "hide", "toggle", "destroy"] }, adapters: adapter("collapse", "useCollapse", "useCollapse"), events: ["bs:collapse:show", "bs:collapse:shown", "bs:collapse:hide", "bs:collapse:hidden"] },
   combobox: { core: { controller: "Combobox", initializer: "initComboboxes", methods: ["show", "hide", "toggle", "select", "reset", "destroy"] }, adapters: adapter("combobox", "useCombobox", "useCombobox"), events: ["bs:combobox:show", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hide", "bs:combobox:hidden"] },
+  commandPalette: { core: { controller: "CommandPalette", initializer: "initCommandPalettes", methods: ["show", "hide", "toggle", "search", "select", "destroy"] }, adapters: adapter("commandPalette", "useCommandPalette", "useCommandPalette"), events: ["bs:command:show", "bs:command:shown", "bs:command:select", "bs:command:hide", "bs:command:hidden"] },
   dialog: { core: { controller: "Dialog", initializer: "initDialogs", methods: ["show", "hide", "toggle", "destroy"] }, adapters: adapter("dialog", "useDialog", "useDialog"), events: ["bs:dialog:show", "bs:dialog:shown", "bs:dialog:hide", "bs:dialog:hidden"] },
   dropdown: { core: { controller: "Dropdown", initializer: "initDropdowns", methods: ["show", "hide", "toggle", "destroy"] }, adapters: adapter("dropdown", "useDropdown", "useDropdown"), events: ["bs:dropdown:show", "bs:dropdown:shown", "bs:dropdown:hide", "bs:dropdown:hidden"] },
   inputMask: { core: { controller: "InputMask", initializer: "initInputMasks", methods: ["format", "destroy"] }, adapters: adapter("inputMask", "useInputMask", "useInputMask"), events: ["bs:mask:change"] },

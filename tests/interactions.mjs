@@ -16,6 +16,7 @@ const assets = new Map([
   ["/dist/js/button.js", await readFile(new URL("../dist/js/button.js", import.meta.url))],
   ["/dist/js/collapse.js", await readFile(new URL("../dist/js/collapse.js", import.meta.url))],
   ["/dist/js/combobox.js", await readFile(new URL("../dist/js/combobox.js", import.meta.url))],
+  ["/dist/js/command-palette.js", await readFile(new URL("../dist/js/command-palette.js", import.meta.url))],
   ["/dist/js/dropdown.js", await readFile(new URL("../dist/js/dropdown.js", import.meta.url))],
   ["/dist/js/dialog.js", await readFile(new URL("../dist/js/dialog.js", import.meta.url))],
   ["/dist/js/floating.js", await readFile(new URL("../dist/js/floating.js", import.meta.url))],
@@ -257,19 +258,73 @@ try {
   await securityTab.press("Home");
   if (await profileTab.getAttribute("aria-selected") !== "true") failures.push("Tabs did not support the Home key");
 
-  const comboboxInput = page.locator("#framework-combobox-input");
-  const comboboxListbox = page.locator("[data-bs-combobox-listbox]");
+  const singleCombobox = page.locator("[aria-labelledby='combobox-label']");
+  const comboboxInput = singleCombobox.locator("#framework-combobox-input");
+  const comboboxListbox = singleCombobox.locator("[data-bs-combobox-listbox]");
   await comboboxInput.fill("eng");
-  const comboboxState = await page.evaluate(() => ({
-    hidden: document.querySelector("[data-bs-combobox-listbox]").hidden,
-    options: [...document.querySelectorAll("[data-bs-combobox-option]")].map((option) => ({ label: option.textContent.trim(), hidden: option.hidden })),
+  const comboboxState = await singleCombobox.evaluate((element) => ({
+    hidden: element.querySelector("[data-bs-combobox-listbox]").hidden,
+    options: [...element.querySelectorAll("[data-bs-combobox-option]")].map((option) => ({ label: option.textContent.trim(), hidden: option.hidden })),
   }));
   if (comboboxState.hidden || comboboxState.options.filter((option) => !option.hidden).length !== 1) failures.push(`Combobox did not filter its options (${JSON.stringify(comboboxState)})`);
   await comboboxInput.press("Enter");
-  if (!await comboboxListbox.isHidden() || await page.locator("[data-bs-combobox-value]").inputValue() !== "engineer") failures.push("Combobox did not commit its active option");
+  if (!await comboboxListbox.isHidden() || await singleCombobox.locator("[data-bs-combobox-value]").inputValue() !== "engineer") failures.push("Combobox did not commit its active option");
   await comboboxInput.click();
   await page.locator("h1").click();
   if (!await comboboxListbox.isHidden()) failures.push("Combobox did not dismiss outside");
+
+  // Multi-select combobox tests
+  const multiInput = page.locator("#framework-combobox-multi-input");
+  await multiInput.click();
+  await page.locator("#tag-react").click();
+  const chipsCount1 = await page.locator("#framework-combobox-multi .bs-combobox-chip").count();
+  if (chipsCount1 !== 1) failures.push("Multi combobox did not create chip on option select");
+  await multiInput.click();
+  await page.locator("#tag-vue").click();
+  const chipsCount2 = await page.locator("#framework-combobox-multi .bs-combobox-chip").count();
+  if (chipsCount2 !== 2) failures.push("Multi combobox did not add second chip");
+  await multiInput.press("Backspace");
+  const chipsCount3 = await page.locator("#framework-combobox-multi .bs-combobox-chip").count();
+  if (chipsCount3 !== 1) failures.push("Multi combobox did not remove last chip on Backspace");
+  await page.locator("#framework-combobox-multi .bs-combobox-chip-remove").first().click();
+  const chipsCount4 = await page.locator("#framework-combobox-multi .bs-combobox-chip").count();
+  if (chipsCount4 !== 0) failures.push("Multi combobox did not remove chip on remove button click");
+
+  // Bottom drawer swipe gesture test
+  const bottomDrawerToggle = page.locator("#drawer-bottom-toggle");
+  const bottomDrawer = page.locator("#drawer-bottom");
+  await bottomDrawerToggle.click();
+  await page.waitForFunction(() => document.querySelector("#drawer-bottom").open);
+  await bottomDrawer.evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)));
+  if (!await bottomDrawer.evaluate((element) => element.classList.contains("bs-drawer-bottom"))) {
+    failures.push("Bottom drawer missing bs-drawer-bottom class");
+  }
+  const handleBox = await page.locator("#drawer-bottom-handle").boundingBox();
+  if (handleBox) {
+    await page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2 + 100, { steps: 5 });
+    await page.mouse.up();
+    await page.waitForFunction(() => !document.querySelector("#drawer-bottom").open);
+  } else {
+    failures.push("Bottom drawer handle not found");
+  }
+
+  // Command palette keyboard shortcut and filtering test
+  await page.keyboard.press("Control+k");
+  await page.waitForFunction(() => document.querySelector("#framework-command-palette").open);
+  const commandInput = page.locator("#command-input");
+  if (!await commandInput.evaluate((input) => input === document.activeElement)) {
+    failures.push("Command palette did not focus search input");
+  }
+  await commandInput.fill("delete");
+  const commandItemCopy = page.locator("#command-item-copy");
+  const commandItemDelete = page.locator("#command-item-delete");
+  if (!await commandItemCopy.isHidden() || await commandItemDelete.isHidden()) {
+    failures.push("Command palette did not filter items based on search query");
+  }
+  await commandInput.press("Enter");
+  await page.waitForFunction(() => !document.querySelector("#framework-command-palette").open);
 
   const passwordInput = page.locator("#framework-password");
   await page.locator("[data-bs-password-toggle]").click();
@@ -317,6 +372,7 @@ try {
   if (await tooltip.isVisible()) failures.push("Tooltip did not hide after pointer exit");
 
   const popoverTrigger = page.locator("#popover-trigger");
+  await popoverTrigger.scrollIntoViewIfNeeded();
   await popoverTrigger.click();
   const popover = page.locator(".bs-popover");
   if (!await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "true" || await popover.getAttribute("role") !== "dialog") failures.push("Popover did not show with synchronized accessible state");
@@ -327,7 +383,7 @@ try {
   if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:scrollspy:activate", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:command:shown", "bs:command:select", "bs:command:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:scrollspy:activate", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
 
@@ -361,7 +417,7 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 21) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 24) failures.push(`Initializer returned ${await page.evaluate(() => window.bs.controllers.length)} component controllers, expected 24`);
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");

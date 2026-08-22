@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
 
 const open = ref(false);
 const value = ref("");
@@ -9,6 +9,7 @@ useAccordion({ defaultOpenIds: ["one"] }).setOpen("two", true);
 useBanner({}).dismiss();
 useButton({ loading: ref(false), loadingLabel: "Saving" }).start("types");
 useCollapse({ id: "details", open }).toggle("types");
+useCommandPalette({ id: "command", open, shortcut: "k" }).toggle("types");
 useDialog({ id: "dialog", open }).show("types");
 useDropdown({ id: "menu", open }).hide({ reason: "types", restoreFocus: true });
 useInputMask("(999) 999-9999").format();

@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import AxeBuilder from "@axe-core/playwright";
 import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
@@ -11,7 +12,7 @@ if (!browserType) throw new Error(`Unsupported browser: ${browserName}`);
 const html = await readFile(new URL("vue.html", import.meta.url));
 const css = await readFile(new URL("../dist/boobstrap.css", import.meta.url));
 const bundle = await build({
-  entryPoints: [new URL("vue-fixture.js", import.meta.url).pathname],
+  entryPoints: [fileURLToPath(new URL("vue-fixture.js", import.meta.url))],
   bundle: true,
   define: {
     __VUE_OPTIONS_API__: "false",
@@ -81,12 +82,15 @@ try {
   await page.locator("#vue-toast-toggle").click();
   await vueToast.getByRole("button").click();
   await page.locator("#vue-tooltip-trigger").hover();
-  if (await page.locator("#vue-tooltip").isHidden()) failures.push("tooltip did not show");
-  await page.locator("#vue-popover-trigger").click();
+  await page.waitForFunction(() => !document.querySelector("#vue-tooltip").hidden);
+  const vuePopoverTrigger = page.locator("#vue-popover-trigger");
+  await vuePopoverTrigger.scrollIntoViewIfNeeded();
+  await vuePopoverTrigger.click();
+  await page.waitForFunction(() => !document.querySelector("#vue-popover").hidden);
   if (await page.locator("#vue-popover").isHidden()) failures.push("popover did not show");
   await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
   await page.locator("#vue-popover").waitFor({ state: "hidden" });
-  await page.locator("#vue-popover-trigger").click();
+  await vuePopoverTrigger.click();
   await page.locator("h1, main").first().click({ position: { x: 2, y: 2 } });
 
   const vueBanner = page.locator("#vue-banner");
@@ -131,9 +135,20 @@ try {
   if (await vueScrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== "#vue-scrollspy-details") {
     failures.push("scrollspy did not activate the details link");
   }
+  const vueCommandToggle = page.locator("#vue-command-toggle");
+  await vueCommandToggle.click();
+  await page.waitForFunction(() => document.querySelector("#vue-command-palette").open);
+  const vueCommandInput = page.locator("#vue-command-input");
+  await vueCommandInput.fill("delete");
+  const vueCmdCopy = page.locator("#vue-cmd-copy");
+  const vueCmdDelete = page.locator("#vue-cmd-delete");
+  if (!await vueCmdCopy.isHidden() || await vueCmdDelete.isHidden()) failures.push("vue command palette did not filter");
+  await vueCmdDelete.click();
+  await page.waitForFunction(() => !document.querySelector("#vue-command-palette").open);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:command:select" && event.adapter === "vue"));
 
   const eventNames = await page.evaluate(() => window.bsEvents.filter((event) => event.adapter === "vue").map((event) => event.name));
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:command:shown", "bs:command:select", "bs:command:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
   const dimensions = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   if (dimensions.scrollWidth > dimensions.clientWidth + 1) failures.push("horizontal overflow");
   const accessibility = await new AxeBuilder({ page }).analyze();

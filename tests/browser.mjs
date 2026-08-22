@@ -102,8 +102,21 @@ try {
         const compactDialogClose = compactDialog.querySelector(".bs-dialog-close").getBoundingClientRect();
         const describedDialogHeader = document.querySelector("[data-test-described-dialog] .bs-dialog-header");
         const compactDrawerHeader = document.querySelector("[data-test-descriptionless-drawer] .bs-drawer-header");
+        function extractAllRules(ruleList) {
+          if (!ruleList) return [];
+          const rules = [];
+          for (let i = 0; i < ruleList.length; i++) {
+            const rule = ruleList[i];
+            if (rule.cssRules && rule.cssRules.length > 0) {
+              rules.push(...extractAllRules(rule.cssRules));
+            } else {
+              rules.push(rule);
+            }
+          }
+          return rules;
+        }
         const scrollbarButtonRule = [...document.styleSheets]
-          .flatMap((sheet) => [...sheet.cssRules])
+          .flatMap((sheet) => extractAllRules(sheet.cssRules))
           .find((rule) => rule.selectorText?.includes("::-webkit-scrollbar-button:vertical:decrement"));
         return {
           background: getComputedStyle(document.body).backgroundColor,

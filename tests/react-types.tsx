@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const accordion = useAccordion({ defaultOpenIds: ["one"] });
@@ -24,6 +24,7 @@ export function ReactAdapterTypeFixture() {
   });
   const dropdown = useDropdown({ defaultOpen: false });
   const dialog = useDialog({ id: "typed-dialog", defaultOpen: false });
+  const commandPalette = useCommandPalette({ id: "typed-command", shortcut: "k" });
   const navbar = useNavbar({ id: "typed-navbar" });
   const combobox = useCombobox({
     options: [{ value: "engineer", label: "Engineer" }],

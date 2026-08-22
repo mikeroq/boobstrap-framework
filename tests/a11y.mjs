@@ -182,18 +182,28 @@ try {
 
       const forcedColorsMediaRules = [];
       const primaryRules = [];
-      for (const sheet of document.styleSheets) {
-        try {
-          for (const rule of sheet.cssRules) {
-            if (rule.type === CSSRule.MEDIA_RULE && rule.conditionText?.includes("forced-colors")) {
-              forcedColorsMediaRules.push(rule.conditionText);
-              for (const innerRule of rule.cssRules) {
-                if (innerRule.selectorText?.includes("bs-btn-primary")) {
-                  primaryRules.push(innerRule.cssText);
+      function scanRules(ruleList) {
+        if (!ruleList) return;
+        for (let i = 0; i < ruleList.length; i++) {
+          const rule = ruleList[i];
+          if (rule.type === CSSRule.MEDIA_RULE && rule.conditionText?.includes("forced-colors")) {
+            forcedColorsMediaRules.push(rule.conditionText);
+            if (rule.cssRules) {
+              for (let j = 0; j < rule.cssRules.length; j++) {
+                if (rule.cssRules[j].selectorText?.includes("bs-btn-primary")) {
+                  primaryRules.push(rule.cssRules[j].cssText);
                 }
               }
             }
+          } else if (rule.cssRules && rule.cssRules.length > 0) {
+            scanRules(rule.cssRules);
           }
+        }
+      }
+
+      for (const sheet of document.styleSheets) {
+        try {
+          scanRules(sheet.cssRules);
         } catch (error) {}
       }
 

@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import boobstrap, { accordion, banner, button, collapse, combobox, dialog, dropdown, inputMask, navbar, otp, password, popover, scrollspy, sidebar, tabs, toast, tooltip } from "@boobstrap/alpine";
+import boobstrap, { accordion, banner, button, collapse, combobox, commandPalette, dialog, dropdown, inputMask, navbar, otp, password, popover, scrollspy, sidebar, tabs, toast, tooltip } from "@boobstrap/alpine";
 
 const execFileAsync = promisify(execFile);
-const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/alpine", "--dry-run", "--json", "--ignore-scripts"]);
+const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const { stdout } = await execFileAsync(npmCmd, ["pack", "--workspace", "@boobstrap/alpine", "--dry-run", "--json", "--ignore-scripts"], { shell: process.platform === "win32" });
 const jsonStart = stdout.indexOf("[");
 if (jsonStart === -1) throw new Error(`npm pack did not return JSON:\n${stdout}`);
 const [pack] = JSON.parse(stdout.slice(jsonStart));
@@ -18,6 +19,7 @@ const requiredPaths = [
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
+  "src/command-palette.js",
   "src/dropdown.js",
   "src/dialog.js",
   "src/input-mask.js",
@@ -41,6 +43,7 @@ assert.equal(typeof banner, "function");
 assert.equal(typeof button, "function");
 assert.equal(typeof collapse, "function");
 assert.equal(typeof combobox, "function");
+assert.equal(typeof commandPalette, "function");
 assert.equal(typeof dropdown, "function");
 assert.equal(typeof dialog, "function");
 assert.equal(typeof inputMask, "function");
@@ -56,7 +59,7 @@ assert.equal(typeof tooltip, "function");
 
 const providers = new Map();
 boobstrap({ data: (name, provider) => providers.set(name, provider) });
-assert.deepEqual([...providers.keys()], ["bsAccordion", "bsBanner", "bsButton", "bsCollapse", "bsCombobox", "bsDropdown", "bsDialog", "bsInputMask", "bsNavbar", "bsOtp", "bsPassword", "bsPopover", "bsScrollspy", "bsSidebar", "bsTabs", "bsToast", "bsTooltip"]);
+assert.deepEqual([...providers.keys()], ["bsAccordion", "bsBanner", "bsButton", "bsCollapse", "bsCombobox", "bsCommandPalette", "bsDropdown", "bsDialog", "bsInputMask", "bsNavbar", "bsOtp", "bsPassword", "bsPopover", "bsScrollspy", "bsSidebar", "bsTabs", "bsToast", "bsTooltip"]);
 assert.equal(providers.get("bsAccordion"), accordion);
 assert.equal(providers.get("bsBanner"), banner);
 assert.equal(providers.get("bsButton"), button);

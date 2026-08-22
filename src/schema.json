@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://boobstrap.org/schema.json",
+  "title": "Boobstrap Configuration",
+  "description": "Configuration schema for customizing and compiling Boobstrap CSS stylesheets.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path or URL to this JSON schema."
+    },
+    "palettes": {
+      "description": "Color palettes to include in the compiled stylesheet. Pass false to omit optional palettes and keep only default brand/gray.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["rose", "violet", "blue", "teal", "amber"]
+          }
+        },
+        {
+          "type": "boolean",
+          "enum": [false]
+        }
+      ],
+      "default": ["rose", "violet", "blue", "teal", "amber"]
+    },
+    "radii": {
+      "description": "Border radius presets to include in the compiled stylesheet. Pass false to omit preset classes.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["small", "normal", "large", "rounded", "square"]
+          }
+        },
+        {
+          "type": "boolean",
+          "enum": [false]
+        }
+      ],
+      "default": ["small", "normal", "large", "rounded", "square"]
+    },
+    "components": {
+      "description": "Component stylesheets to include in the bundle. Use 'all' or provide an array of specific component names to tree-shake unused components.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["all"]
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "accordion",
+              "alert",
+              "avatar",
+              "badge",
+              "banner",
+              "button",
+              "card",
+              "close",
+              "code",
+              "dialog",
+              "empty",
+              "floating",
+              "form",
+              "interactions",
+              "list",
+              "navigation",
+              "progress",
+              "separator",
+              "skeleton",
+              "table",
+              "datatables"
+            ]
+          }
+        }
+      ],
+      "default": "all"
+    },
+    "utilities": {
+      "description": "Utility groups to include in the bundle. Use 'all' or provide an array of specific utility names.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["all"]
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["layout", "spacing", "typography", "icons"]
+          }
+        }
+      ],
+      "default": "all"
+    },
+    "tokens": {
+      "type": "object",
+      "description": "Custom token overrides mapped to CSS variable names or shorthand names.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "breakpoints": {
+      "type": "object",
+      "description": "Custom responsive media query breakpoints.",
+      "properties": {
+        "sm": { "type": "string", "default": "40rem" },
+        "md": { "type": "string", "default": "48rem" },
+        "lg": { "type": "string", "default": "64rem" },
+        "xl": { "type": "string", "default": "80rem" },
+        "2xl": { "type": "string", "default": "96rem" }
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "layers": {
+      "type": "boolean",
+      "description": "Whether to wrap stylesheet rules in CSS @layer (bs.base, bs.layout, bs.components, bs.utilities).",
+      "default": true
+    },
+    "autoColorScheme": {
+      "type": "boolean",
+      "description": "Whether to include @media (prefers-color-scheme) automatic dark/light theme switching.",
+      "default": true
+    },
+    "static": {
+      "type": "boolean",
+      "description": "Whether to inline static token values directly (replacing var(--bs-*) lookups with concrete values).",
+      "default": false
+    },
+    "minify": {
+      "type": "boolean",
+      "description": "Whether to minify the generated CSS stylesheet using esbuild.",
+      "default": false
+    },
+    "outFile": {
+      "type": "string",
+      "description": "Output path where the compiled CSS file should be written."
+    }
+  },
+  "additionalProperties": false
+}

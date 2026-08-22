@@ -3,6 +3,7 @@ import * as core from "../src/js/index.js";
 import * as alpine from "../packages/alpine/src/index.js";
 import * as react from "../packages/react/src/index.js";
 import * as vue from "../packages/vue/src/index.js";
+import * as svelte from "../packages/svelte/src/index.js";
 import { interactionContract, interactionEvents } from "../src/js/interaction-contract.js";
 
 for (const [name, component] of Object.entries(interactionContract)) {
@@ -14,6 +15,9 @@ for (const [name, component] of Object.entries(interactionContract)) {
   assert.equal(typeof alpine[component.adapters.alpine], "function", `${name} Alpine provider`);
   assert.equal(typeof react[component.adapters.react], "function", `${name} React hook`);
   assert.equal(typeof vue[component.adapters.vue], "function", `${name} Vue composable`);
+  assert.equal(typeof svelte[component.adapters.svelte], "function", `${name} Svelte hook`);
+  const createName = component.adapters.svelte.replace(/^use/, "create");
+  assert.equal(typeof svelte[createName], "function", `${name} Svelte creator`);
 }
 
 assert.equal(interactionEvents.length, new Set(interactionEvents).size, "lifecycle events must be unique");

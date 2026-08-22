@@ -70,6 +70,31 @@ export interface DialogResult {
 
 export function useDialog(options?: DialogOptions): DialogResult;
 
+export interface CommandPaletteOptions {
+  id?: string;
+  open?: boolean;
+  defaultOpen?: boolean;
+  shortcut?: string;
+  onOpenChange?: (open: boolean, detail: OpenChangeDetail) => void;
+}
+
+export interface CommandPaletteResult {
+  open: boolean;
+  query: string;
+  setQuery: (query: string) => void;
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+  paletteId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  select: (item: { value?: string; label?: string }, sourceEvent?: Event) => boolean;
+  getDialogProps: (props?: DialogHTMLAttributes<HTMLDialogElement> & RefAttributes<HTMLDialogElement>) => DialogHTMLAttributes<HTMLDialogElement> & RefAttributes<HTMLDialogElement>;
+  getInputProps: (props?: InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>) => InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>;
+}
+
+export function useCommandPalette(options?: CommandPaletteOptions): CommandPaletteResult;
+
 export interface NavbarResult {
   open: boolean;
   menuId: string;

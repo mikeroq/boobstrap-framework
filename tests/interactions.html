@@ -139,6 +139,40 @@
         <footer class="bs-drawer-footer"><button class="bs-btn bs-btn-primary" type="button">View all activity</button></footer>
       </dialog>
 
+      <section aria-label="Bottom drawer example">
+        <button class="bs-btn bs-btn-secondary" id="drawer-bottom-toggle" type="button" data-bs-toggle="dialog" aria-controls="drawer-bottom">Open bottom drawer</button>
+        <dialog class="bs-dialog bs-drawer bs-drawer-bottom" id="drawer-bottom" data-bs-dialog aria-labelledby="drawer-bottom-title">
+          <div class="bs-drawer-handle" id="drawer-bottom-handle"></div>
+          <header class="bs-drawer-header">
+            <h2 class="bs-drawer-title" id="drawer-bottom-title">Bottom Sheet</h2>
+            <button class="bs-drawer-close" type="button" data-bs-dialog-dismiss aria-label="Close bottom sheet">×</button>
+          </header>
+          <div class="bs-drawer-body">
+            <p>Bottom sheet swipeable content.</p>
+          </div>
+        </dialog>
+      </section>
+
+      <dialog class="bs-command-palette" id="framework-command-palette" data-bs-command-palette aria-label="Command Palette">
+        <div class="bs-command-palette-header">
+          <input class="bs-command-palette-input" id="command-input" type="search" placeholder="Type a command or search..." />
+        </div>
+        <div class="bs-command-palette-list" role="listbox">
+          <div class="bs-command-palette-group" role="group" aria-labelledby="group-actions">
+            <div class="bs-command-palette-group-title" id="group-actions">Actions</div>
+            <div class="bs-command-palette-item" id="command-item-copy" role="option" data-bs-value="copy">
+              <span>Copy Link</span>
+              <span class="bs-command-palette-shortcut">⌘C</span>
+            </div>
+            <div class="bs-command-palette-item" id="command-item-delete" role="option" data-bs-value="delete">
+              <span>Delete Project</span>
+              <span class="bs-command-palette-shortcut">⌘D</span>
+            </div>
+          </div>
+          <div class="bs-command-palette-empty" hidden>No commands found</div>
+        </div>
+      </dialog>
+
       <section aria-label="Dropdown example">
         <div class="bs-dropdown" data-bs-dropdown>
           <button class="bs-btn bs-btn-secondary" id="actions-toggle" type="button" data-bs-toggle="dropdown" aria-controls="actions-menu">
@@ -185,6 +219,22 @@
             <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="engineer">Engineer</div>
             <div class="bs-combobox-option" data-bs-combobox-option data-bs-value="founder" aria-disabled="true">Founder</div>
             <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No roles found</div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="combobox-multi-label">
+        <label class="bs-label" id="combobox-multi-label" for="framework-combobox-multi-input">Tags</label>
+        <div class="bs-combobox bs-combobox-multi" id="framework-combobox-multi" data-bs-combobox data-bs-multiple>
+          <div class="bs-combobox-chips"></div>
+          <input class="bs-combobox-input" id="framework-combobox-multi-input" data-bs-combobox-input placeholder="Add tags..." />
+          <button class="bs-combobox-toggle" type="button" data-bs-combobox-toggle aria-label="Toggle tags"></button>
+          <input type="hidden" name="tags" data-bs-combobox-value />
+          <div class="bs-combobox-listbox" data-bs-combobox-listbox hidden>
+            <div class="bs-combobox-option" id="tag-react" data-bs-combobox-option data-bs-value="react">React</div>
+            <div class="bs-combobox-option" id="tag-vue" data-bs-combobox-option data-bs-value="vue">Vue</div>
+            <div class="bs-combobox-option" id="tag-alpine" data-bs-combobox-option data-bs-value="alpine">Alpine</div>
+            <div class="bs-combobox-empty" data-bs-combobox-empty hidden>No tags found</div>
           </div>
         </div>
       </section>

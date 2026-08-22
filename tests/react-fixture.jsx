@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "@boobstrap/react";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -229,6 +229,24 @@ function ScrollspyExample() {
   );
 }
 
+function CommandPaletteExample() {
+  const palette = useCommandPalette({ id: "react-command-palette", shortcut: "k" });
+  return (
+    <section aria-label="React command palette example">
+      <button id="react-command-toggle" className="bs-btn bs-btn-secondary" type="button" onClick={() => palette.toggle("trigger")}>Open commands</button>
+      <dialog className="bs-command-palette" {...palette.getDialogProps()} aria-label="React commands">
+        <div className="bs-command-palette-header">
+          <input id="react-command-input" className="bs-command-palette-input" type="search" {...palette.getInputProps()} />
+        </div>
+        <div className="bs-command-palette-list" role="listbox">
+          <div id="react-cmd-copy" className="bs-command-palette-item" role="option" hidden={Boolean(palette.query && !palette.query.toLowerCase().includes("copy"))} onClick={() => palette.select({ label: "Copy", value: "copy" })}>Copy</div>
+          <div id="react-cmd-delete" className="bs-command-palette-item" role="option" hidden={Boolean(palette.query && !palette.query.toLowerCase().includes("delete"))} onClick={() => palette.select({ label: "Delete", value: "delete" })}>Delete</div>
+        </div>
+      </dialog>
+    </section>
+  );
+}
+
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
@@ -247,6 +265,7 @@ function App() {
       <OtpExample />
       <PasswordExample />
       <ScrollspyExample />
+      <CommandPaletteExample />
     </>
   );
 }

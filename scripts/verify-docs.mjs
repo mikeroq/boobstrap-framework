@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const documents = ["README.md", "DEVELOPMENT.md", "CHANGELOG.md", "docs/INTERACTIONS.md", "docs/VERSIONING.md", "docs/MIGRATING.md", "packages/alpine/README.md", "packages/react/README.md", "packages/vue/README.md"];
+const documents = ["README.md", "DEVELOPMENT.md", "CHANGELOG.md", "docs/INTERACTIONS.md", "docs/VERSIONING.md", "docs/MIGRATING.md", "packages/alpine/README.md", "packages/react/README.md", "packages/vue/README.md", "packages/svelte/README.md"];
 const contents = Object.fromEntries(await Promise.all(documents.map(async (path) => [path, await readFile(resolve(root, path), "utf8")])));
 for (const [path, source] of Object.entries(contents)) {
   for (const match of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
@@ -14,7 +14,7 @@ for (const [path, source] of Object.entries(contents)) {
   }
 }
 const policy = contents["docs/VERSIONING.md"];
-for (const workspace of ["alpine", "react", "vue"]) {
+for (const workspace of ["alpine", "react", "vue", "svelte"]) {
   const manifest = JSON.parse(await readFile(resolve(root, "packages", workspace, "package.json"), "utf8"));
   for (const [peer, range] of Object.entries(manifest.peerDependencies)) assert.ok(policy.includes(`${peer} ${range}`), `Compatibility docs missing ${peer} ${range}`);
 }
@@ -24,6 +24,7 @@ const v06Adapters = {
   alpine: { factories: ["banner", "inputMask", "otp", "password", "sidebar"] },
   react: { hooks: ["useBanner", "useInputMask", "useOtp", "usePassword", "useSidebar"] },
   vue: { hooks: ["useBanner", "useInputMask", "useOtp", "usePassword", "useSidebar"] },
+  svelte: { hooks: ["createBanner", "createInputMask", "createOtp", "createPassword", "createSidebar"] },
 };
 for (const [workspace, expectations] of Object.entries(v06Adapters)) {
   const source = contents[`packages/${workspace}/README.md`];

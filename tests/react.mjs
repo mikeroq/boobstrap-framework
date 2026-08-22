@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import AxeBuilder from "@axe-core/playwright";
 import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
@@ -12,7 +13,7 @@ if (!browserType) throw new Error(`Unsupported browser: ${browserName}`);
 const fixture = await readFile(new URL("react.html", import.meta.url), "utf8");
 const css = await readFile(new URL("../dist/boobstrap.css", import.meta.url));
 const bundle = await build({
-  entryPoints: [new URL("react-fixture.jsx", import.meta.url).pathname],
+  entryPoints: [fileURLToPath(new URL("react-fixture.jsx", import.meta.url))],
   bundle: true,
   format: "esm",
   jsx: "automatic",
@@ -196,12 +197,20 @@ try {
     const link = document.querySelector("#react-scrollspy a[aria-current=\"true\"]");
     return link?.getAttribute("href") === "#react-scrollspy-details";
   });
-  if (await reactScrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== "#react-scrollspy-details") {
-    failures.push("scrollspy did not activate the details link");
-  }
+  const reactCommandToggle = page.locator("#react-command-toggle");
+  await reactCommandToggle.click();
+  await page.waitForFunction(() => document.querySelector("#react-command-palette").open);
+  const reactCommandInput = page.locator("#react-command-input");
+  await reactCommandInput.fill("delete");
+  const reactCmdCopy = page.locator("#react-cmd-copy");
+  const reactCmdDelete = page.locator("#react-cmd-delete");
+  if (!await reactCmdCopy.isHidden() || await reactCmdDelete.isHidden()) failures.push("react command palette did not filter");
+  await reactCmdDelete.click();
+  await page.waitForFunction(() => !document.querySelector("#react-command-palette").open);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:command:select" && event.adapter === "react"));
 
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:command:shown", "bs:command:select", "bs:command:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 

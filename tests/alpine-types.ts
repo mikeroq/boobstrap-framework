@@ -1,4 +1,4 @@
-import boobstrap, { accordion, banner, button, collapse, combobox, dialog, dropdown, inputMask, navbar, otp, password, popover, scrollspy, sidebar, tabs, toast, tooltip, type AccordionProvider, type AlpineLike } from "@boobstrap/alpine";
+import boobstrap, { accordion, banner, button, collapse, combobox, commandPalette, dialog, dropdown, inputMask, navbar, otp, password, popover, scrollspy, sidebar, tabs, toast, tooltip, type AccordionProvider, type AlpineLike } from "@boobstrap/alpine";
 
 const Alpine: AlpineLike = { data: (_name, _provider) => {} };
 boobstrap(Alpine);
@@ -9,6 +9,7 @@ banner(false).show();
 button(false, { loadingLabel: "Saving" }).start("test");
 collapse(false).toggle();
 combobox({ options: [] }).hide();
+commandPalette({ shortcut: "k" }).toggle();
 dialog(false).show();
 dropdown(false).hide();
 inputMask("(999) 999-9999").format();

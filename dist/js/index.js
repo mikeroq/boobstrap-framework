@@ -3,6 +3,7 @@ export { Button, initButtons } from "./button.js";
 export { Banner, initBanners } from "./banner.js";
 export { Collapse, initCollapses } from "./collapse.js";
 export { Combobox, initComboboxes } from "./combobox.js";
+export { CommandPalette, initCommandPalettes } from "./command-palette.js";
 export { Dropdown, initDropdowns } from "./dropdown.js";
 export { Dialog, initDialogs } from "./dialog.js";
 export { formatMask, InputMask, initInputMasks } from "./input-mask.js";
@@ -22,6 +23,7 @@ import { initAccordions } from "./accordion.js";
 import { initBanners } from "./banner.js";
 import { initCollapses } from "./collapse.js";
 import { initComboboxes } from "./combobox.js";
+import { initCommandPalettes } from "./command-palette.js";
 import { initDropdowns } from "./dropdown.js";
 import { initDialogs } from "./dialog.js";
 import { initInputMasks } from "./input-mask.js";
@@ -42,6 +44,7 @@ export function initBoobstrap(root = document) {
     ...initButtons(root),
     ...initCollapses(root),
     ...initComboboxes(root),
+    ...initCommandPalettes(root),
     ...initDropdowns(root),
     ...initDialogs(root),
     ...initInputMasks(root),

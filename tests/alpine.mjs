@@ -17,6 +17,7 @@ const assets = new Map([
   ["/adapter/index.js", await readFile(new URL("../packages/alpine/src/index.js", import.meta.url))],
   ["/adapter/collapse.js", await readFile(new URL("../packages/alpine/src/collapse.js", import.meta.url))],
   ["/adapter/combobox.js", await readFile(new URL("../packages/alpine/src/combobox.js", import.meta.url))],
+  ["/adapter/command-palette.js", await readFile(new URL("../packages/alpine/src/command-palette.js", import.meta.url))],
   ["/adapter/dropdown.js", await readFile(new URL("../packages/alpine/src/dropdown.js", import.meta.url))],
   ["/adapter/dialog.js", await readFile(new URL("../packages/alpine/src/dialog.js", import.meta.url))],
   ["/adapter/input-mask.js", await readFile(new URL("../packages/alpine/src/input-mask.js", import.meta.url))],
@@ -176,6 +177,18 @@ try {
     const maskValue = await maskInput.inputValue();
     if (maskValue !== "(512) 555-1234") failures.push(`${build}: input mask did not format value (received ${maskValue})`);
     await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:mask:change" && event.adapter === "alpine"));
+
+    const alpineCommandToggle = page.locator("#alpine-command-toggle");
+    await alpineCommandToggle.click();
+    await page.waitForFunction(() => document.querySelector("#alpine-command-palette").open);
+    const alpineCommandInput = page.locator("#alpine-command-input");
+    await alpineCommandInput.fill("delete");
+    const cmdCopy = page.locator("#alpine-cmd-copy");
+    const cmdDelete = page.locator("#alpine-cmd-delete");
+    if (!await cmdCopy.isHidden() || await cmdDelete.isHidden()) failures.push(`${build}: command palette did not filter`);
+    await cmdDelete.click();
+    await page.waitForFunction(() => !document.querySelector("#alpine-command-palette").open);
+    await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:command:select" && event.adapter === "alpine"));
 
     const otpInputs = page.locator("[data-test-otp] .bs-otp-input");
     await otpInputs.nth(0).fill("1");

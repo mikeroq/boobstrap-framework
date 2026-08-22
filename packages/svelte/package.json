@@ -1,0 +1,50 @@
+{
+  "name": "@boobstrap/svelte",
+  "version": "0.7.0",
+  "description": "Official Svelte 5 behavior adapter for Boobstrap components.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "LICENSE",
+    "README.md",
+    "src"
+  ],
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@boobstrap/boobstrap": "^0.7.0",
+    "svelte": ">=5.0.0 <6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@boobstrap/boobstrap": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "runes",
+    "boobstrap",
+    "components",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeroq/boobstrap-framework.git",
+    "directory": "packages/svelte"
+  },
+  "homepage": "https://boobstrap.org/docs#svelte",
+  "bugs": {
+    "url": "https://github.com/mikeroq/boobstrap-framework/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT"
+}

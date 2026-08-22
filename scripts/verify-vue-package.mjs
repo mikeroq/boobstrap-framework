@@ -3,22 +3,23 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createSSRApp, h } from "vue";
 import { renderToString } from "@vue/server-renderer";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
 
 const execFileAsync = promisify(execFile);
-const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/vue", "--dry-run", "--json", "--ignore-scripts"]);
+const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const { stdout } = await execFileAsync(npmCmd, ["pack", "--workspace", "@boobstrap/vue", "--dry-run", "--json", "--ignore-scripts"], { shell: process.platform === "win32" });
 const jsonStart = stdout.indexOf("[");
 if (jsonStart === -1) throw new Error(`npm pack did not return JSON:\n${stdout}`);
 const [pack] = JSON.parse(stdout.slice(jsonStart));
 const paths = pack.files.map((file) => file.path);
 const requiredPaths = [
   "LICENSE", "README.md", "package.json",
-  "src/accordion.js", "src/banner.js", "src/button.js", "src/collapse.js", "src/combobox.js", "src/dialog.js",
+  "src/accordion.js", "src/banner.js", "src/button.js", "src/collapse.js", "src/combobox.js", "src/command-palette.js", "src/dialog.js",
   "src/dropdown.js", "src/input-mask.js", "src/index.d.ts", "src/index.js", "src/navbar.js", "src/otp.js",
   "src/password.js", "src/popover.js", "src/scrollspy.js", "src/sidebar.js", "src/shared.js", "src/tabs.js", "src/toast.js", "src/tooltip.js",
 ];
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "Vue package is missing required files");
-for (const hook of [useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip]) assert.equal(typeof hook, "function");
+for (const hook of [useAccordion, useBanner, useButton, useCollapse, useCombobox, useCommandPalette, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip]) assert.equal(typeof hook, "function");
 
 const app = createSSRApp({
   setup() {

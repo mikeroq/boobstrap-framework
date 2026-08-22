@@ -38,13 +38,9 @@ function inlineBreakpointTokens(css, tokens) {
   // Custom properties are not substituted inside `@media` queries by current
   // browsers (Chromium, Firefox, WebKit). To keep the source token-driven, we
   // resolve `var(--bs-breakpoint-*)` references to their numeric values at
-  // bundle time. The bundled CSS will not contain `var(--bs-breakpoint-*)`
-  // inside media blocks; the contract test reads these tokens from the `:root`
-  // block, where they remain. If a downstream consumer overrides the tokens
-  // for a non-media-query use, that override still reaches them.
-  const mediaPattern = /@media[^{]+\{[\s\S]*?\n\}\n/g;
-  return css.replace(mediaPattern, (block) =>
-    block.replace(/var\(--bs-breakpoint-([a-z0-9-]+)\)/g, (match, name) => {
+  // bundle time.
+  return css.replace(/@media[^{]*\{/g, (header) =>
+    header.replace(/var\(--bs-breakpoint-([a-z0-9-]+)\)/g, (match, name) => {
       const value = tokens[name];
       if (!value) throw new Error(`Unknown breakpoint token --bs-breakpoint-${name} referenced in a media query`);
       return value;
@@ -88,6 +84,9 @@ for (const file of javascriptFiles) {
 await copyFile(join(javascriptSource, "index.d.ts"), join(javascriptDestination, "index.d.ts"));
 await copyFile(join(root, "src", "boobstrap.js"), join(root, "dist", "boobstrap.js"));
 await copyFile(join(javascriptSource, "index.d.ts"), join(root, "dist", "boobstrap.d.ts"));
+await copyFile(join(root, "src", "compiler.js"), join(root, "dist", "compiler.js"));
+await copyFile(join(root, "src", "compiler.d.ts"), join(root, "dist", "compiler.d.ts"));
+await copyFile(join(root, "src", "schema.json"), join(root, "dist", "schema.json"));
 await writeTokenArtifacts(
   join(root, "src", "base", "tokens.css"),
   join(root, "dist", "tokens.json"),

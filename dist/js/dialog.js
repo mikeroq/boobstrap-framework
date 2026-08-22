@@ -41,6 +41,50 @@ export class Dialog {
     };
     this.onClose = () => this.completeClose();
 
+    // Bottom drawer gesture dragging
+    this.handle = element.querySelector(".bs-drawer-handle") || (element.classList.contains("bs-drawer-bottom") ? element.querySelector(".bs-drawer-header, .bs-dialog-header") : null);
+    this.startY = 0;
+    this.currentDeltaY = 0;
+    this.isDragging = false;
+
+    this.onPointerDown = (event) => {
+      if (event.button !== undefined && event.button !== 0) return;
+      this.startY = event.clientY;
+      this.currentDeltaY = 0;
+      this.isDragging = true;
+      this.element.style.transition = "none";
+      const win = this.document.defaultView || window;
+      win.addEventListener("pointermove", this.onPointerMove);
+      win.addEventListener("pointerup", this.onPointerUp);
+      win.addEventListener("pointercancel", this.onPointerUp);
+    };
+
+    this.onPointerMove = (event) => {
+      if (!this.isDragging) return;
+      this.currentDeltaY = Math.max(0, event.clientY - this.startY);
+      this.element.style.transform = `translateY(${this.currentDeltaY}px)`;
+    };
+
+    this.onPointerUp = (event) => {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      const win = this.document.defaultView || window;
+      win.removeEventListener("pointermove", this.onPointerMove);
+      win.removeEventListener("pointerup", this.onPointerUp);
+      win.removeEventListener("pointercancel", this.onPointerUp);
+      this.element.style.transition = "";
+
+      const delta = this.currentDeltaY;
+      this.element.style.transform = "";
+      if (delta > 50) {
+        this.hide({ reason: "drag", sourceEvent: event });
+      }
+    };
+
+    if (this.handle) {
+      this.handle.addEventListener("pointerdown", this.onPointerDown);
+    }
+
     this.triggers.forEach((trigger) => trigger.addEventListener("click", this.onTrigger));
     this.dismissers.forEach((dismiss) => dismiss.addEventListener("click", this.onDismiss));
     element.addEventListener("cancel", this.onCancel);
@@ -108,6 +152,10 @@ export class Dialog {
     this.destroyed = true;
     this.triggers.forEach((trigger) => trigger.removeEventListener("click", this.onTrigger));
     this.dismissers.forEach((dismiss) => dismiss.removeEventListener("click", this.onDismiss));
+    this.handle?.removeEventListener("pointerdown", this.onPointerDown);
+    this.document.removeEventListener("pointermove", this.onPointerMove);
+    this.document.removeEventListener("pointerup", this.onPointerUp);
+    this.document.removeEventListener("pointercancel", this.onPointerUp);
     this.element.removeEventListener("cancel", this.onCancel);
     this.element.removeEventListener("click", this.onClick);
     this.element.removeEventListener("close", this.onClose);

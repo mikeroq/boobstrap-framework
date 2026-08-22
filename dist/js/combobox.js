@@ -5,7 +5,7 @@ const enabledOptionSelector = '[data-bs-combobox-option]:not([aria-disabled="tru
 let nextId = 0;
 
 export class Combobox {
-  constructor(element) {
+  constructor(element, options = {}) {
     this.element = requireElement(element, "Combobox");
     this.input = element.querySelector("[data-bs-combobox-input]");
     this.listbox = element.querySelector("[data-bs-combobox-listbox]");
@@ -39,10 +39,20 @@ export class Combobox {
     this.input.setAttribute("aria-controls", this.listbox.id);
     this.input.setAttribute("autocomplete", this.input.getAttribute("autocomplete") ?? "off");
 
+    this.multiple = Boolean(options.multiple ?? element.hasAttribute("data-bs-multiple") ?? element.classList.contains("bs-combobox-multi"));
+    this.chipsContainer = element.querySelector(".bs-combobox-chips");
+    this.selectedOptions = this.options.filter((option) => option.getAttribute("aria-selected") === "true");
+
+    if (this.multiple) {
+      this.listbox.setAttribute("aria-multiselectable", "true");
+      this.syncChips();
+    }
+
     this.activeOption = null;
     this.selectedOption = this.options.find((option) => option.getAttribute("aria-selected") === "true") ?? null;
     this.initialOption = this.selectedOption;
-    if (this.selectedOption) this.commit(this.selectedOption, { silent: true });
+    this.initialSelectedOptions = [...this.selectedOptions];
+    if (this.selectedOption && !this.multiple) this.commit(this.selectedOption, { silent: true });
 
     this.onInput = () => this.filter();
     this.onInputClick = () => this.show();
@@ -69,8 +79,8 @@ export class Combobox {
     instances.set(element, this);
   }
 
-  static getOrCreateInstance(element) {
-    return instances.get(element) ?? new Combobox(element);
+  static getOrCreateInstance(element, options) {
+    return instances.get(element) ?? new Combobox(element, options);
   }
 
   get expanded() {
@@ -160,6 +170,29 @@ export class Combobox {
     this.setActive(this.visibleOptions[0] ?? null);
   }
 
+  syncChips() {
+    if (!this.chipsContainer) return;
+    this.chipsContainer.innerHTML = "";
+    for (const option of this.selectedOptions) {
+      const chip = this.element.ownerDocument.createElement("span");
+      chip.className = "bs-combobox-chip";
+      const label = this.element.ownerDocument.createElement("span");
+      label.className = "bs-combobox-chip-label";
+      label.textContent = this.optionLabel(option);
+      const removeBtn = this.element.ownerDocument.createElement("button");
+      removeBtn.className = "bs-combobox-chip-remove";
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", `Remove ${this.optionLabel(option)}`);
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.select(option);
+      });
+      chip.append(label, removeBtn);
+      this.chipsContainer.append(chip);
+    }
+  }
+
   commit(option, options = {}) {
     this.options.forEach((candidate) => candidate.setAttribute("aria-selected", String(candidate === option)));
     this.selectedOption = option;
@@ -175,7 +208,43 @@ export class Combobox {
 
   select(option, options = {}) {
     if (!option || option.hidden || option.getAttribute("aria-disabled") === "true") return false;
-    const detail = { controller: this, value: this.optionValue(option), label: this.optionLabel(option), option, sourceEvent: options.sourceEvent };
+    const value = this.optionValue(option);
+    const label = this.optionLabel(option);
+
+    if (this.multiple) {
+      const isSelected = this.selectedOptions.includes(option);
+      if (isSelected) {
+        this.selectedOptions = this.selectedOptions.filter((o) => o !== option);
+        option.setAttribute("aria-selected", "false");
+      } else {
+        this.selectedOptions.push(option);
+        option.setAttribute("aria-selected", "true");
+      }
+      const values = this.selectedOptions.map((o) => this.optionValue(o));
+      const labels = this.selectedOptions.map((o) => this.optionLabel(o));
+      this.input.value = "";
+      this.options.forEach((o) => { o.hidden = false; });
+      if (this.valueElement) {
+        this.valueElement.value = JSON.stringify(values);
+        if (!options.silent) this.valueElement.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      this.syncChips();
+      if (!options.silent) {
+        emit(this.element, "bs:combobox:change", {
+          controller: this,
+          value: values,
+          label: labels,
+          option,
+          values,
+          labels,
+          selectedOptions: this.selectedOptions,
+        });
+      }
+      this.input.focus({ preventScroll: true });
+      return true;
+    }
+
+    const detail = { controller: this, value, label, option, sourceEvent: options.sourceEvent };
     if (!emit(this.element, "bs:combobox:select", detail, true)) return false;
     this.commit(option);
     this.hide();
@@ -195,6 +264,11 @@ export class Combobox {
       this.select(this.activeOption, { sourceEvent: event });
       return;
     }
+    if (event.key === "Backspace" && this.multiple && !this.input.value && this.selectedOptions.length > 0) {
+      const lastOption = this.selectedOptions[this.selectedOptions.length - 1];
+      this.select(lastOption);
+      return;
+    }
     if (event.key === "Escape" && this.expanded) {
       event.preventDefault();
       this.hide();
@@ -204,13 +278,25 @@ export class Combobox {
   }
 
   reset() {
-    const initial = this.initialOption;
     this.options.forEach((option) => { option.hidden = false; });
-    if (initial) this.commit(initial, { silent: true });
-    else {
-      this.selectedOption = null;
+    if (this.multiple) {
+      this.selectedOptions = [...this.initialSelectedOptions];
+      this.options.forEach((option) => {
+        option.setAttribute("aria-selected", String(this.selectedOptions.includes(option)));
+      });
+      this.syncChips();
       this.input.value = "";
-      if (this.valueElement) this.valueElement.value = "";
+      if (this.valueElement) {
+        this.valueElement.value = JSON.stringify(this.selectedOptions.map((o) => this.optionValue(o)));
+      }
+    } else {
+      const initial = this.initialOption;
+      if (initial) this.commit(initial, { silent: true });
+      else {
+        this.selectedOption = null;
+        this.input.value = "";
+        if (this.valueElement) this.valueElement.value = "";
+      }
     }
     this.hide({ force: true });
   }

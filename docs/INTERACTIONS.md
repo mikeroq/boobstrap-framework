@@ -2,7 +2,7 @@
 
 Boobstrap is CSS-first. Importing `@boobstrap/boobstrap` or its stylesheet never loads, initializes, or requires JavaScript. Applications may bring their own behavior or opt into Boobstrap's dependency-free controllers.
 
-The contract in this document is also the compatibility target for official Alpine, React, and Vue adapters. Adapters are alternative behavior layers: an application should not attach both Boobstrap JS and a framework adapter to the same component instance.
+The contract in this document is also the compatibility target for official Alpine, React, Vue, and Svelte adapters. Adapters are alternative behavior layers: an application should not attach both Boobstrap JS and a framework adapter to the same component instance.
 
 ## Support layers
 
@@ -13,8 +13,9 @@ The contract in this document is also the compatibility target for official Alpi
 | Alpine adapter | Optional Alpine peer dependency | Attribute-driven reactive applications |
 | React adapter | React peer dependency | Controlled and uncontrolled React components |
 | Vue adapter | Vue peer dependency | Vue components and `v-model` state |
+| Svelte adapter | Svelte peer dependency | Svelte 5 runes and action-driven components |
 
-The CSS, Boobstrap JS, Alpine, React, and Vue layers are implemented and tested against the same public lifecycle contract.
+The CSS, Boobstrap JS, Alpine, React, Vue, and Svelte layers are implemented and tested against the same public lifecycle contract.
 
 ## Directional contract (RTL)
 
@@ -546,7 +547,8 @@ Every Boobstrap controller is exposed by all behavior layers (core, Alpine, Reac
 | button      | `Button` | `button` | `useButton` | `useButton` | universal |
 | collapse    | `Collapse` | `collapse` | `useCollapse` | `useCollapse` | universal |
 | combobox    | `Combobox` | `combobox` | `useCombobox` | `useCombobox` | universal |
-| dialog      | `Dialog` | `dialog` | `useDialog` | `useDialog` | universal |
+| command-palette | `CommandPalette` | `commandPalette` | `useCommandPalette` | `useCommandPalette` | universal; keyboard shortcut + search |
+| dialog      | `Dialog` | `dialog` | `useDialog` | `useDialog` | universal; modal + drawer gesture |
 | dropdown    | `Dropdown` | `dropdown` | `useDropdown` | `useDropdown` | universal |
 | input-mask  | `InputMask` | `inputMask` | `useInputMask` | `useInputMask` | universal |
 | navbar      | `Navbar` | `navbar` | `useNavbar` | `useNavbar` | universal; responsive overlay |

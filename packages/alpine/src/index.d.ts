@@ -5,6 +5,7 @@ export interface ButtonProvider { loading: boolean; start(reason?: string, sourc
 export interface CollapseProvider extends OpenProvider { trigger: AlpineBinding; panel: AlpineBinding; }
 export interface ComboboxProvider extends OpenProvider { value: string; query: string; input: AlpineBinding; listbox: AlpineBinding; toggleButton: AlpineBinding; option(option: { value: string; label: string; disabled?: boolean }, index: number): AlpineBinding; }
 export interface DialogProvider extends OpenProvider { trigger: AlpineBinding; dialog: AlpineBinding; dismiss: AlpineBinding; }
+export interface CommandPaletteProvider extends OpenProvider { query: string; activeIndex: number; getDialogProps(): AlpineBinding; getInputProps(): AlpineBinding; select(item: unknown, sourceEvent?: Event): boolean; }
 export interface DropdownProvider extends OpenProvider { root: AlpineBinding; trigger: AlpineBinding; menu: AlpineBinding; }
 export interface NavbarProvider extends OpenProvider { trigger: AlpineBinding; menu: AlpineBinding; dismiss: AlpineBinding; }
 export interface TabsProvider { selectedId: string | null; activate(id: string, sourceEvent?: Event): boolean; tablist: AlpineBinding; tab(id: string, controls?: string): AlpineBinding; panel(tabId: string): AlpineBinding; destroy(): void; }
@@ -21,6 +22,7 @@ export function accordion(initialOpenIds?: string[], options?: { alwaysOpen?: bo
 export function banner(initialVisible?: boolean): BannerProvider;
 export function collapse(initialOpen?: boolean): CollapseProvider;
 export function combobox(options?: Record<string, unknown>): ComboboxProvider;
+export function commandPalette(options?: Record<string, unknown>): CommandPaletteProvider;
 export function dialog(initialOpen?: boolean): DialogProvider;
 export function dropdown(initialOpen?: boolean): DropdownProvider;
 export function inputMask(pattern: string): InputMaskProvider;

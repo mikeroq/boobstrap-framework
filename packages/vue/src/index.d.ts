@@ -59,6 +59,29 @@ export interface DialogResult extends Omit<CollapseResult, "panelId" | "getPanel
 
 export function useDialog(options?: OpenOptions): DialogResult;
 
+export interface CommandPaletteOptions {
+  id?: string;
+  open?: boolean | Ref<boolean>;
+  defaultOpen?: boolean;
+  shortcut?: string;
+  onOpenChange?: (open: boolean, detail: OpenChangeDetail) => void;
+}
+
+export interface CommandPaletteResult {
+  open: ComputedRef<boolean>;
+  query: Ref<string>;
+  activeIndex: Ref<number>;
+  paletteId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  select: (item: { value?: string; label?: string }, sourceEvent?: Event) => boolean;
+  getDialogProps: (props?: ElementProps) => ElementProps;
+  getInputProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useCommandPalette(options?: CommandPaletteOptions): CommandPaletteResult;
+
 export interface NavbarResult extends Omit<CollapseResult, "panelId" | "getPanelProps"> {
   menuId: string;
   getMenuProps: (props?: ElementProps) => ElementProps;
