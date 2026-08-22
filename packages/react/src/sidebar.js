@@ -12,6 +12,14 @@ function getOverlay(media) {
   return Boolean(media?.matches);
 }
 
+function shouldIgnoreShortcut(event, document) {
+  const target = event.target;
+  const tag = target?.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) return true;
+  if (document.querySelector("dialog[open]")) return true;
+  return false;
+}
+
 export function useSidebar(options = {}) {
   const sidebarRef = useRef(null);
   const restoreTargetRef = useRef(null);
@@ -68,6 +76,7 @@ export function useSidebar(options = {}) {
     };
     const onKeydown = (event) => {
       if (options.shortcut && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === options.shortcut.toLowerCase()) {
+        if (shouldIgnoreShortcut(event, document)) return;
         event.preventDefault();
         if (getOverlay(media)) toggle({ reason: "shortcut", sourceEvent: event, restoreTarget: document.activeElement });
         return;

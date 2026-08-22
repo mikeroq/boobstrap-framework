@@ -20,6 +20,7 @@ export class Dialog {
     this.dismissers = [...element.querySelectorAll("[data-bs-dialog-dismiss]")];
     this.restoreTarget = null;
     this.pendingClose = null;
+    this.destroyed = false;
 
     this.onTrigger = (event) => {
       event.preventDefault();
@@ -69,8 +70,9 @@ export class Dialog {
     if (this.element.open) return false;
     const detail = { controller: this, reason: options.reason ?? "api", sourceEvent: options.sourceEvent };
     if (!emit(this.element, "bs:dialog:show", detail, true)) return false;
-    this.restoreTarget = options.restoreTarget ?? this.document.activeElement;
+    const restoreTarget = options.restoreTarget ?? this.document.activeElement;
     this.element.showModal();
+    this.restoreTarget = restoreTarget;
     this.sync();
     emit(this.element, "bs:dialog:shown", detail);
     return true;
@@ -91,9 +93,10 @@ export class Dialog {
   }
 
   completeClose() {
+    if (this.destroyed) return;
     const pending = this.pendingClose ?? {
       detail: { controller: this, reason: "native" },
-      restoreFocus: true,
+      restoreFocus: false,
     };
     this.pendingClose = null;
     this.sync();
@@ -102,13 +105,15 @@ export class Dialog {
   }
 
   destroy() {
+    this.destroyed = true;
     this.triggers.forEach((trigger) => trigger.removeEventListener("click", this.onTrigger));
     this.dismissers.forEach((dismiss) => dismiss.removeEventListener("click", this.onDismiss));
     this.element.removeEventListener("cancel", this.onCancel);
     this.element.removeEventListener("click", this.onClick);
     this.element.removeEventListener("close", this.onClose);
-    if (this.element.open) this.element.close();
     this.pendingClose = null;
+    this.restoreTarget = null;
+    if (this.element.open) this.element.close();
     this.syncDocumentState();
     instances.delete(this.element);
   }

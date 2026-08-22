@@ -8,6 +8,8 @@
 .bs-text-left { text-align: left; }
 .bs-text-center { text-align: center; }
 .bs-text-right { text-align: right; }
+.bs-text-start { text-align: start; }
+.bs-text-end { text-align: end; }
 .bs-text-primary { color: var(--bs-color-primary); }
 .bs-text-muted { color: var(--bs-color-text-muted); }
 .bs-text-subtle { color: var(--bs-color-text-subtle); }

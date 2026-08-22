@@ -11,7 +11,7 @@
 
 .bs-alert-title {
   display: block;
-  margin-bottom: var(--bs-space-1);
+  margin-block-end: var(--bs-space-1);
   color: var(--bs-color-text);
   font-weight: 650;
 }

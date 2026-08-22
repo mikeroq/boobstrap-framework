@@ -54,7 +54,7 @@
 
 .bs-card-header + :is(.bs-card-content, .bs-card-body),
 :is(.bs-card-content, .bs-card-body) + .bs-card-footer,
-.bs-card-header + .bs-card-footer { padding-top: 0; }
+.bs-card-header + .bs-card-footer { padding-block-start: 0; }
 
 .bs-card-footer {
   display: flex;

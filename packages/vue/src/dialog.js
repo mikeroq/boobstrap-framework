@@ -5,6 +5,12 @@ function syncDocumentState(document) {
   document?.body?.classList.toggle("bs-dialog-open", Boolean(document.querySelector("dialog[open]")));
 }
 
+function isBackdropPointer(element, event) {
+  if (event.target !== element) return false;
+  const rect = element.getBoundingClientRect();
+  return event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+}
+
 export function useDialog(options = {}) {
   const dialogId = options.id ?? nextId("bs-dialog");
   const dialogRef = ref(null);
@@ -40,6 +46,12 @@ export function useDialog(options = {}) {
     ref: (element) => { dialogRef.value = element; },
     "data-bs-state": open.value ? "open" : "closed",
     onCancel: composeHandlers(props.onCancel, (event) => { event.preventDefault(); hide("escape", event); }),
+    onClick: composeHandlers(props.onClick, (event) => {
+      const element = dialogRef.value;
+      if (element && element.dataset.bsDialogCloseOnBackdrop !== "false" && isBackdropPointer(element, event)) {
+        hide("backdrop", event);
+      }
+    }),
   });
   const getDismissProps = (props = {}) => ({ ...props, type: props.type ?? "button", onClick: composeHandlers(props.onClick, (event) => hide("dismiss", event)) });
   return { open, dialogId, show, hide, toggle, getTriggerProps, getDialogProps, getDismissProps };
