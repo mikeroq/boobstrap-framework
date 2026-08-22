@@ -41,8 +41,9 @@
 .bs-textarea,
 .bs-file,
 .bs-combobox-input {
-  --bs-control-block-size: 2.75rem;
+  --bs-control-block-size: var(--bs-control-size-md);
   --bs-control-padding-inline: 1rem;
+  --bs-control-radius: var(--bs-radius-md);
 
   width: 100%;
   min-height: var(--bs-control-block-size);
@@ -52,7 +53,7 @@
   line-height: 1.35;
   background-color: var(--bs-color-control-background);
   border: 1px solid var(--bs-color-border);
-  border-radius: var(--bs-radius-md);
+  border-radius: var(--bs-control-radius);
   transition: border-color var(--bs-duration-normal), box-shadow var(--bs-duration-normal), background var(--bs-duration-normal);
 }
 
@@ -97,12 +98,13 @@
 .bs-control-sm .bs-select,
 .bs-control-sm .bs-file,
 .bs-control-sm .bs-combobox-input {
-  --bs-control-block-size: 2.25rem;
+  --bs-control-block-size: var(--bs-control-size-sm);
   --bs-control-padding-inline: 0.75rem;
+  --bs-control-radius: var(--bs-radius-sm);
 
   padding-block: 0.45rem;
   font-size: var(--bs-font-size-sm);
-  border-radius: var(--bs-radius-sm);
+  border-radius: var(--bs-control-radius);
 }
 
 .bs-input-lg,
@@ -112,12 +114,13 @@
 .bs-control-lg .bs-select,
 .bs-control-lg .bs-file,
 .bs-control-lg .bs-combobox-input {
-  --bs-control-block-size: 3.25rem;
+  --bs-control-block-size: var(--bs-control-size-lg);
   --bs-control-padding-inline: 1.125rem;
+  --bs-control-radius: var(--bs-radius-lg);
 
   padding-block: 0.85rem;
   font-size: var(--bs-font-size-lg);
-  border-radius: var(--bs-radius-lg);
+  border-radius: var(--bs-control-radius);
 }
 
 .bs-textarea {
@@ -136,6 +139,10 @@
 
 [data-bs-theme="light"] .bs-select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23715f6b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+@media (forced-colors: active) {
+  .bs-select { forced-color-adjust: none; background-color: Field; border-color: CanvasText; }
 }
 
 .bs-file { padding: 0; overflow: hidden; }
@@ -171,6 +178,18 @@
 .bs-range::-moz-range-thumb { width: 0.9rem; height: 0.9rem; background: var(--bs-color-primary); border: 2px solid var(--bs-color-primary-contrast); border-radius: 50%; box-shadow: var(--bs-shadow-sm); }
 .bs-range:focus-visible { outline: 3px solid var(--bs-color-focus-ring); outline-offset: 3px; border-radius: var(--bs-radius-pill); }
 .bs-range:disabled { cursor: not-allowed; opacity: 0.55; }
+
+@media (forced-colors: active) {
+  .bs-range,
+  .bs-range::-webkit-slider-runnable-track,
+  .bs-range::-moz-range-track { forced-color-adjust: none; background: Canvas; border-color: CanvasText; }
+  .bs-range::-webkit-slider-thumb,
+  .bs-range::-moz-range-thumb {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: HighlightText;
+  }
+}
 
 .bs-color {
   width: 3.25rem;
@@ -269,7 +288,7 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: var(--bs-control-size-md);
   padding: 0.7rem 0.9rem;
   color: var(--bs-color-text-muted);
   font: inherit;
@@ -357,6 +376,24 @@
 .bs-check-input:disabled { cursor: not-allowed; opacity: 0.55; }
 .bs-check-input:disabled ~ * { color: var(--bs-color-text-subtle); cursor: not-allowed; }
 
+@media (forced-colors: active) {
+  .bs-check-input { forced-color-adjust: none; border-color: CanvasText; background: Canvas; }
+  .bs-check-input:checked,
+  .bs-check-input[type="checkbox"]:indeterminate {
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+  .bs-check-input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='HighlightText' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m3 8 3 3 7-7'/%3E%3C/svg%3E");
+  }
+  .bs-check-input[type="checkbox"]:indeterminate {
+    background-image: linear-gradient(HighlightText, HighlightText);
+  }
+  .bs-check-input[type="radio"]:checked {
+    background-image: radial-gradient(circle, HighlightText 0 0.25rem, transparent 0.27rem);
+  }
+}
+
 .bs-check-label {
   color: var(--bs-color-text);
   cursor: pointer;
@@ -384,6 +421,12 @@
   background-position: right 0.1rem center;
 }
 
+@media (forced-colors: active) {
+  .bs-switch .bs-check-input { forced-color-adjust: none; background-color: Canvas; border-color: CanvasText; }
+  .bs-switch .bs-check-input,
+  .bs-switch .bs-check-input:checked { background-image: none; }
+}
+
 .bs-input-mask { font-variant-numeric: tabular-nums; letter-spacing: 0.035em; }
 
 .bs-otp {
@@ -394,7 +437,7 @@
 
 .bs-otp-input {
   width: 2.75rem;
-  min-height: 3.25rem;
+  min-height: var(--bs-control-size-lg);
   padding: var(--bs-space-2);
   color: var(--bs-color-text);
   font: 700 var(--bs-font-size-xl) / 1 var(--bs-font-mono);
@@ -424,8 +467,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  inline-size: var(--bs-control-size-md);
+  block-size: var(--bs-control-size-md);
   color: var(--bs-color-text-muted);
   background: transparent;
   border: 0;
@@ -446,7 +489,7 @@
 
 .bs-combobox-listbox {
   position: absolute;
-  z-index: 60;
+  z-index: var(--bs-z-popover);
   inset-block-start: calc(100% + var(--bs-space-2));
   inset-inline: 0;
   max-height: 16rem;

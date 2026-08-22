@@ -590,6 +590,126 @@ export const tokens = Object.freeze({
         "org.boobstrap.css-variable": "--bs-ease-emphasized"
       }
     }
+  },
+  "z": {
+    "$description": "z design tokens generated from src/base/tokens.css.",
+    "dropdown": {
+      "$value": "1000",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-dropdown"
+      }
+    },
+    "sticky": {
+      "$value": "1020",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-sticky"
+      }
+    },
+    "fixed": {
+      "$value": "1030",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-fixed"
+      }
+    },
+    "navbar-backdrop": {
+      "$value": "1040",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-navbar-backdrop"
+      }
+    },
+    "navbar": {
+      "$value": "1050",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-navbar"
+      }
+    },
+    "popover": {
+      "$value": "1060",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-popover"
+      }
+    },
+    "tooltip": {
+      "$value": "1070",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-tooltip"
+      }
+    },
+    "toast": {
+      "$value": "1080",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-toast"
+      }
+    },
+    "dialog-backdrop": {
+      "$value": "1090",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-dialog-backdrop"
+      }
+    },
+    "dialog": {
+      "$value": "1100",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-z-dialog"
+      }
+    }
+  },
+  "control": {
+    "$description": "control design tokens generated from src/base/tokens.css.",
+    "size-sm": {
+      "$value": "2.25rem",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-control-size-sm"
+      }
+    },
+    "size-md": {
+      "$value": "2.75rem",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-control-size-md"
+      }
+    },
+    "size-lg": {
+      "$value": "3.25rem",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-control-size-lg"
+      }
+    },
+    "size-xl": {
+      "$value": "3.5rem",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-control-size-xl"
+      }
+    }
+  },
+  "btn": {
+    "$description": "btn design tokens generated from src/base/tokens.css.",
+    "size-sm": {
+      "$value": "{control.size-sm}",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-btn-size-sm"
+      }
+    },
+    "size-md": {
+      "$value": "{control.size-md}",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-btn-size-md"
+      }
+    },
+    "size-lg": {
+      "$value": "3.35rem",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-btn-size-lg"
+      }
+    }
+  },
+  "overlay": {
+    "$description": "overlay design tokens generated from src/base/tokens.css.",
+    "backdrop": {
+      "$value": "rgb(5 2 6 / 68%)",
+      "$extensions": {
+        "org.boobstrap.css-variable": "--bs-overlay-backdrop"
+      }
+    }
   }
 });
 export const modes = Object.freeze({

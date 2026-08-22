@@ -1,15 +1,19 @@
 .bs-btn {
+  --bs-btn-block-size: var(--bs-btn-size-md);
+  --bs-btn-padding-inline: 1.25rem;
+  --bs-btn-radius: var(--bs-radius-md);
+
   position: relative;
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: var(--bs-btn-block-size);
   align-items: center;
   justify-content: center;
   gap: var(--bs-space-2);
-  padding: 0.7rem 1.25rem;
+  padding: 0.7rem var(--bs-btn-padding-inline);
   color: var(--bs-color-text);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--bs-radius-md);
+  border-radius: var(--bs-btn-radius);
   appearance: none;
   font-weight: 650;
   line-height: 1.2;
@@ -121,24 +125,28 @@
 }
 
 .bs-btn-icon {
-  width: 2.75rem;
+  width: var(--bs-control-size-md);
   padding-inline: 0;
 }
 
 .bs-btn-lg {
-  min-height: 3.35rem;
-  padding-inline: 1.65rem;
+  --bs-btn-block-size: var(--bs-btn-size-lg);
+  --bs-btn-padding-inline: 1.65rem;
+
   font-size: var(--bs-font-size-lg);
 }
 
 .bs-btn-sm {
-  min-height: 2.25rem;
-  padding: 0.5rem 0.9rem;
+  --bs-btn-block-size: var(--bs-btn-size-sm);
+  --bs-btn-padding-inline: 0.9rem;
+  --bs-btn-radius: var(--bs-radius-sm);
+
+  padding-block: 0.5rem;
   font-size: var(--bs-font-size-sm);
 }
 
-.bs-btn-icon.bs-btn-sm { width: 2.25rem; padding-inline: 0; }
-.bs-btn-icon.bs-btn-lg { width: 3.35rem; padding-inline: 0; }
+.bs-btn-icon.bs-btn-sm { width: var(--bs-control-size-sm); padding-inline: 0; }
+.bs-btn-icon.bs-btn-lg { width: var(--bs-btn-size-lg); padding-inline: 0; }
 .bs-btn-block { display: flex; width: 100%; }
 
 .bs-btn-toolbar {
@@ -168,24 +176,28 @@
 .bs-btn-group > .bs-btn:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover { transform: none; }
 
 .bs-btn-group-sm > .bs-btn {
-  min-height: 2.25rem;
-  padding: 0.5rem 0.9rem;
+  --bs-btn-block-size: var(--bs-btn-size-sm);
+  --bs-btn-padding-inline: 0.9rem;
+  --bs-btn-radius: var(--bs-radius-sm);
+
+  padding-block: 0.5rem;
   font-size: var(--bs-font-size-sm);
 }
 
 .bs-btn-group-lg > .bs-btn {
-  min-height: 3.35rem;
-  padding-inline: 1.65rem;
+  --bs-btn-block-size: var(--bs-btn-size-lg);
+  --bs-btn-padding-inline: 1.65rem;
+
   font-size: var(--bs-font-size-lg);
 }
 
 .bs-btn-split {
-  width: 2.75rem;
+  width: var(--bs-control-size-md);
   padding-inline: 0;
 }
 
-.bs-btn-group-sm > .bs-btn-split { width: 2.25rem; padding-inline: 0; }
-.bs-btn-group-lg > .bs-btn-split { width: 3.35rem; padding-inline: 0; }
+.bs-btn-group-sm > .bs-btn-split { width: var(--bs-control-size-sm); padding-inline: 0; }
+.bs-btn-group-lg > .bs-btn-split { width: var(--bs-btn-size-lg); padding-inline: 0; }
 
 .bs-btn-caret::after {
   width: 0.45em;

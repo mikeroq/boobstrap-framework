@@ -16,6 +16,16 @@ The contract in this document is also the compatibility target for official Alpi
 
 The CSS, Boobstrap JS, Alpine, React, and Vue layers are implemented and tested against the same public lifecycle contract.
 
+## Directional contract (RTL)
+
+Every component in this contract is direction-neutral by default. Boobstrap uses logical CSS properties (`margin-inline`, `padding-inline`, `inset-inline-start`, `border-inline-end`, etc.) so a `dir="rtl"` ancestor mirrors the layout without component-specific overrides. Adapters and JavaScript controllers must therefore:
+
+- Read and write logical coordinates. The floating UI controller exposes `data-bs-placement` values of `start` and `end` (not `left`/`right`); adapters translate these into `inset-inline-start`/`inset-inline-end` for the panel and arrow.
+- Honor a `[dir="rtl"]` ancestor when computing placement. When the document direction flips, `start` becomes the visual right and `end` becomes the visual left; controllers should re-evaluate placement on `directionchange` events or on each open.
+- Avoid physical `left:` / `right:` declarations on `transform` or animation offsets for persistent state. A one-shot keyframe animation may keep physical values (the `bs-drawer-start` / `bs-drawer-end` swap in `dialog.css` is the canonical example), but a persistent closed-state position must use logical properties or a `[dir="rtl"]` override.
+
+The framework's own behavior under RTL is verified by `tests/rtl.mjs`. Adapters that consume the contract inherit the same coverage if they delegate placement to the framework helpers and avoid re-implementing physical coordinates.
+
 ## Installation and initialization
 
 Importing the stylesheet remains unchanged:

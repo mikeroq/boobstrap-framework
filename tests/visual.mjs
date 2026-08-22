@@ -81,6 +81,10 @@ try {
   }
   if (visualGroup === "all" || visualGroup === "variants") {
     await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
+    for (const region of ["rtl-navbar", "rtl-sidebar", "rtl-dropdown", "rtl-drawer", "rtl-form", "rtl-breadcrumb", "rtl-floating"]) {
+      await capture(`${region}`, { direction: "rtl", selector: `[data-visual="${region}"]` });
+      await capture(`${region}-mobile`, { direction: "rtl", viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
+    }
     await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
     await capture("reduced-loading", { reducedMotion: "reduce", selector: '[data-visual="loading"]' });
   }

@@ -103,6 +103,29 @@
   --bs-duration-slow: 360ms;
   --bs-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --bs-ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Structural scale — z-index layers, control dimensions, and overlay tint. */
+  --bs-z-dropdown: 1000;
+  --bs-z-sticky: 1020;
+  --bs-z-fixed: 1030;
+  --bs-z-navbar-backdrop: 1040;
+  --bs-z-navbar: 1050;
+  --bs-z-popover: 1060;
+  --bs-z-tooltip: 1070;
+  --bs-z-toast: 1080;
+  --bs-z-dialog-backdrop: 1090;
+  --bs-z-dialog: 1100;
+
+  --bs-control-size-sm: 2.25rem;
+  --bs-control-size-md: 2.75rem;
+  --bs-control-size-lg: 3.25rem;
+  --bs-control-size-xl: 3.5rem;
+
+  --bs-btn-size-sm: var(--bs-control-size-sm);
+  --bs-btn-size-md: var(--bs-control-size-md);
+  --bs-btn-size-lg: 3.35rem;
+
+  --bs-overlay-backdrop: rgb(5 2 6 / 68%);
 }
 
 [data-bs-theme="light"] {

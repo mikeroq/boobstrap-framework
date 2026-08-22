@@ -1,5 +1,7 @@
 .bs-banner {
   --bs-banner-accent: var(--bs-color-primary);
+  --bs-banner-padding-block: var(--bs-space-3);
+  --bs-banner-padding-inline: var(--bs-space-5);
 
   width: 100%;
   color: var(--bs-color-text);
@@ -12,12 +14,12 @@
 .bs-banner-inner {
   display: grid;
   width: min(100%, var(--bs-container-2xl));
-  min-height: 3.25rem;
+  min-height: var(--bs-control-size-lg);
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: var(--bs-space-3);
   align-items: center;
   margin-inline: auto;
-  padding: var(--bs-space-3) var(--bs-space-5);
+  padding: var(--bs-banner-padding-block) var(--bs-banner-padding-inline);
 }
 
 .bs-banner-icon {
