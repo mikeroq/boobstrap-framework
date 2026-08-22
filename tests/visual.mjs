@@ -71,8 +71,8 @@ async function capture(name, options = {}) {
 
 try {
   for (const theme of ["dark", "light"]) {
-    for (const region of ["controls", "accordion", "data", "loading", "native", "primitives", "grid", "spacing", "layout"]) {
-      const regionGroup = ["controls", "accordion", "primitives"].includes(region) ? "components" : "content";
+    for (const region of ["controls", "accordion", "data", "loading", "native", "primitives", "grid", "spacing", "layout", "form-validation"]) {
+      const regionGroup = ["controls", "accordion", "primitives", "form-validation"].includes(region) ? "components" : "content";
       if (visualGroup === "all" || visualGroup === `${theme}-${regionGroup}`) {
         await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
         await capture(`${theme}-mobile-${region}`, { theme, viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });

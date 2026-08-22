@@ -192,6 +192,18 @@
             <label class="bs-label" for="accent">Accent color</label>
             <input class="bs-color" id="accent" type="color" value="#d83c87" />
           </div>
+          <div class="bs-form-group" data-test-form-validation>
+            <label class="bs-label" for="validation-default">Validation default</label>
+            <input class="bs-input" id="validation-default" type="text" />
+            <label class="bs-label" for="validation-aria-false">Validation aria false</label>
+            <input class="bs-input" id="validation-aria-false" type="text" aria-invalid="false" />
+            <label class="bs-label" for="validation-class-valid">Validation class valid</label>
+            <input class="bs-input bs-is-valid" id="validation-class-valid" type="text" />
+            <label class="bs-label" for="validation-aria-true">Validation aria true</label>
+            <input class="bs-input" id="validation-aria-true" type="text" aria-invalid="true" />
+            <label class="bs-label" for="validation-class-invalid">Validation class invalid</label>
+            <input class="bs-input bs-is-invalid" id="validation-class-invalid" type="text" />
+          </div>
           <div data-test-scrollbar tabindex="0" aria-label="Themed scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Scrollable theme preview</div></div>
           <div data-bs-scrollbars="native" data-test-native-scrollbar tabindex="0" aria-label="Native scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Native scrollbar preview</div></div>
         </form>
