@@ -1,5 +1,5 @@
 import { createApp, h, onMounted } from "vue";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
+import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -19,6 +19,10 @@ createApp({
     const toast = useToast({ duration: 180 });
     const tooltip = useTooltip({ id: "vue-tooltip", placement: "top" });
     const popover = usePopover({ id: "vue-popover", placement: "bottom" });
+    const banner = useBanner({});
+    const mask = useInputMask("(999) 999-9999");
+    const otp = useOtp();
+    const password = usePassword();
     onMounted(() => { window.vueReady = true; });
 
     return () => h("main", { class: "bs-container bs-section bs-stack bs-gap-6" }, [
@@ -55,6 +59,36 @@ createApp({
       h("div", tooltip.getTooltipProps({ class: "bs-tooltip" }), ["Tooltip details", h("span", { class: "bs-floating-arrow", "aria-hidden": "true" })]),
       h("button", popover.getTriggerProps({ id: "vue-popover-trigger", class: "bs-btn bs-btn-secondary" }), "Vue popover"),
       h("div", popover.getPopoverProps({ class: "bs-popover", "aria-label": "Vue guidance" }), [h("div", { class: "bs-popover-body" }, "Popover details"), h("span", { class: "bs-floating-arrow", "aria-hidden": "true" })]),
+      h("section", { "aria-label": "Vue banner example", "data-test-banner": "" }, [
+        h("div", banner.getBannerProps({ id: "vue-banner", class: "bs-banner" }), [
+          h("div", { class: "bs-banner-inner" }, [
+            h("strong", { class: "bs-banner-title" }, "Preview"),
+            h("span", { class: "bs-banner-message" }, "Composable dismiss."),
+            h("button", banner.getDismissProps({ id: "vue-banner-dismiss", class: "bs-banner-dismiss", "data-bs-banner-dismiss": "", "aria-label": "Dismiss banner" }), "×"),
+          ]),
+        ]),
+      ]),
+      h("section", { "aria-label": "Vue input mask example" }, [
+        h("label", { class: "bs-label", for: "vue-mask-input" }, "Phone"),
+        h("input", mask.getInputProps({ id: "vue-mask-input", class: "bs-input" })),
+      ]),
+      h("section", { "aria-label": "Vue OTP example", "data-test-otp": "" }, [
+        h("span", { class: "bs-label", id: "vue-otp-label" }, "One-time code"),
+        h("div", otp.getRootProps({ class: "bs-otp", "aria-labelledby": "vue-otp-label" }), [
+          h("input", otp.getInputProps(0, { id: "vue-otp-1", class: "bs-otp-input", "aria-label": "Digit 1" })),
+          h("input", otp.getInputProps(1, { id: "vue-otp-2", class: "bs-otp-input", "aria-label": "Digit 2" })),
+          h("input", otp.getInputProps(2, { id: "vue-otp-3", class: "bs-otp-input", "aria-label": "Digit 3" })),
+          h("input", otp.getInputProps(3, { id: "vue-otp-4", class: "bs-otp-input", "aria-label": "Digit 4" })),
+          h("input", { id: "vue-otp-value", type: "hidden", "data-bs-otp-value": "" }),
+        ]),
+      ]),
+      h("section", { "aria-label": "Vue password example", "data-test-password": "" }, [
+        h("label", { class: "bs-label", for: "vue-password-input" }, "Password"),
+        h("div", password.getRootProps({ class: "bs-input-group" }), [
+          h("input", password.getInputProps({ id: "vue-password-input", class: "bs-input", type: "password" })),
+          h("button", password.getToggleProps({ id: "vue-password-toggle", class: "bs-btn bs-btn-secondary", type: "button" }), "Toggle"),
+        ]),
+      ]),
     ]);
   },
 }).mount("#app");

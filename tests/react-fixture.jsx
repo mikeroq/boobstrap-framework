@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -154,6 +154,60 @@ function FloatingFeedbackExample() {
   );
 }
 
+function BannerExample() {
+  const banner = useBanner({});
+  return (
+    <section aria-label="React banner example" data-test-banner>
+      <div id="react-banner" className="bs-banner" {...banner.getBannerProps()}>
+        <div className="bs-banner-inner">
+          <strong className="bs-banner-title">Preview</strong>
+          <span className="bs-banner-message">Hook-controlled dismiss.</span>
+          <button id="react-banner-dismiss" className="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss banner" {...banner.getDismissProps()}>×</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InputMaskExample() {
+  const mask = useInputMask("(999) 999-9999");
+  return (
+    <section aria-label="React input mask example">
+      <label className="bs-label" htmlFor="react-mask-input">Phone</label>
+      <input id="react-mask-input" className="bs-input" {...mask.getInputProps({ defaultValue: "5125551234" })} />
+    </section>
+  );
+}
+
+function OtpExample() {
+  const otp = useOtp();
+  return (
+    <section aria-label="React OTP example" data-test-otp>
+      <span className="bs-label" id="react-otp-label">One-time code</span>
+      <div className="bs-otp" {...otp.getRootProps({ "aria-labelledby": "react-otp-label" })}>
+        <input id="react-otp-1" className="bs-otp-input" aria-label="Digit 1" {...otp.getInputProps(0)} />
+        <input id="react-otp-2" className="bs-otp-input" aria-label="Digit 2" {...otp.getInputProps(1)} />
+        <input id="react-otp-3" className="bs-otp-input" aria-label="Digit 3" {...otp.getInputProps(2)} />
+        <input id="react-otp-4" className="bs-otp-input" aria-label="Digit 4" {...otp.getInputProps(3)} />
+        <input id="react-otp-value" type="hidden" data-bs-otp-value />
+      </div>
+    </section>
+  );
+}
+
+function PasswordExample() {
+  const password = usePassword();
+  return (
+    <section aria-label="React password example" data-test-password>
+      <label className="bs-label" htmlFor="react-password-input">Password</label>
+      <div className="bs-input-group" {...password.getRootProps()}>
+        <input id="react-password-input" className="bs-input" type="password" {...password.getInputProps({ defaultValue: "hunter2" })} />
+        <button id="react-password-toggle" className="bs-btn bs-btn-secondary" type="button" {...password.getToggleProps()}>Toggle</button>
+      </div>
+    </section>
+  );
+}
+
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
@@ -167,6 +221,10 @@ function App() {
       <ComboboxExample />
       <TabsExample />
       <FloatingFeedbackExample />
+      <BannerExample />
+      <InputMaskExample />
+      <OtpExample />
+      <PasswordExample />
     </>
   );
 }

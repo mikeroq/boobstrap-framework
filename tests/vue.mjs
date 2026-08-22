@@ -88,8 +88,41 @@ try {
   await page.locator("#vue-popover").waitFor({ state: "hidden" });
   await page.locator("#vue-popover-trigger").click();
   await page.locator("h1, main").first().click({ position: { x: 2, y: 2 } });
+
+  const vueBanner = page.locator("#vue-banner");
+  if (!await vueBanner.isVisible()) failures.push("banner did not initialize visible");
+  await page.locator("#vue-banner-dismiss").click();
+  await page.waitForFunction(() => document.querySelector("#vue-banner").hidden);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:banner:dismissed" && event.adapter === "vue"));
+
+  const vueMaskInput = page.locator("#vue-mask-input");
+  await vueMaskInput.click();
+  await vueMaskInput.fill("");
+  await vueMaskInput.type("5125551234");
+  const vueMaskValue = await vueMaskInput.inputValue();
+  if (vueMaskValue !== "(512) 555-1234") failures.push(`input mask did not format value (received ${vueMaskValue})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:mask:change" && event.adapter === "vue"));
+
+  const vueOtpInputs = page.locator("[data-test-otp] .bs-otp-input");
+  await vueOtpInputs.nth(0).fill("1");
+  await page.waitForFunction(() => document.querySelectorAll("[data-test-otp] .bs-otp-input")[1] === document.activeElement);
+  await page.keyboard.type("23");
+  await vueOtpInputs.nth(3).fill("4");
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:otp:complete" && event.adapter === "vue"));
+  const vueOtpValue = await page.locator("#vue-otp-value").inputValue();
+  if (vueOtpValue !== "1234") failures.push(`otp value did not synchronize (received ${vueOtpValue})`);
+
+  const vuePasswordInput = page.locator("#vue-password-input");
+  const vuePasswordToggle = page.locator("#vue-password-toggle");
+  const vueInitialType = await vuePasswordInput.getAttribute("type");
+  await vuePasswordToggle.click();
+  await page.waitForFunction(() => document.querySelector("#vue-password-input").type === "text");
+  const vueToggledType = await vuePasswordInput.getAttribute("type");
+  if (vueInitialType !== "password" || vueToggledType !== "text") failures.push(`password toggle did not flip input type (${vueInitialType} -> ${vueToggledType})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:password:toggled" && event.adapter === "vue"));
+
   const eventNames = await page.evaluate(() => window.bsEvents.filter((event) => event.adapter === "vue").map((event) => event.name));
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
   const dimensions = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   if (dimensions.scrollWidth > dimensions.clientWidth + 1) failures.push("horizontal overflow");
   const accessibility = await new AxeBuilder({ page }).analyze();

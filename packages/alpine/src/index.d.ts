@@ -10,14 +10,24 @@ export interface NavbarProvider extends OpenProvider { trigger: AlpineBinding; m
 export interface TabsProvider { selectedId: string | null; activate(id: string, sourceEvent?: Event): boolean; tablist: AlpineBinding; tab(id: string, controls?: string): AlpineBinding; panel(tabId: string): AlpineBinding; destroy(): void; }
 export interface ToastProvider extends OpenProvider { trigger: AlpineBinding; panel: AlpineBinding; dismiss: AlpineBinding; }
 export interface FloatingProvider extends OpenProvider { trigger: AlpineBinding; panel: AlpineBinding; }
+export interface BannerProvider { visible: boolean; show(): boolean; dismiss(): boolean; root: AlpineBinding; dismissButton: AlpineBinding; }
+export interface InputMaskProvider { mask: string; format(): boolean; root: AlpineBinding; }
+export interface OtpProvider { value: string; clear(): void; root: AlpineBinding; }
+export interface PasswordProvider { visible: boolean; setVisible(visible: boolean): boolean; toggle(): boolean; toggleButton: AlpineBinding; }
+export interface SidebarProvider { open: boolean; expanded: boolean; overlay: boolean; show(reason?: string, sourceEvent?: Event): boolean; hide(reason?: string, sourceEvent?: Event): boolean; toggle(reason?: string, sourceEvent?: Event): boolean; expand(reason?: string, sourceEvent?: Event): boolean; collapse(reason?: string, sourceEvent?: Event): boolean; destroy(): void; }
 export function button(initialLoading?: boolean, options?: Record<string, unknown>): ButtonProvider;
 export function accordion(initialOpenIds?: string[], options?: { alwaysOpen?: boolean; onOpenIdsChange?: (ids: string[]) => void }): AccordionProvider;
+export function banner(initialVisible?: boolean): BannerProvider;
 export function collapse(initialOpen?: boolean): CollapseProvider;
 export function combobox(options?: Record<string, unknown>): ComboboxProvider;
 export function dialog(initialOpen?: boolean): DialogProvider;
 export function dropdown(initialOpen?: boolean): DropdownProvider;
+export function inputMask(pattern: string): InputMaskProvider;
 export function navbar(initialOpen?: boolean): NavbarProvider;
+export function otp(options?: { pattern?: string }): OtpProvider;
+export function password(options?: { showLabel?: string; hideLabel?: string }): PasswordProvider;
 export function popover(initialOpen?: boolean, options?: Record<string, unknown>): FloatingProvider;
+export function sidebar(options?: { media?: string; collapse?: "none" | "icon" | "offcanvas"; shortcut?: string }): SidebarProvider;
 export function tabs(initialSelectedId?: string | null): TabsProvider;
 export function toast(initialOpen?: boolean, options?: { autohide?: boolean; duration?: number }): ToastProvider;
 export function tooltip(initialOpen?: boolean, options?: Record<string, unknown>): FloatingProvider;

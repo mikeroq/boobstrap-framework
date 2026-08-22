@@ -156,3 +156,79 @@ export interface PopoverResult {
   getPopoverProps: (props?: ElementProps) => ElementProps;
 }
 export function usePopover(options?: FloatingOptions): PopoverResult;
+
+export interface BannerOptions {
+  visible?: boolean | Ref<boolean>;
+  defaultVisible?: boolean;
+  onVisibleChange?: (visible: boolean, detail: TransitionDetail) => void;
+}
+
+export interface BannerResult {
+  visible: ComputedRef<boolean>;
+  show: () => boolean;
+  dismiss: () => boolean;
+  getBannerProps: (props?: ElementProps) => ElementProps;
+  getDismissProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useBanner(options?: BannerOptions): BannerResult;
+
+export interface InputMaskResult {
+  format: (options?: { silent?: boolean }) => boolean;
+  getInputProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useInputMask(mask: string): InputMaskResult;
+export function formatMask(value: string, mask: string): string;
+
+export interface OtpOptions { pattern?: string; }
+
+export interface OtpResult {
+  clear: () => void;
+  sync: (options?: { silent?: boolean }) => void;
+  getRootProps: (props?: ElementProps) => ElementProps;
+  getInputProps: (index: number, props?: ElementProps) => ElementProps;
+}
+
+export function useOtp(options?: OtpOptions): OtpResult;
+
+export interface PasswordOptions {
+  showLabel?: string;
+  hideLabel?: string;
+}
+
+export interface PasswordResult {
+  visible: ComputedRef<boolean>;
+  setVisible: (visible: boolean) => boolean;
+  toggle: () => boolean;
+  getRootProps: (props?: ElementProps) => ElementProps;
+  getInputProps: (props?: ElementProps) => ElementProps;
+  getToggleProps: (props?: ElementProps) => ElementProps;
+  getLabelProps: (props?: ElementProps) => ElementProps;
+}
+
+export function usePassword(options?: PasswordOptions): PasswordResult;
+
+export interface SidebarTransitionOptions {
+  reason?: string;
+  sourceEvent?: Event;
+  restoreTarget?: EventTarget | null;
+  restoreFocus?: boolean;
+}
+
+export interface SidebarOptions extends OpenOptions {
+  media?: string;
+  shortcut?: string;
+}
+
+export interface SidebarResult {
+  open: ComputedRef<boolean>;
+  show: (options?: SidebarTransitionOptions) => boolean;
+  hide: (options?: SidebarTransitionOptions) => boolean;
+  toggle: (options?: SidebarTransitionOptions) => boolean;
+  expand: (options?: SidebarTransitionOptions) => boolean;
+  collapse: (options?: SidebarTransitionOptions) => boolean;
+  getRootProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useSidebar(options?: SidebarOptions): SidebarResult;

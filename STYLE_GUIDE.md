@@ -829,7 +829,45 @@ Recommended component page structure:
 7. Customization guidance
 8. Related components
 
-## 21. CSS Token Foundation
+## 21. Compositional Primitives
+
+Boobstrap ships small, single-purpose composition primitives that complement full components. They share tokens with the rest of the framework and never override application structure.
+
+### Separator
+
+`<hr class="bs-separator">` draws a themed horizontal rule by default. The element accepts `aria-orientation="vertical"` to switch to a vertical divider inside flex layouts:
+
+```html
+<hr class="bs-separator" />
+<hr class="bs-separator" aria-orientation="vertical" />
+```
+
+### Generic close button
+
+`.bs-close` is a square icon button with an `×` glyph that ships as a default `::before` pseudo-element so no asset is required. The dialog, drawer, banner, and toast close variants (`bs-dialog-close`, `bs-drawer-close`, `bs-banner-dismiss`, `bs-toast-dismiss`) extend the same base. Existing close selectors continue to work.
+
+```html
+<button type="button" class="bs-close" aria-label="Dismiss"></button>
+```
+
+### Dropdown composition
+
+Inside a `.bs-dropdown-menu`, the following helpers add common compositional patterns without overriding the controller contract:
+
+- `.bs-dropdown-header` — section heading (uppercase, subtle text, `--bs-color-text-subtle`).
+- `.bs-dropdown-divider` — separator between groups.
+- `.bs-dropdown-item-checked` — item with a leading `✓` glyph.
+- `.bs-dropdown-item-secondary` — muted descriptive text under an item label.
+
+```html
+<div class="bs-dropdown-header">Recent</div>
+<button class="bs-dropdown-item bs-dropdown-item-checked" role="menuitem">Edit<span class="bs-dropdown-item-secondary">2 minutes ago</span></button>
+<hr class="bs-dropdown-divider" />
+```
+
+The dropdown controller still owns keyboard navigation and selection; these classes are presentational only.
+
+## 22. CSS Token Foundation
 
 ```css
 :root {

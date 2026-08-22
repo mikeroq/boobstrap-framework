@@ -132,6 +132,40 @@
           <div class="bs-popover" id="alpine-popover" x-ref="popover" x-bind="panel" aria-label="Integration guidance" hidden><div class="bs-popover-body">Popover details</div><span class="bs-floating-arrow" aria-hidden="true"></span></div>
         </div>
       </section>
+
+      <section aria-label="Alpine banner example" data-test-banner>
+        <div class="bs-banner" x-data="bsBanner" x-ref="banner" x-bind="root" data-bs-state="visible">
+          <div class="bs-banner-inner">
+            <strong class="bs-banner-title">Preview</strong>
+            <span class="bs-banner-message">Adapter-controlled dismiss.</span>
+            <button class="bs-banner-dismiss" id="alpine-banner-dismiss" type="button" x-bind="dismissButton" data-bs-banner-dismiss aria-label="Dismiss banner">×</button>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Alpine input mask example">
+        <label class="bs-label" for="alpine-mask-input">Phone</label>
+        <input class="bs-input" id="alpine-mask-input" x-data="bsInputMask('(999) 999-9999')" x-bind="root" />
+      </section>
+
+      <section aria-label="Alpine OTP example" data-test-otp>
+        <span class="bs-label" id="alpine-otp-label">One-time code</span>
+        <div class="bs-otp" x-data="bsOtp" x-bind="root" aria-labelledby="alpine-otp-label">
+          <input class="bs-otp-input" id="alpine-otp-1" data-bs-otp-input aria-label="Digit 1" />
+          <input class="bs-otp-input" id="alpine-otp-2" data-bs-otp-input aria-label="Digit 2" />
+          <input class="bs-otp-input" id="alpine-otp-3" data-bs-otp-input aria-label="Digit 3" />
+          <input class="bs-otp-input" id="alpine-otp-4" data-bs-otp-input aria-label="Digit 4" />
+          <input type="hidden" data-bs-otp-value />
+        </div>
+      </section>
+
+      <section aria-label="Alpine password example" data-test-password>
+        <label class="bs-label" for="alpine-password">Password</label>
+        <div class="bs-input-group" x-data="bsPassword" x-ref="root">
+          <input class="bs-input" id="alpine-password" type="password" x-ref="input" data-bs-password-input value="hunter2" />
+          <button class="bs-btn bs-btn-secondary" type="button" x-bind="toggleButton" data-bs-password-toggle>Toggle</button>
+        </div>
+      </section>
     </main>
   </body>
 </html>

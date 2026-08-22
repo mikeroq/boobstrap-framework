@@ -21,6 +21,8 @@
 @import "./components/empty.css";
 @import "./components/interactions.css";
 @import "./components/floating.css";
+@import "./components/separator.css";
+@import "./components/close.css";
 @import "./integrations/datatables.css";
 @import "./utilities/layout.css";
 @import "./utilities/spacing.css";

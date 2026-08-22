@@ -31,7 +31,28 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsNavbar`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Each provider exposes reusable Alpine bind objects so component markup contains names instead of duplicated behavior expressions.
+The plugin registers `bsAccordion`, `bsBanner`, `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsInputMask`, `bsNavbar`, `bsOtp`, `bsPassword`, `bsPopover`, `bsSidebar`, `bsTabs`, `bsToast`, and `bsTooltip` data providers.
+
+## Supported controllers
+
+| controller  | alpine factory | core export        |
+|-------------|----------------|--------------------|
+| accordion   | `accordion`    | `Accordion`        |
+| banner      | `banner`       | `Banner`           |
+| button      | `button`       | `Button`           |
+| collapse    | `collapse`     | `Collapse`         |
+| combobox    | `combobox`     | `Combobox`         |
+| dialog      | `dialog`       | `Dialog`           |
+| dropdown    | `dropdown`     | `Dropdown`         |
+| input-mask  | `inputMask`    | `InputMask`        |
+| navbar      | `navbar`       | `Navbar`           |
+| otp         | `otp`          | `Otp`              |
+| password    | `password`     | `Password`         |
+| popover     | `popover`      | `Popover`          |
+| sidebar     | `sidebar`     | `Sidebar`          |
+| tabs        | `tabs`         | `Tabs`             |
+| toast       | `toast`        | `Toast`            |
+| tooltip     | `tooltip`      | `Tooltip`          |
 
 ## Dialog or drawer
 
@@ -67,6 +88,52 @@ Use `.bs-dialog` instead of `.bs-drawer` for a centered modal. The provider expo
 ```
 
 The button enters loading state on click. Call `stop()` when the asynchronous action settles.
+
+## Banner
+
+```html
+<div class="bs-banner" x-data="bsBanner" x-bind="root" data-bs-state="visible">
+  <div class="bs-banner-inner">
+    <strong class="bs-banner-title">Preview</strong>
+    <span class="bs-banner-message">Dismiss with the adapter hook.</span>
+    <button class="bs-banner-dismiss" type="button" data-bs-banner-dismiss x-bind="dismissButton" aria-label="Dismiss banner">×</button>
+  </div>
+</div>
+```
+
+`bsBanner` exposes `show()` and `dismiss()` and reflects state through `data-bs-state="visible|dismissed"`.
+
+## Sidebar
+
+```html
+<aside class="bs-sidebar bs-sidebar-start bs-sidebar-drawer" id="app-sidebar" data-bs-sidebar x-data="bsSidebar" x-ref="sidebar" data-bs-state="closed">
+  <div class="bs-sidebar-content">
+    <a class="bs-sidebar-menu-button" href="/dashboard">Dashboard</a>
+  </div>
+</aside>
+<button class="bs-sidebar-trigger" type="button" data-bs-toggle="sidebar" aria-controls="app-sidebar" x-data="bsSidebar" x-bind="trigger">☰</button>
+```
+
+`bsSidebar` exposes `show()`, `hide()`, `toggle()`, `expand()`, and `collapse()` so the same provider handles both responsive drawer behavior and desktop collapse modes.
+
+## Input mask, OTP, and password
+
+```html
+<input class="bs-input" x-data="bsInputMask('(999) 999-9999')" x-bind="root" />
+<div x-data="bsOtp" x-bind="root">
+  <input class="bs-otp-input" data-bs-otp-input />
+  <input class="bs-otp-input" data-bs-otp-input />
+  <input class="bs-otp-input" data-bs-otp-input />
+  <input class="bs-otp-input" data-bs-otp-input />
+  <input type="hidden" data-bs-otp-value />
+</div>
+<div x-data="bsPassword" x-ref="root">
+  <input class="bs-input" type="password" data-bs-password-input value="hunter2" />
+  <button class="bs-btn bs-btn-secondary" type="button" x-bind="toggleButton" data-bs-password-toggle>Toggle</button>
+</div>
+```
+
+`bsInputMask`, `bsOtp`, and `bsPassword` mirror their core counterparts so the controller contract holds across layers.
 
 ## Searchable combobox
 
