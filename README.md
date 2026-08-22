@@ -208,9 +208,7 @@ import tokenJson from "@boobstrap/boobstrap/tokens.json" with { type: "json" };
 
 `dist/tokens.json` follows the DTCG `$value` and alias shape. Exact CSS `var()` aliases become token references; CSS-native expressions such as `clamp()`, gradients, shadows, and font stacks remain lossless strings without a misleading `$type`. CSS custom properties remain the runtime styling API; these generated artifacts are interoperability data and must not be edited directly.
 
-## Browser support
-
-### Loading skeletons
+## Loading skeletons
 
 Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with `.bs-skeleton-text`, `.bs-skeleton-circle`, `.bs-skeleton-media`, size modifiers, and either `.bs-skeleton-pulse` or `.bs-skeleton-wave`. Set widths with `--bs-skeleton-width` or existing layout utilities. Mark the placeholder group `aria-hidden="true"`, put `aria-busy="true"` on the containing content region, and update that region when real content replaces it; skeletons are not progress bars. Both animations become static under reduced motion.
 
@@ -219,6 +217,12 @@ Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with
 The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, optional controller interactions, keyboard navigation, and automated Axe accessibility checks.
 
 Legacy browsers are not a target. Boobstrap uses modern CSS features including custom properties, Grid, `clamp()`, and modern color syntax.
+
+Forced colors (Windows High Contrast) are exercised by the browser test matrix. Components that override native chrome opt into `forced-color-adjust: auto` so users keep a recognizable OS shape and high-contrast palette.
+
+## What's new in v0.6
+
+v0.6 completes the responsive grid, spacing, and layout utility surfaces, adds five new component controllers (banner, input-mask, otp, password, sidebar) with matching Alpine, React, and Vue adapters, and ships minified CSS and component-local customization hooks. It also fixes `aria-invalid="false"` so it no longer applies success styling. See [docs/MIGRATING.md](docs/MIGRATING.md) for the migration notes, including the one deliberate breaking change, and [CHANGELOG.md](CHANGELOG.md) for the complete list.
 
 ## Development
 
@@ -283,6 +287,18 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Machine-readable design token exports
 - Accordion and loading skeleton primitives
 - Adapter conformance and visual regression contracts
+
+### v0.6 — Responsive surface, component breadth, and resilience
+
+- Completed responsive 12-column grid with breakpoint tokens (`--bs-breakpoint-*`)
+- Completed spacing utility grammar (margin, padding, gap) with responsive variants
+- Added display, position, flex, sizing, text overflow, and media fit utilities
+- Added full semantic variants for alert, badge, button, and banner
+- Added compositional primitives (`.bs-separator`, `.bs-close`, dropdown helpers)
+- Added five controllers (banner, input-mask, otp, password, sidebar) with matching Alpine, React, and Vue adapters
+- Added structural tokens (`--bs-z-*`, `--bs-control-size-*`, `--bs-btn-size-*`, `--bs-overlay-backdrop`) and component-local hooks (`--bs-btn-*`, `--bs-card-*`, `--bs-dialog-*`, `--bs-control-*`, `--bs-banner-*`, `--bs-toast-*`, `--bs-sidebar-*`)
+- Shipped minified CSS at `@boobstrap/boobstrap/min.css` with size budgets
+- Fixed `aria-invalid="false"` so it no longer applies success styling (migration required)
 
 ### Future
 

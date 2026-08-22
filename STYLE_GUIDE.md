@@ -31,7 +31,7 @@ Lowercase `boobstrap` may be used for package names, repositories, file names, a
 
 ```text
 boobstrap
-@boobstrap/core
+@boobstrap/boobstrap
 boobstrap.css
 ```
 
@@ -660,6 +660,33 @@ The `--bs-alert-accent` and `--bs-badge-accent` component-local variables are
 public customization hooks. Override them on a parent element to retint a
 single alert or badge family without touching the base `--bs-color-*` tokens.
 
+### Component customization hooks
+
+Every component exposes a small, focused set of `--bs-<component>-*` custom
+properties. Override them on the component boundary (or any ancestor) to retint
+or resize one instance without touching the global `--bs-color-*` scale.
+
+| Component   | Public hooks                                                                       |
+|-------------|------------------------------------------------------------------------------------|
+| `bs-alert`  | `--bs-alert-accent`                                                                |
+| `bs-badge`  | `--bs-badge-accent`                                                                |
+| `bs-btn`    | `--bs-btn-block-size`, `--bs-btn-padding-inline`                                   |
+| `bs-card`   | `--bs-card-padding`                                                                |
+| `bs-control` (inputs, selects, textareas) | `--bs-control-bg`, `--bs-control-border`, `--bs-control-color`        |
+| `bs-dialog` | `--bs-dialog-width`, `--bs-dialog-max-height`, `--bs-drawer-width`                  |
+| `bs-banner` | `--bs-banner-bg`, `--bs-banner-border`, `--bs-banner-color`                        |
+| `bs-toast`  | `--bs-toast-bg`, `--bs-toast-border`, `--bs-toast-color`                           |
+| `bs-sidebar`| `--bs-sidebar-offset`, `--bs-sidebar-height`, `--bs-sidebar-width`, `--bs-sidebar-width-mobile`, `--bs-sidebar-width-collapsed`, `--bs-sidebar-skeleton-width` |
+
+Global structural tokens complete the customization surface and are resolved
+once at the document root:
+
+- `--bs-z-dropdown`, `--bs-z-sticky`, `--bs-z-fixed`, `--bs-z-navbar-backdrop`, `--bs-z-navbar`, `--bs-z-popover`, `--bs-z-tooltip`, `--bs-z-toast`, `--bs-z-dialog-backdrop`, `--bs-z-dialog` — explicit z-index layers for floating UI.
+- `--bs-control-size-sm`, `--bs-control-size-md`, `--bs-control-size-lg`, `--bs-control-size-xl` — form-control and input dimensions.
+- `--bs-btn-size-sm`, `--bs-btn-size-md`, `--bs-btn-size-lg` — button minimum heights (alias the control sizes for `sm`/`md`).
+- `--bs-overlay-backdrop` — modal, drawer, navbar, and sidebar backdrop tint.
+- `--bs-breakpoint-sm`, `--bs-breakpoint-md`, `--bs-breakpoint-lg`, `--bs-breakpoint-xl`, `--bs-breakpoint-2xl` — responsive grid and utility breakpoints.
+
 ### Badge foreground color
 
 `.bs-badge-primary` keeps its `--bs-color-primary-hover` foreground so existing
@@ -895,6 +922,18 @@ Inside a `.bs-dropdown-menu`, the following helpers add common compositional pat
 
 The dropdown controller still owns keyboard navigation and selection; these classes are presentational only.
 
+### Adapter parity
+
+Every controller is exposed by Boobstrap JS, `@boobstrap/alpine`, `@boobstrap/react`, and `@boobstrap/vue`. There are no core-only controllers. The framework intentionally ships nothing that is framework-incompatible. The full controller parity table — including the five controllers added in v0.6 (`banner`, `input-mask`, `otp`, `password`, `sidebar`) — lives in [docs/INTERACTIONS.md](../docs/INTERACTIONS.md#universal-controllers).
+
+Adapter behavior contracts:
+
+- Adapters preserve the documented semantic structure, classes, state attributes, and keyboard behavior.
+- Adapters use the same event names (`bs:<component>:<action>`) when the host framework supports DOM events, while also exposing idiomatic framework callbacks.
+- Adapters support externally controlled state without attaching Boobstrap JS controllers to framework-owned DOM.
+- Adapters keep their framework runtime as a peer dependency.
+- Adapters document any deliberate difference from the base interaction contract.
+
 ## 22. CSS Token Foundation
 
 ```css
@@ -981,7 +1020,7 @@ The dropdown controller still owns keyboard navigation and selection; these clas
 }
 ```
 
-## 22. Design Checklist
+## 23. Design Checklist
 
 Before shipping a Boobstrap-branded page or component, confirm that:
 
