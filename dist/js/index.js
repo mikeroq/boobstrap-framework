@@ -10,6 +10,7 @@ export { Otp, initOtps } from "./otp.js";
 export { Password, initPasswords } from "./password.js";
 export { Popover, initPopovers } from "./popover.js";
 export { Navbar, initNavbars } from "./navbar.js";
+export { Scrollspy, initScrollspies } from "./scrollspy.js";
 export { Sidebar, initSidebars } from "./sidebar.js";
 export { Tabs, initTabs } from "./tabs.js";
 export { Toast, initToasts } from "./toast.js";
@@ -28,6 +29,7 @@ import { initOtps } from "./otp.js";
 import { initPasswords } from "./password.js";
 import { initPopovers } from "./popover.js";
 import { initNavbars } from "./navbar.js";
+import { initScrollspies } from "./scrollspy.js";
 import { initSidebars } from "./sidebar.js";
 import { initTabs } from "./tabs.js";
 import { initToasts } from "./toast.js";
@@ -47,6 +49,7 @@ export function initBoobstrap(root = document) {
     ...initPasswords(root),
     ...initPopovers(root),
     ...initNavbars(root),
+    ...initScrollspies(root),
     ...initSidebars(root),
     ...initTabs(root),
     ...initToasts(root),

@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "@boobstrap/react";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -208,6 +208,27 @@ function PasswordExample() {
   );
 }
 
+function ScrollspyExample() {
+  const spy = useScrollspy();
+  return (
+    <section aria-label="React scrollspy example" data-test-scrollspy>
+      <nav id="react-scrollspy" className="bs-nav" aria-label="React section navigation" {...spy.getNavProps()}>
+        <a className="bs-nav-link" href="#react-scrollspy-intro">Introduction</a>
+        <a className="bs-nav-link" href="#react-scrollspy-details">Details</a>
+        <a className="bs-nav-link" href="#react-scrollspy-summary">Summary</a>
+      </nav>
+      <article>
+        <h2 id="react-scrollspy-intro">Introduction</h2>
+        <p style={{ minBlockSize: "80vh" }}>Long introductory content.</p>
+        <h2 id="react-scrollspy-summary">Summary</h2>
+        <p style={{ minBlockSize: "80vh" }}>Intermediate anchor so the active link can change.</p>
+        <h2 id="react-scrollspy-details">Details</h2>
+        <p style={{ minBlockSize: "80vh" }}>Detailed content so the final link can become active.</p>
+      </article>
+    </section>
+  );
+}
+
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
@@ -225,6 +246,7 @@ function App() {
       <InputMaskExample />
       <OtpExample />
       <PasswordExample />
+      <ScrollspyExample />
     </>
   );
 }

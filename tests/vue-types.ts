@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/vue";
 
 const open = ref(false);
 const value = ref("");
@@ -21,3 +21,4 @@ useTabs({ selectedId }).activate("profile");
 useToast({ open, duration: 2500 }).hide("types");
 useTooltip({ open, placement: "top" }).show("types");
 usePopover({ open, placement: "bottom" }).toggle("types");
+useScrollspy().getNavProps();

@@ -229,6 +229,22 @@
     </main>
     </div>
 
+    <section aria-label="Scrollspy example" class="bs-scrollspy-section" id="scrollspy-section">
+      <nav class="bs-nav" data-bs-scrollspy aria-label="Section navigation">
+        <a class="bs-nav-link" href="#scrollspy-intro">Introduction</a>
+        <a class="bs-nav-link" href="#scrollspy-details">Details</a>
+        <a class="bs-nav-link" href="#scrollspy-summary">Summary</a>
+      </nav>
+      <article>
+        <h2 id="scrollspy-intro">Introduction</h2>
+        <p style="min-block-size: 80vh">Long introductory content that pushes the layout down.</p>
+        <h2 id="scrollspy-summary">Summary</h2>
+        <p style="min-block-size: 80vh">An intermediate section anchor so the active link can change.</p>
+        <h2 id="scrollspy-details">Details</h2>
+        <p style="min-block-size: 80vh">Detailed content so the final link can become active.</p>
+      </article>
+    </section>
+
     <script type="module">
       import { initBoobstrap, interactionEvents } from "/dist/boobstrap.js";
 

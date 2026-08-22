@@ -36,6 +36,8 @@ export class Password extends ElementController { constructor(element: HTMLEleme
 export function initPasswords(root?: Root): Password[];
 export class Popover extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Popover; readonly visible: boolean; show(options?: TransitionOptions): boolean; hide(options?: TransitionOptions): boolean; toggle(options?: TransitionOptions): boolean; }
 export function initPopovers(root?: Root): Popover[];
+export class Scrollspy extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Scrollspy; readonly activeLink: HTMLAnchorElement | null; }
+export function initScrollspies(root?: Root): Scrollspy[];
 export class Sidebar extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Sidebar; readonly overlay: boolean; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions): boolean; toggle(options?: FocusTransitionOptions): boolean; expand(options?: TransitionOptions): boolean; collapse(options?: TransitionOptions): boolean; }
 export function initSidebars(root?: Root): Sidebar[];
 export class Tabs extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Tabs; readonly selectedTab: HTMLElement | undefined; activate(tab: HTMLElement): boolean; }

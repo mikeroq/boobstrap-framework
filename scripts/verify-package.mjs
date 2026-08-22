@@ -34,6 +34,7 @@ const requiredPaths = [
   "dist/js/otp.js",
   "dist/js/password.js",
   "dist/js/popover.js",
+  "dist/js/scrollspy.js",
   "dist/js/sidebar.js",
   "dist/js/tabs.js",
   "dist/js/toast.js",

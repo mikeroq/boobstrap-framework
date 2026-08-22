@@ -14,6 +14,7 @@ export interface BannerProvider { visible: boolean; show(): boolean; dismiss(): 
 export interface InputMaskProvider { mask: string; format(): boolean; root: AlpineBinding; }
 export interface OtpProvider { value: string; clear(): void; root: AlpineBinding; }
 export interface PasswordProvider { visible: boolean; setVisible(visible: boolean): boolean; toggle(): boolean; toggleButton: AlpineBinding; }
+export interface ScrollspyProvider { activeLink: HTMLAnchorElement | null; destroy(): void; }
 export interface SidebarProvider { open: boolean; expanded: boolean; overlay: boolean; show(reason?: string, sourceEvent?: Event): boolean; hide(reason?: string, sourceEvent?: Event): boolean; toggle(reason?: string, sourceEvent?: Event): boolean; expand(reason?: string, sourceEvent?: Event): boolean; collapse(reason?: string, sourceEvent?: Event): boolean; destroy(): void; }
 export function button(initialLoading?: boolean, options?: Record<string, unknown>): ButtonProvider;
 export function accordion(initialOpenIds?: string[], options?: { alwaysOpen?: boolean; onOpenIdsChange?: (ids: string[]) => void }): AccordionProvider;
@@ -27,6 +28,7 @@ export function navbar(initialOpen?: boolean): NavbarProvider;
 export function otp(options?: { pattern?: string }): OtpProvider;
 export function password(options?: { showLabel?: string; hideLabel?: string }): PasswordProvider;
 export function popover(initialOpen?: boolean, options?: Record<string, unknown>): FloatingProvider;
+export function scrollspy(): ScrollspyProvider;
 export function sidebar(options?: { media?: string; collapse?: "none" | "icon" | "offcanvas"; shortcut?: string }): SidebarProvider;
 export function tabs(initialSelectedId?: string | null): TabsProvider;
 export function toast(initialOpen?: boolean, options?: { autohide?: boolean; duration?: number }): ToastProvider;

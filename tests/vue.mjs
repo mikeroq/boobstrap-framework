@@ -121,8 +121,19 @@ try {
   if (vueInitialType !== "password" || vueToggledType !== "text") failures.push(`password toggle did not flip input type (${vueInitialType} -> ${vueToggledType})`);
   await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:password:toggled" && event.adapter === "vue"));
 
+  const vueScrollspyNav = page.locator("#vue-scrollspy");
+  if (await vueScrollspyNav.evaluate((nav) => !nav.querySelector('a[aria-current="true"]'))) failures.push("scrollspy did not set an initial active link");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#vue-scrollspy-details").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => {
+    const link = document.querySelector("#vue-scrollspy a[aria-current=\"true\"]");
+    return link?.getAttribute("href") === "#vue-scrollspy-details";
+  });
+  if (await vueScrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== "#vue-scrollspy-details") {
+    failures.push("scrollspy did not activate the details link");
+  }
+
   const eventNames = await page.evaluate(() => window.bsEvents.filter((event) => event.adapter === "vue").map((event) => event.name));
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:combobox:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:popover:shown", "bs:popover:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) if (!eventNames.includes(name)) failures.push(`missing ${name}`);
   const dimensions = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
   if (dimensions.scrollWidth > dimensions.clientWidth + 1) failures.push("horizontal overflow");
   const accessibility = await new AxeBuilder({ page }).analyze();

@@ -282,6 +282,12 @@ export interface PasswordResult {
 
 export function usePassword(options?: PasswordOptions): PasswordResult;
 
+export interface ScrollspyResult {
+  getNavProps: (props?: HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>) => HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>;
+}
+
+export function useScrollspy(): ScrollspyResult;
+
 export interface SidebarTransitionOptions {
   reason?: string;
   sourceEvent?: Event;

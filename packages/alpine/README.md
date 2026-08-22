@@ -31,7 +31,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin registers `bsAccordion`, `bsBanner`, `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsInputMask`, `bsNavbar`, `bsOtp`, `bsPassword`, `bsPopover`, `bsSidebar`, `bsTabs`, `bsToast`, and `bsTooltip` data providers.
+The plugin registers `bsAccordion`, `bsBanner`, `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsInputMask`, `bsNavbar`, `bsOtp`, `bsPassword`, `bsPopover`, `bsScrollspy`, `bsSidebar`, `bsTabs`, `bsToast`, and `bsTooltip` data providers.
 
 ## Supported controllers
 
@@ -49,6 +49,7 @@ The plugin registers `bsAccordion`, `bsBanner`, `bsButton`, `bsCollapse`, `bsCom
 | otp         | `otp`          | `Otp`              |
 | password    | `password`     | `Password`         |
 | popover     | `popover`      | `Popover`          |
+| scrollspy   | `scrollspy`    | `Scrollspy`        |
 | sidebar     | `sidebar`     | `Sidebar`          |
 | tabs        | `tabs`         | `Tabs`             |
 | toast       | `toast`        | `Toast`            |

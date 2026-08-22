@@ -10,7 +10,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 ```
 
 React remains a peer dependency. The adapter does not import or initialize Boobstrap JS.
@@ -31,6 +31,7 @@ React remains a peer dependency. The adapter does not import or initialize Boobs
 | `useOtp`      | `Otp`       |
 | `usePassword` | `Password`  |
 | `usePopover`  | `Popover`   |
+| `useScrollspy` | `Scrollspy` |
 | `useSidebar`  | `Sidebar`   |
 | `useTabs`     | `Tabs`      |
 | `useToast`    | `Toast`     |

@@ -20,7 +20,7 @@ const details = useCollapse({ id: "details" });
 </template>
 ```
 
-The package exports `useAccordion`, `useBanner`, `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useInputMask`, `useNavbar`, `useOtp`, `usePassword`, `usePopover`, `useSidebar`, `useTabs`, `useToast`, and `useTooltip`. State options accept either plain controlled values or Vue refs for `v-model`-style ownership. Lifecycle events use the same cancelable `bs:*` contract as Boobstrap JS, Alpine, and React.
+The package exports `useAccordion`, `useBanner`, `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useInputMask`, `useNavbar`, `useOtp`, `usePassword`, `usePopover`, `useScrollspy`, `useSidebar`, `useTabs`, `useToast`, and `useTooltip`. State options accept either plain controlled values or Vue refs for `v-model`-style ownership. Lifecycle events use the same cancelable `bs:*` contract as Boobstrap JS, Alpine, and React.
 
 ## Supported composables
 
@@ -38,6 +38,7 @@ The package exports `useAccordion`, `useBanner`, `useButton`, `useCollapse`, `us
 | `useOtp`         | `Otp`       |
 | `usePassword`    | `Password`  |
 | `usePopover`     | `Popover`   |
+| `useScrollspy`   | `Scrollspy` |
 | `useSidebar`     | `Sidebar`   |
 | `useTabs`        | `Tabs`      |
 | `useToast`       | `Toast`     |

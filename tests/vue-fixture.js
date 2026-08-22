@@ -1,5 +1,5 @@
 import { createApp, h, onMounted } from "vue";
-import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
+import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "../packages/vue/src/index.js";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -23,6 +23,7 @@ createApp({
     const mask = useInputMask("(999) 999-9999");
     const otp = useOtp();
     const password = usePassword();
+    const scrollspy = useScrollspy();
     onMounted(() => { window.vueReady = true; });
 
     return () => h("main", { class: "bs-container bs-section bs-stack bs-gap-6" }, [
@@ -87,6 +88,21 @@ createApp({
         h("div", password.getRootProps({ class: "bs-input-group" }), [
           h("input", password.getInputProps({ id: "vue-password-input", class: "bs-input", type: "password" })),
           h("button", password.getToggleProps({ id: "vue-password-toggle", class: "bs-btn bs-btn-secondary", type: "button" }), "Toggle"),
+        ]),
+      ]),
+      h("section", { "aria-label": "Vue scrollspy example", "data-test-scrollspy": "" }, [
+        h("nav", scrollspy.getNavProps({ id: "vue-scrollspy", class: "bs-nav", "aria-label": "Vue section navigation" }), [
+          h("a", { class: "bs-nav-link", href: "#vue-scrollspy-intro" }, "Introduction"),
+          h("a", { class: "bs-nav-link", href: "#vue-scrollspy-details" }, "Details"),
+          h("a", { class: "bs-nav-link", href: "#vue-scrollspy-summary" }, "Summary"),
+        ]),
+        h("article", [
+          h("h2", { id: "vue-scrollspy-intro" }, "Introduction"),
+          h("p", { style: "min-block-size: 80vh" }, "Long introductory content."),
+          h("h2", { id: "vue-scrollspy-summary" }, "Summary"),
+          h("p", { style: "min-block-size: 80vh" }, "Intermediate anchor so the active link can change."),
+          h("h2", { id: "vue-scrollspy-details" }, "Details"),
+          h("p", { style: "min-block-size: 80vh" }, "Detailed content so the final link can become active."),
         ]),
       ]),
     ]);

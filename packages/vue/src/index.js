@@ -10,6 +10,7 @@ export { useNavbar } from "./navbar.js";
 export { useOtp } from "./otp.js";
 export { usePassword } from "./password.js";
 export { usePopover } from "./popover.js";
+export { useScrollspy } from "./scrollspy.js";
 export { useSidebar } from "./sidebar.js";
 export { useTabs } from "./tabs.js";
 export { useToast } from "./toast.js";

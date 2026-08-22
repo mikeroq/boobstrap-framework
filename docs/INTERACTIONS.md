@@ -501,6 +501,40 @@ Tooltips are brief, non-interactive descriptions shown by hover or focus and dis
 
 Public APIs expose `show()`, `hide()`, and `destroy()`; popovers also expose `toggle()`. Lifecycle events use `bs:tooltip:*` and `bs:popover:*` with cancelable `show` / `hide` and completed `shown` / `hidden` actions.
 
+## Scrollspy
+
+Scrollspy marks the section link in a `<nav>` that matches the content the user is currently reading. It is scroll-only: clicks, taps, and keyboard activation do not change the active link, so the page remains the single source of truth. The framework already applies `scroll-behavior: smooth` to `html` in `base/reset.css`; no opt-in class is required.
+
+```html
+<nav class="bs-nav" data-bs-scrollspy aria-label="On this page">
+  <a class="bs-nav-link" href="#introduction">Introduction</a>
+  <a class="bs-nav-link" href="#details">Details</a>
+  <a class="bs-nav-link" href="#summary">Summary</a>
+</nav>
+
+<article>
+  <h2 id="introduction">Introduction</h2>
+  <p>…</p>
+  <h2 id="summary">Summary</h2>
+  <p>…</p>
+  <h2 id="details">Details</h2>
+  <p>…</p>
+</article>
+```
+
+Each link's `href` must point to a same-document fragment whose `id` exists. The controller observes those targets with `IntersectionObserver` and falls back to a throttled `scroll` listener. It sets `aria-current="true"` on the active link, removes it on the previous link, and dispatches `bs:scrollspy:activate` with the link and the matching section so applications can mirror selection state elsewhere. The observer is disconnected and the `aria-current` attribute is cleared on `destroy()`.
+
+Public API:
+
+```js
+import { Scrollspy } from "@boobstrap/boobstrap/js/scrollspy";
+
+const spy = Scrollspy.getOrCreateInstance(document.querySelector("[data-bs-scrollspy]"));
+spy.destroy();
+```
+
+Events: `bs:scrollspy:activate`. Detail includes the activated `link` and `section`.
+
 ## Universal controllers
 
 Every Boobstrap controller is exposed by all behavior layers (core, Alpine, React, and Vue). There are no core-only controllers; the framework intentionally ships nothing that is framework-incompatible.
@@ -519,6 +553,7 @@ Every Boobstrap controller is exposed by all behavior layers (core, Alpine, Reac
 | otp         | `Otp` | `otp` | `useOtp` | `useOtp` | universal |
 | password    | `Password` | `password` | `usePassword` | `usePassword` | universal |
 | popover     | `Popover` | `popover` | `usePopover` | `usePopover` | universal |
+| scrollspy   | `Scrollspy` | `scrollspy` | `useScrollspy` | `useScrollspy` | universal; scroll-only |
 | sidebar     | `Sidebar` | `sidebar` | `useSidebar` | `useSidebar` | universal; responsive overlay + collapse |
 | tabs        | `Tabs` | `tabs` | `useTabs` | `useTabs` | universal |
 | toast       | `Toast` | `toast` | `useToast` | `useToast` | universal; autohide + pause |
@@ -656,6 +691,16 @@ Use the same option markup as Boobstrap JS, replace `data-bs-combobox` with `x-d
 
 Do not initialize Boobstrap JS on the same component subtree. Alpine owns these instances' state and lifecycle while preserving the public Boobstrap events and `data-bs-state` values.
 
+### Alpine scrollspy
+
+```html
+<nav class="bs-nav" x-data="bsScrollspy" aria-label="On this page">
+  <a class="bs-nav-link" href="#introduction">Introduction</a>
+  <a class="bs-nav-link" href="#details">Details</a>
+  <a class="bs-nav-link" href="#summary">Summary</a>
+</nav>
+```
+
 ## React adapter
 
 Install the headless React hooks alongside React and the Boobstrap stylesheet:
@@ -748,6 +793,23 @@ function Account() {
 
 Do not initialize Boobstrap JS or an Alpine provider on a React-owned component subtree. React controls the DOM state while preserving Boobstrap lifecycle events and `data-bs-state` values.
 
+### React scrollspy
+
+```jsx
+import { useScrollspy } from "@boobstrap/react";
+
+function OnThisPage() {
+  const spy = useScrollspy();
+  return (
+    <nav className="bs-nav" aria-label="On this page" {...spy.getNavProps()}>
+      <a className="bs-nav-link" href="#introduction">Introduction</a>
+      <a className="bs-nav-link" href="#details">Details</a>
+      <a className="bs-nav-link" href="#summary">Summary</a>
+    </nav>
+  );
+}
+```
+
 ## Vue adapter
 
 Install the headless Vue composables with Vue 3.5 or newer:
@@ -770,4 +832,22 @@ const details = useCollapse({ id: "details" });
 </template>
 ```
 
-The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useNavbar`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
+The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useNavbar`, `usePopover`, `useScrollspy`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
+
+### Vue scrollspy
+
+```vue
+<script setup>
+import { useScrollspy } from "@boobstrap/vue";
+
+const spy = useScrollspy();
+</script>
+
+<template>
+  <nav class="bs-nav" v-bind="spy.getNavProps()" aria-label="On this page">
+    <a class="bs-nav-link" href="#introduction">Introduction</a>
+    <a class="bs-nav-link" href="#details">Details</a>
+    <a class="bs-nav-link" href="#summary">Summary</a>
+  </nav>
+</template>
+```
