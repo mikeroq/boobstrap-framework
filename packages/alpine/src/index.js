@@ -10,12 +10,13 @@ import { navbar } from "./navbar.js";
 import { otp } from "./otp.js";
 import { password } from "./password.js";
 import { popover } from "./popover.js";
+import { scrollspy } from "./scrollspy.js";
 import { sidebar } from "./sidebar.js";
 import { tabs } from "./tabs.js";
 import { toast } from "./toast.js";
 import { tooltip } from "./tooltip.js";
 
-export { accordion, banner, button, collapse, combobox, dialog, dropdown, inputMask, navbar, otp, password, popover, sidebar, tabs, toast, tooltip };
+export { accordion, banner, button, collapse, combobox, dialog, dropdown, inputMask, navbar, otp, password, popover, scrollspy, sidebar, tabs, toast, tooltip };
 
 export function boobstrap(Alpine) {
   Alpine.data("bsAccordion", accordion);
@@ -30,6 +31,7 @@ export function boobstrap(Alpine) {
   Alpine.data("bsOtp", otp);
   Alpine.data("bsPassword", password);
   Alpine.data("bsPopover", popover);
+  Alpine.data("bsScrollspy", scrollspy);
   Alpine.data("bsSidebar", sidebar);
   Alpine.data("bsTabs", tabs);
   Alpine.data("bsToast", toast);

@@ -44,6 +44,7 @@
     "./js/otp": { "types": "./dist/js/index.d.ts", "default": "./dist/js/otp.js" },
     "./js/password": { "types": "./dist/js/index.d.ts", "default": "./dist/js/password.js" },
     "./js/popover": { "types": "./dist/js/index.d.ts", "default": "./dist/js/popover.js" },
+    "./js/scrollspy": { "types": "./dist/js/index.d.ts", "default": "./dist/js/scrollspy.js" },
     "./js/sidebar": { "types": "./dist/js/index.d.ts", "default": "./dist/js/sidebar.js" },
     "./js/tabs": { "types": "./dist/js/index.d.ts", "default": "./dist/js/tabs.js" },
     "./js/toast": { "types": "./dist/js/index.d.ts", "default": "./dist/js/toast.js" },

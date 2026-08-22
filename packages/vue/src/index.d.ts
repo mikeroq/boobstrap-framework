@@ -209,6 +209,12 @@ export interface PasswordResult {
 
 export function usePassword(options?: PasswordOptions): PasswordResult;
 
+export interface ScrollspyResult {
+  getNavProps: (props?: ElementProps) => ElementProps;
+}
+
+export function useScrollspy(): ScrollspyResult;
+
 export interface SidebarTransitionOptions {
   reason?: string;
   sourceEvent?: Event;

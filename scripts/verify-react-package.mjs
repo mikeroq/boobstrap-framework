@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
@@ -27,6 +27,7 @@ const requiredPaths = [
   "src/otp.js",
   "src/password.js",
   "src/popover.js",
+  "src/scrollspy.js",
   "src/sidebar.js",
   "src/index.d.ts",
   "src/index.js",
@@ -49,6 +50,7 @@ assert.equal(typeof useNavbar, "function");
 assert.equal(typeof useOtp, "function");
 assert.equal(typeof usePassword, "function");
 assert.equal(typeof usePopover, "function");
+assert.equal(typeof useScrollspy, "function");
 assert.equal(typeof useSidebar, "function");
 assert.equal(typeof useTabs, "function");
 assert.equal(typeof useToast, "function");
@@ -60,6 +62,7 @@ function ServerFixture() {
   const combobox = useCombobox({ id: "ssr-role", options: [{ value: "engineer", label: "Engineer" }] });
   const dialog = useDialog({ id: "ssr-dialog" });
   const navbar = useNavbar({ id: "ssr-navbar" });
+  const scrollspy = useScrollspy();
   return createElement("section", null,
     createElement("button", button.getButtonProps(), "Save"),
     createElement("button", collapse.getTriggerProps(), "Details"),
@@ -68,6 +71,7 @@ function ServerFixture() {
     createElement("dialog", dialog.getDialogProps(), "Server-rendered dialog"),
     createElement("button", navbar.getTriggerProps(), "Navigation"),
     createElement("div", navbar.getMenuProps(), "Server-rendered navigation"),
+    createElement("nav", scrollspy.getNavProps(), createElement("a", { href: "#ssr-section" }, "Section")),
     createElement("div", combobox.getRootProps(),
       createElement("input", combobox.getInputProps()),
       createElement("div", combobox.getListboxProps()),
@@ -87,4 +91,4 @@ assert.match(serverMarkup, /id="ssr-dialog"/);
 assert.match(serverMarkup, /id="ssr-navbar"/);
 assert.match(serverMarkup, /aria-controls="ssr-role"/);
 
-console.log(`Verified @boobstrap/react package contents, sixteen hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/react package contents, seventeen hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);

@@ -26,6 +26,7 @@ const assets = new Map([
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
   ["/dist/js/popover.js", await readFile(new URL("../dist/js/popover.js", import.meta.url))],
+  ["/dist/js/scrollspy.js", await readFile(new URL("../dist/js/scrollspy.js", import.meta.url))],
   ["/dist/js/sidebar.js", await readFile(new URL("../dist/js/sidebar.js", import.meta.url))],
   ["/dist/js/shared.js", await readFile(new URL("../dist/js/shared.js", import.meta.url))],
   ["/dist/js/tabs.js", await readFile(new URL("../dist/js/tabs.js", import.meta.url))],
@@ -326,9 +327,29 @@ try {
   if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:scrollspy:activate", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
+
+  const scrollspyNav = page.locator("[data-bs-scrollspy]");
+  const scrollspyLinks = scrollspyNav.locator("a");
+  const initialActive = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (!initialActive) failures.push("Scrollspy did not set an initial active link");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-details").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-details");
+  const activateDetail = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (activateDetail !== "#scrollspy-details") failures.push(`Scrollspy did not activate the details link (got ${activateDetail})`);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-intro");
+  const scrolledBack = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (scrolledBack !== "#scrollspy-intro") failures.push(`Scrollspy did not reactivate the intro link after scrolling back (got ${scrolledBack})`);
+  await scrollspyLinks.first().focus();
+  await scrollspyLinks.first().press("Enter");
+  if (await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== initialActive) {
+    failures.push("Scrollspy responded to keyboard activation, which violates its scroll-only contract");
+  }
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-summary").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-summary");
 
   const dimensions = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -340,12 +361,16 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 20) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 21) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
   await collapseToggle.click();
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-summary").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  if (await scrollspyNav.evaluate((nav) => Boolean(nav.querySelector('a[aria-current="true"]')?.getAttribute("href") === "#scrollspy-summary"))) {
+    failures.push("Destroy did not remove scrollspy observers");
+  }
   if (consoleErrors.length) failures.push(`Console errors: ${consoleErrors.join("; ")}`);
   await context.close();
 

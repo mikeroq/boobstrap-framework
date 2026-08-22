@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const accordion = useAccordion({ defaultOpenIds: ["one"] });
@@ -42,6 +42,7 @@ export function ReactAdapterTypeFixture() {
   const otp = useOtp({ pattern: "[0-9]" });
   const password = usePassword({ showLabel: "Show", hideLabel: "Hide" });
   const sidebar = useSidebar({ id: "typed-sidebar", media: "(max-width: 64rem)", shortcut: "b" });
+  const scrollspy = useScrollspy();
 
   collapse.show();
   button.stop("type-test");
@@ -57,6 +58,7 @@ export function ReactAdapterTypeFixture() {
   otp.clear();
   password.toggle();
   sidebar.toggle({ reason: "type-test" });
+  scrollspy.getNavProps();
 
   return (
     <main>
@@ -105,6 +107,7 @@ export function ReactAdapterTypeFixture() {
         <button {...password.getToggleProps()}>Toggle</button>
       </div>
       <aside {...sidebar.getRootProps()}>Sidebar</aside>
+      <nav {...scrollspy.getNavProps()}><a href="#typed-section">Section</a></nav>
     </main>
   );
 }
