@@ -1,6 +1,6 @@
 {
   "name": "@boobstrap/vue",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Official Vue behavior adapter for Boobstrap components.",
   "type": "module",
   "sideEffects": false,

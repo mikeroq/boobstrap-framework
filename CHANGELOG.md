@@ -2,12 +2,6 @@
 
 Notable changes to Boobstrap are documented here. The project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) structure and the versioning policy in [docs/VERSIONING.md](docs/VERSIONING.md).
 
-## Unreleased
-
-- Added responsive navbar behavior to core JavaScript and the Alpine, React, and Vue adapters.
-- Added avatar, empty-state, list-group, and alert-dialog component variants.
-- Added native file, range, and color controls plus a documented baseline for links and semantic HTML content.
-
 ## 0.6.0
 
 - Completed the responsive 12-column grid with explicit start, offset, and auto utilities at `sm`, `md`, `lg`, `xl`, and `2xl`. The `sm` step is the smallest responsive breakpoint; below `sm` the layout is single-column. See [docs/MIGRATING.md](docs/MIGRATING.md) for the new breakpoint tokens.
