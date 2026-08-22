@@ -29,6 +29,8 @@ jobs:
         run: npm run test:contract
       - name: Validate CSS
         run: npm run test:css
+      - name: Verify distribution size budgets
+        run: npm run test:size
       - name: Verify package contents
         run: npm run test:package
       - name: Audit runtime dependencies

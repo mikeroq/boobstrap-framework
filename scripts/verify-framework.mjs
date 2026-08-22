@@ -4,6 +4,8 @@ import { parseTokenCss } from "./token-artifacts.mjs";
 
 const root = new URL("../", import.meta.url);
 const css = await readFile(new URL("dist/boobstrap.css", root), "utf8");
+const minifiedCss = await readFile(new URL("dist/boobstrap.min.css", root), "utf8");
+const minifiedMap = JSON.parse(await readFile(new URL("dist/boobstrap.min.css.map", root), "utf8"));
 const sourceEntry = await readFile(new URL("src/boobstrap.css", root), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
 const contract = JSON.parse(await readFile(new URL("tests/api-contract.json", root), "utf8"));
@@ -57,4 +59,16 @@ if (!css.startsWith(expectedBanner)) {
   throw new Error(`Distribution banner does not match package metadata. Expected: ${expectedBanner}`);
 }
 
-console.log(`Verified dist/boobstrap.css: ${actualClasses.length} classes, ${actualTokens.length} tokens, ${Buffer.byteLength(css)} bytes.`);
+const unminifiedSelectors = [...new Set(
+  [...css.matchAll(/\.([a-z][a-z0-9-]*)/gi)].map((match) => match[1]).filter((name) => name.startsWith("bs-")),
+)].sort();
+const minifiedSelectors = [...new Set(
+  [...minifiedCss.matchAll(/\.([a-z][a-z0-9-]*)/gi)].map((match) => match[1]).filter((name) => name.startsWith("bs-")),
+)].sort();
+assert.deepEqual(minifiedSelectors, unminifiedSelectors, "Minified CSS must expose the same public bs- selectors as the unminified bundle");
+
+assert.equal(minifiedMap.version, 3, "Source map must declare version 3");
+assert.ok(Array.isArray(minifiedMap.sources) && minifiedMap.sources.includes("boobstrap.css"), "Source map must reference the unminified bundle");
+assert.ok(typeof minifiedMap.sourcesContent?.[0] === "string" && minifiedMap.sourcesContent[0].length > 0, "Source map must embed the unminified source for debugger support");
+
+console.log(`Verified dist/boobstrap.css: ${actualClasses.length} classes, ${actualTokens.length} tokens, ${Buffer.byteLength(css)} bytes; dist/boobstrap.min.css: ${Buffer.byteLength(minifiedCss)} bytes.`);
