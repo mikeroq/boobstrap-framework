@@ -350,6 +350,65 @@ try {
       if (validationMetrics.classValid !== expectedSuccess) failures.push(`${theme}/${viewport.name}: .bs-is-valid should resolve to the success border (expected ${expectedSuccess}, received ${validationMetrics.classValid})`);
       if (validationMetrics.ariaTrue !== expectedDanger) failures.push(`${theme}/${viewport.name}: aria-invalid="true" should resolve to the danger border (expected ${expectedDanger}, received ${validationMetrics.ariaTrue})`);
       if (validationMetrics.classInvalid !== expectedDanger) failures.push(`${theme}/${viewport.name}: .bs-is-invalid should resolve to the danger border (expected ${expectedDanger}, received ${validationMetrics.classInvalid})`);
+      const variantMetrics = await page.evaluate(() => {
+        const rootStyle = getComputedStyle(document.documentElement);
+        const dangerToken = rootStyle.getPropertyValue("--bs-color-danger").trim();
+        const successToken = rootStyle.getPropertyValue("--bs-color-success").trim();
+        const dangerAlert = document.querySelector("[data-test-alert-danger]");
+        const badgeSuccess = document.querySelector("[data-test-badge-success]");
+        const btnDanger = document.querySelector("[data-test-btn-danger]");
+        const bodyBackground = getComputedStyle(document.body).backgroundColor;
+        const dangerAlertStyle = dangerAlert ? getComputedStyle(dangerAlert) : null;
+        const badgeSuccessStyle = badgeSuccess ? getComputedStyle(badgeSuccess) : null;
+        const btnDangerStyle = btnDanger ? getComputedStyle(btnDanger) : null;
+        return {
+          dangerToken,
+          successToken,
+          bodyBackground,
+          dangerAlertBorderColor: dangerAlertStyle?.borderColor ?? "",
+          dangerAlertBackground: dangerAlertStyle?.backgroundColor ?? "",
+          badgeSuccessColor: badgeSuccessStyle?.color ?? "",
+          badgeSuccessBackground: badgeSuccessStyle?.backgroundColor ?? "",
+          btnDangerBackground: btnDangerStyle?.backgroundColor ?? "",
+          btnDangerColor: btnDangerStyle?.color ?? "",
+        };
+      });
+      function parseRgb(value) {
+        if (!value) return null;
+        const srgbMatch = value.match(/srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+        if (srgbMatch) return [Number(srgbMatch[1]) * 255, Number(srgbMatch[2]) * 255, Number(srgbMatch[3]) * 255];
+        const match = value.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/);
+        return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null;
+      }
+      function parseHex(value) {
+        const match = value.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+        return match ? [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)] : null;
+      }
+      const dangerChannels = parseHex(variantMetrics.dangerToken);
+      const successChannels = parseHex(variantMetrics.successToken);
+      const bodyChannels = parseRgb(variantMetrics.bodyBackground);
+      const dangerAlertBorderChannels = parseRgb(variantMetrics.dangerAlertBorderColor);
+      const badgeSuccessBackgroundChannels = parseRgb(variantMetrics.badgeSuccessBackground);
+      const btnDangerChannels = parseRgb(variantMetrics.btnDangerBackground);
+      function channelDistance(a, b) {
+        return a && b ? Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]), Math.abs(a[2] - b[2])) : 0;
+      }
+      if (!dangerChannels || !dangerAlertBorderChannels || channelDistance(dangerChannels, dangerAlertBorderChannels) > 10) {
+        failures.push(`${theme}/${viewport.name}: .bs-alert-danger border did not derive from --bs-color-danger (token ${variantMetrics.dangerToken}, border ${variantMetrics.dangerAlertBorderColor})`);
+      }
+      if (!bodyChannels || !dangerAlertBorderChannels || channelDistance(bodyChannels, dangerAlertBorderChannels) < 8) {
+        failures.push(`${theme}/${viewport.name}: .bs-alert-danger did not produce visible contrast against body (body ${variantMetrics.bodyBackground}, border ${variantMetrics.dangerAlertBorderColor})`);
+      }
+      if (!successChannels || !badgeSuccessBackgroundChannels || channelDistance(successChannels, badgeSuccessBackgroundChannels) > 10) {
+        failures.push(`${theme}/${viewport.name}: .bs-badge-success background did not derive from --bs-color-success (token ${variantMetrics.successToken}, background ${variantMetrics.badgeSuccessBackground})`);
+      }
+      if (!dangerChannels || !btnDangerChannels || channelDistance(dangerChannels, btnDangerChannels) > 10) {
+        failures.push(`${theme}/${viewport.name}: .bs-btn-danger background did not derive from --bs-color-danger (token ${variantMetrics.dangerToken}, background ${variantMetrics.btnDangerBackground})`);
+      }
+      const dangerButtonForegroundChannels = parseRgb(variantMetrics.btnDangerColor);
+      if (!dangerButtonForegroundChannels || !bodyChannels || channelDistance(dangerButtonForegroundChannels, btnDangerChannels) < 80) {
+        failures.push(`${theme}/${viewport.name}: .bs-btn-danger foreground and background do not produce visible contrast (fg ${variantMetrics.btnDangerColor}, bg ${variantMetrics.btnDangerBackground})`);
+      }
 
       const accessibility = await new AxeBuilder({ page }).analyze();
       if (accessibility.violations.length) {

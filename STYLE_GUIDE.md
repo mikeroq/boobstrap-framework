@@ -623,11 +623,49 @@ The deliberate positive-validation API is the `.bs-is-valid` class; we intention
   border-radius: var(--bs-radius-lg);
 }
 
-.bs-alert-primary {
-  background: rgb(216 60 135 / 9%);
-  border-color: rgb(216 60 135 / 28%);
+.bs-alert-primary,
+.bs-alert-info,
+.bs-alert-success,
+.bs-alert-warning,
+.bs-alert-danger {
+  background: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 24%, transparent);
 }
+
+.bs-alert-info { --bs-alert-accent: var(--bs-color-info); }
+.bs-alert-success { --bs-alert-accent: var(--bs-color-success); }
+.bs-alert-warning { --bs-alert-accent: var(--bs-color-warning); }
+.bs-alert-danger { --bs-alert-accent: var(--bs-color-danger); }
 ```
+
+### Semantic variant coverage
+
+- `.bs-alert`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-badge`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-btn`: `primary`, `secondary`, `ghost`, `danger`
+- `.bs-banner`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-toast`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-progress`: `primary`, `info`, `success`, `warning`, `danger`
+
+The `--bs-alert-accent` and `--bs-badge-accent` component-local variables are
+public customization hooks. Override them on a parent element to retint a
+single alert or badge family without touching the base `--bs-color-*` tokens.
+
+### Badge foreground color
+
+`.bs-badge-primary` keeps its `--bs-color-primary-hover` foreground so existing
+callers see no visual change. The new `.bs-badge-info`, `.bs-badge-success`,
+`.bs-badge-warning`, and `.bs-badge-danger` use `--bs-color-text` for the
+foreground, matching banner and toast — semantic tone comes from the tinted
+background and border, not from the text color.
+
+### Outline / subtle button treatment — rejected
+
+The framework deliberately ships `primary`, `secondary`, `ghost`, and `danger`
+buttons and nothing else. An outline or subtle button variant would visually
+duplicate `secondary` without adding semantic distinction, so adding one would
+inflate the API for no benefit. Do not introduce `.bs-btn-outline` or
+`.bs-btn-subtle`.
 
 ## 14. Code Blocks
 

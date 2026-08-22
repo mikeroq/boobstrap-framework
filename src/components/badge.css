@@ -12,8 +12,21 @@
   font-weight: 550;
 }
 
-.bs-badge-primary {
-  color: var(--bs-color-primary-hover);
-  background: color-mix(in srgb, var(--bs-color-primary) 9%, transparent);
+.bs-badge-primary,
+.bs-badge-info,
+.bs-badge-success,
+.bs-badge-warning,
+.bs-badge-danger {
+  background: color-mix(in srgb, var(--bs-badge-accent, var(--bs-color-primary)) 9%, transparent);
   border-color: var(--bs-color-border-strong);
 }
+
+.bs-badge-primary { color: var(--bs-color-primary-hover); --bs-badge-accent: var(--bs-color-primary); }
+.bs-badge-info,
+.bs-badge-success,
+.bs-badge-warning,
+.bs-badge-danger { color: var(--bs-color-text); }
+.bs-badge-info { --bs-badge-accent: var(--bs-color-info); }
+.bs-badge-success { --bs-badge-accent: var(--bs-color-success); }
+.bs-badge-warning { --bs-badge-accent: var(--bs-color-warning); }
+.bs-badge-danger { --bs-badge-accent: var(--bs-color-danger); }
