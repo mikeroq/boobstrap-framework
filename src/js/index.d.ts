@@ -28,12 +28,16 @@ export function initDropdowns(root?: Root): Dropdown[];
 export function formatMask(value: string, pattern: string, placeholder?: string): string;
 export class InputMask extends ElementController<HTMLInputElement> { constructor(element: HTMLInputElement); static getOrCreateInstance(element: HTMLInputElement): InputMask; format(options?: { silent?: boolean }): string; }
 export function initInputMasks(root?: Root): InputMask[];
+export class Navbar extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Navbar; readonly overlay: boolean; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions): boolean; toggle(options?: FocusTransitionOptions): boolean; }
+export function initNavbars(root?: Root): Navbar[];
 export class Otp extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Otp; readonly value: string; clear(): void; }
 export function initOtps(root?: Root): Otp[];
 export class Password extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Password; readonly visible: boolean; setVisible(visible: boolean): boolean; toggle(): boolean; }
 export function initPasswords(root?: Root): Password[];
 export class Popover extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Popover; readonly visible: boolean; show(options?: TransitionOptions): boolean; hide(options?: TransitionOptions): boolean; toggle(options?: TransitionOptions): boolean; }
 export function initPopovers(root?: Root): Popover[];
+export class Scrollspy extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Scrollspy; readonly activeLink: HTMLAnchorElement | null; }
+export function initScrollspies(root?: Root): Scrollspy[];
 export class Sidebar extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Sidebar; readonly overlay: boolean; show(options?: FocusTransitionOptions): boolean; hide(options?: FocusTransitionOptions): boolean; toggle(options?: FocusTransitionOptions): boolean; expand(options?: TransitionOptions): boolean; collapse(options?: TransitionOptions): boolean; }
 export function initSidebars(root?: Root): Sidebar[];
 export class Tabs extends ElementController { constructor(element: HTMLElement); static getOrCreateInstance(element: HTMLElement): Tabs; readonly selectedTab: HTMLElement | undefined; activate(tab: HTMLElement): boolean; }

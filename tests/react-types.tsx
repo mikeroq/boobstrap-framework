@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 export function ReactAdapterTypeFixture() {
   const accordion = useAccordion({ defaultOpenIds: ["one"] });
@@ -24,6 +24,7 @@ export function ReactAdapterTypeFixture() {
   });
   const dropdown = useDropdown({ defaultOpen: false });
   const dialog = useDialog({ id: "typed-dialog", defaultOpen: false });
+  const navbar = useNavbar({ id: "typed-navbar" });
   const combobox = useCombobox({
     options: [{ value: "engineer", label: "Engineer" }],
     defaultValue: "engineer",
@@ -36,15 +37,28 @@ export function ReactAdapterTypeFixture() {
   const toast = useToast({ defaultOpen: false, duration: 2500 });
   const tooltip = useTooltip({ id: "typed-tooltip", placement: "top" });
   const popover = usePopover({ id: "typed-popover", placement: "bottom" });
+  const banner = useBanner({});
+  const mask = useInputMask("(999) 999-9999");
+  const otp = useOtp({ pattern: "[0-9]" });
+  const password = usePassword({ showLabel: "Show", hideLabel: "Hide" });
+  const sidebar = useSidebar({ id: "typed-sidebar", media: "(max-width: 64rem)", shortcut: "b" });
+  const scrollspy = useScrollspy();
 
   collapse.show();
   button.stop("type-test");
   dropdown.hide({ restoreFocus: true, reason: "type-test" });
   dialog.show("type-test");
+  navbar.toggle("type-test");
   tabs.activate("typed-profile-tab");
   toast.show("type-test");
   tooltip.hide("type-test");
   popover.toggle("type-test");
+  banner.dismiss();
+  mask.format();
+  otp.clear();
+  password.toggle();
+  sidebar.toggle({ reason: "type-test" });
+  scrollspy.getNavProps();
 
   return (
     <main>
@@ -65,6 +79,8 @@ export function ReactAdapterTypeFixture() {
         <button {...dialog.getDismissProps()}>Close</button>
       </dialog>
 
+      <button {...navbar.getTriggerProps()}>Navigation</button><div {...navbar.getMenuProps()}><button {...navbar.getDismissProps()}>Close</button></div>
+
       <div className="bs-combobox" {...combobox.getRootProps()}>
         <input className="bs-combobox-input" {...combobox.getInputProps()} />
         <button className="bs-combobox-toggle" {...combobox.getToggleProps()} />
@@ -80,6 +96,18 @@ export function ReactAdapterTypeFixture() {
       <button {...toast.getTriggerProps()}>Toast</button><div {...toast.getToastProps()}><button {...toast.getDismissProps()}>Dismiss</button></div>
       <button {...tooltip.getTriggerProps()}>Tooltip</button><div {...tooltip.getTooltipProps()}>Details</div>
       <button {...popover.getTriggerProps()}>Popover</button><div {...popover.getPopoverProps()}>Details</div>
+      <div className="bs-banner" {...banner.getBannerProps()}><button {...banner.getDismissProps()}>Dismiss</button></div>
+      <input className="bs-input" {...mask.getInputProps()} />
+      <div {...otp.getRootProps()}>
+        <input {...otp.getInputProps(0)} />
+        <input {...otp.getInputProps(1)} />
+      </div>
+      <div {...password.getRootProps()}>
+        <input {...password.getInputProps()} />
+        <button {...password.getToggleProps()}>Toggle</button>
+      </div>
+      <aside {...sidebar.getRootProps()}>Sidebar</aside>
+      <nav {...scrollspy.getNavProps()}><a href="#typed-section">Section</a></nav>
     </main>
   );
 }

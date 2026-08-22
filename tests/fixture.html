@@ -26,6 +26,13 @@
           <a class="bs-nav-link" href="#grid-title" aria-current="page">Cards</a>
           <a class="bs-nav-link bs-nav-link-subitem" href="#code-title">Code</a>
         </nav>
+        <aside class="bs-sidebar bs-mt-4" aria-label="Scrollable sidebar preview" style="--bs-sidebar-height: 4rem; position: relative">
+          <nav class="bs-sidebar-content" aria-label="Sidebar preview links" data-test-sidebar-scrollbar tabindex="0">
+            <a class="bs-nav-link" href="#grid-title">Grid</a>
+            <a class="bs-nav-link" href="#form-title">Forms</a>
+            <a class="bs-nav-link" href="#table-title">Tables</a>
+          </nav>
+        </aside>
       </section>
 
       <section aria-labelledby="grid-title" class="bs-mt-8">
@@ -35,7 +42,7 @@
             <div class="bs-card-body">
               <h3 class="bs-card-title">Card one</h3>
               <p class="bs-card-text">Full width on mobile and four columns on large screens.</p>
-              <button class="bs-btn bs-btn-primary" type="button">Primary action</button>
+              <button class="bs-btn bs-btn-primary" type="button"><svg class="bs-icon" data-test-button-icon viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>Primary action</button>
             </div>
           </article>
           <article class="bs-card bs-card-raised bs-col-12 bs-col-lg-8">
@@ -46,7 +53,52 @@
             </div>
           </article>
         </div>
-        <article class="bs-card bs-card-raised bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
+        <div class="bs-grid bs-gap-4 bs-mt-4" data-test-grid-responsive>
+          <div class="bs-col-md-12" data-test-grid-md-12>md-12</div>
+          <div class="bs-col-xl-3" data-test-grid-xl-3>xl-3</div>
+          <div class="bs-col-xl-3" data-test-grid-xl-3-second>xl-3</div>
+          <div class="bs-col-xl-3" data-test-grid-xl-3-third>xl-3</div>
+          <div class="bs-col-xl-3" data-test-grid-xl-3-fourth>xl-3</div>
+          <div class="bs-col-2xl-auto" data-test-grid-2xl-auto>2xl-auto</div>
+          <div class="bs-col-start-3" data-test-grid-start-3>start-3</div>
+          <div class="bs-col-md-start-2 bs-col-md-6" data-test-grid-md-start-2>md-start-2</div>
+          <div class="bs-col-md-offset-3 bs-col-md-4" data-test-grid-md-offset-3>md-offset-3</div>
+        </div>
+        <div class="bs-grid bs-gap-x-4 bs-gap-y-4 bs-mt-4" data-test-grid-gap>
+          <div class="bs-col-4">gap-1</div>
+          <div class="bs-col-4">gap-2</div>
+          <div class="bs-col-4">gap-3</div>
+        </div>
+        <div class="bs-grid bs-gap-x-4 bs-mt-4" data-test-spacing-gap-x>
+          <div class="bs-col-4" style="padding:var(--bs-space-2);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-2);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-2);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+        </div>
+        <div data-test-spacing-mt-base style="display:flow-root">
+          <div class="bs-py-2 bs-px-3" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">base</div>
+          <div class="bs-py-2 bs-px-3 bs-mt-4" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">mt-4</div>
+        </div>
+        <div data-test-spacing-mt-md style="display:flow-root">
+          <div class="bs-py-2 bs-px-3" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">base</div>
+          <div class="bs-py-2 bs-px-3 bs-md-mt-8" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">md-mt-8</div>
+        </div>
+        <div data-test-layout-display class="bs-mt-4">
+          <div class="bs-hidden bs-sm-flex" data-test-layout-sm-flex>sm-flex</div>
+          <div class="bs-hidden bs-md-flex" data-test-layout-md-flex>md-flex</div>
+          <div class="bs-hidden bs-lg-flex" data-test-layout-lg-flex>lg-flex</div>
+          <div class="bs-block bs-md-hidden" data-test-layout-md-hidden>md-hidden</div>
+          <div class="bs-inline-grid" data-test-layout-inline-grid>inline-grid</div>
+        </div>
+        <div class="bs-flex bs-gap-3 bs-mt-4" data-test-layout-truncate-row style="inline-size:min(100%, 320px)">
+          <span class="bs-shrink-0" data-test-layout-shrink-0 style="inline-size:80px">shrink-0</span>
+          <span class="bs-grow bs-truncate" data-test-layout-truncate>Truncation requires a single line that overflows its inline size by a wide margin.</span>
+        </div>
+        <div class="bs-mt-4">
+          <span class="bs-aspect-square" data-test-layout-aspect-square style="display:block;inline-size:120px;border:1px solid var(--bs-color-border)"></span>
+          <span class="bs-aspect-video" data-test-layout-aspect-video style="display:block;inline-size:160px;border:1px solid var(--bs-color-border)"></span>
+          <img class="bs-object-cover" data-test-layout-object-cover alt="" width="80" height="40" style="inline-size:80px;block-size:80px" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Crect width='80' height='40' fill='%23d9468f'/%3E%3C/svg%3E" />
+        </div>
+        <article class="bs-card bs-card-raised bs-card-separated bs-mt-4" aria-labelledby="structured-card-title" data-test-structured-card>
           <header class="bs-card-header">
             <h3 class="bs-card-title" id="structured-card-title">Workspace usage</h3>
             <p class="bs-card-description">Review current storage and manage plan capacity.</p>
@@ -134,13 +186,50 @@
             <label class="bs-check"><input class="bs-check-input" type="radio" name="plan" /><span class="bs-check-label">Yearly</span></label>
             <label class="bs-check bs-switch"><input class="bs-check-input" type="checkbox" name="alerts" /><span class="bs-check-label">Security alerts</span></label>
           </fieldset>
+          <div class="bs-form-row">
+            <label class="bs-label" for="volume">Volume</label>
+            <input class="bs-range" id="volume" type="range" value="65" />
+            <label class="bs-label" for="accent">Accent color</label>
+            <input class="bs-color" id="accent" type="color" value="#d83c87" />
+          </div>
+          <div class="bs-form-group" data-test-form-validation>
+            <label class="bs-label" for="validation-default">Validation default</label>
+            <input class="bs-input" id="validation-default" type="text" />
+            <label class="bs-label" for="validation-aria-false">Validation aria false</label>
+            <input class="bs-input" id="validation-aria-false" type="text" aria-invalid="false" />
+            <label class="bs-label" for="validation-class-valid">Validation class valid</label>
+            <input class="bs-input bs-is-valid" id="validation-class-valid" type="text" />
+            <label class="bs-label" for="validation-aria-true">Validation aria true</label>
+            <input class="bs-input" id="validation-aria-true" type="text" aria-invalid="true" />
+            <label class="bs-label" for="validation-class-invalid">Validation class invalid</label>
+            <input class="bs-input bs-is-invalid" id="validation-class-invalid" type="text" />
+          </div>
+          <div data-test-scrollbar tabindex="0" aria-label="Themed scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Scrollable theme preview</div></div>
+          <div data-bs-scrollbars="native" data-test-native-scrollbar tabindex="0" aria-label="Native scrollbar preview" style="max-height: 3rem; overflow: auto"><div style="height: 6rem">Native scrollbar preview</div></div>
         </form>
       </section>
 
       <section aria-labelledby="feedback-title" class="bs-mt-8 bs-stack bs-gap-4">
         <h2 id="feedback-title">Feedback</h2>
+        <div class="bs-dialog" data-test-descriptionless-dialog style="display: flex; position: static; inline-size: 100%">
+          <header class="bs-dialog-header"><h3 class="bs-dialog-title">Compact header</h3><button class="bs-dialog-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-dialog-body" tabindex="0">A header without a description does not reserve an empty row.</div>
+        </div>
+        <div class="bs-dialog" data-test-described-dialog style="display: flex; position: static; inline-size: 100%">
+          <header class="bs-dialog-header"><h3 class="bs-dialog-title">Described header</h3><p class="bs-dialog-description">The description has a compact trailing edge.</p><button class="bs-dialog-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-dialog-body" tabindex="0">Dialog body.</div>
+        </div>
+        <div class="bs-drawer" data-test-descriptionless-drawer style="display: flex; position: static; inline-size: 100%; block-size: auto">
+          <header class="bs-drawer-header"><h3 class="bs-drawer-title">Compact drawer header</h3><button class="bs-drawer-close" type="button" aria-label="Close">×</button></header>
+          <div class="bs-drawer-body" tabindex="0">Drawer body.</div>
+        </div>
         <div class="bs-alert bs-alert-primary" role="status"><span><strong class="bs-alert-title">Primary alert</strong>Useful contextual information.</span></div>
+        <div class="bs-alert bs-alert-info" role="status"><span><strong class="bs-alert-title">Info alert</strong>Informational context.</span></div>
         <div class="bs-alert bs-alert-success" role="status"><span><strong class="bs-alert-title">Success alert</strong>The operation completed successfully.</span></div>
+        <div class="bs-alert bs-alert-warning" role="status"><span><strong class="bs-alert-title">Warning alert</strong>Heads-up before continuing.</span></div>
+        <div class="bs-alert bs-alert-danger" data-test-alert-danger role="status"><span><strong class="bs-alert-title">Danger alert</strong>The operation failed.</span></div>
+        <div class="bs-flex bs-flex-wrap bs-gap-2"><span class="bs-badge bs-badge-primary">Primary</span><span class="bs-badge bs-badge-info">Info</span><span class="bs-badge bs-badge-success" data-test-badge-success>Success</span><span class="bs-badge bs-badge-warning">Warning</span><span class="bs-badge bs-badge-danger">Danger</span></div>
+        <div><button class="bs-btn bs-btn-danger" data-test-btn-danger type="button">Delete</button></div>
         <div class="bs-progress bs-progress-lg" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="68" data-test-progress><div class="bs-progress-bar bs-progress-success bs-progress-striped bs-progress-animated" style="width: 68%">68%</div></div>
         <div class="bs-progress bs-progress-sm bs-progress-indeterminate" role="progressbar" aria-label="Loading results"><div class="bs-progress-bar"></div></div>
         <div class="bs-flex bs-flex-col bs-lg-flex-row bs-gap-2" data-test-responsive-utility><span>First</span><span>Second</span></div>
@@ -150,13 +239,14 @@
         <h2 id="code-title">Code sample</h2>
         <div class="bs-code-window">
           <div class="bs-code-header"><span>example.html</span><button class="bs-code-action" type="button">Copy</button></div>
-          <div class="bs-code-tabs" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
+          <div class="bs-code-tabs bs-code-tabs-underline" role="tablist" aria-label="Code variants"><button class="bs-code-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-code-tab" role="tab" type="button" aria-selected="false">React</button></div>
           <pre class="bs-code-body bs-m-0"><span class="bs-code-tag">&lt;button</span> <span class="bs-code-attribute">class</span>=<span class="bs-code-string">"bs-btn"</span><span class="bs-code-tag">&gt;</span>Ship<span class="bs-code-tag">&lt;/button&gt;</span></pre>
         </div>
       </section>
 
       <section aria-labelledby="tabs-title" class="bs-mt-8">
         <h2 id="tabs-title">Tab variants</h2>
+        <div class="bs-tabs" role="tablist" aria-label="Default tabs"><button class="bs-tab" role="tab" type="button" aria-selected="true">Overview</button><button class="bs-tab" role="tab" type="button" aria-selected="false">Activity</button></div>
         <div class="bs-tabs bs-tabs-pills" role="tablist" aria-label="Package manager"><button class="bs-tab" role="tab" type="button" aria-selected="true">npm</button><button class="bs-tab" role="tab" type="button" aria-selected="false">pnpm</button></div>
         <div class="bs-tabs bs-tabs-contained bs-mt-4" role="tablist" aria-label="Framework"><button class="bs-tab" role="tab" type="button" aria-selected="true">HTML</button><button class="bs-tab" role="tab" type="button" aria-selected="false">React</button></div>
         <div class="bs-tab-panel bs-tab-panel-contained"><code class="bs-code-inline">npm install @boobstrap/boobstrap</code></div>
@@ -217,6 +307,20 @@
       </section>
 
       <nav class="bs-page-nav bs-mt-8" aria-label="Adjacent pages"><a class="bs-page-nav-link" href="#navigation-title"><span class="bs-page-nav-context">Previous</span><strong class="bs-page-nav-title">Navigation</strong></a><a class="bs-page-nav-link" href="#table-title"><span class="bs-page-nav-context">Next</span><strong class="bs-page-nav-title">Tables</strong></a></nav>
+
+      <section aria-labelledby="rtl-fixtures-title" class="bs-mt-8" data-test-rtl-fixtures>
+        <h2 id="rtl-fixtures-title">RTL fixtures</h2>
+        <div class="bs-sidebar-layout" data-test-sidebar-layout>
+          <aside class="bs-sidebar bs-sidebar-start" data-test-sidebar-start aria-label="RTL sidebar start"><nav class="bs-sidebar-content"><a class="bs-nav-link" href="#" aria-current="page">Home</a></nav></aside>
+          <div class="bs-sidebar-main"><a class="bs-nav-link" href="#">Body</a></div>
+          <aside class="bs-sidebar bs-sidebar-end" data-test-sidebar-end aria-label="RTL sidebar end" hidden><nav class="bs-sidebar-content"></nav></aside>
+        </div>
+        <div class="bs-toast-region bs-mt-4" data-test-toast-region><div class="bs-toast bs-toast-success"><span><strong class="bs-toast-title">Saved</strong><span class="bs-toast-message">Done</span></span><button class="bs-toast-dismiss" type="button" aria-label="Close">×</button></div></div>
+        <div class="bs-drawer bs-drawer-start bs-mt-4" data-test-drawer-start style="position:static;inline-size:14rem;display:flex;flex-direction:column"><header class="bs-drawer-header"><h3 class="bs-drawer-title">Drawer</h3></header></div>
+        <div class="bs-drawer bs-drawer-end bs-mt-4" data-test-drawer-end style="position:static;inline-size:14rem;display:flex;flex-direction:column"><header class="bs-drawer-header"><h3 class="bs-drawer-title">Drawer end</h3></header></div>
+        <div class="bs-form-group bs-mt-4"><label class="bs-label" for="rtl-search">Search</label><div class="bs-input-wrap"><svg class="bs-input-icon bs-input-icon-start" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle></svg><input class="bs-input bs-input-has-icon-start" id="rtl-search" /></div></div>
+        <div class="bs-form-group bs-mt-4"><label class="bs-label" for="rtl-search-end">Search end</label><div class="bs-input-wrap"><svg class="bs-input-icon bs-input-icon-end" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle></svg><input class="bs-input bs-input-has-icon-end" id="rtl-search-end" /></div></div>
+      </section>
     </main>
   </body>
 </html>

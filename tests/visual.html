@@ -18,9 +18,13 @@
     <main class="visual-page">
       <section class="visual-region" data-visual="controls" aria-label="Controls">
         <div class="bs-stack bs-gap-4">
-          <div class="bs-flex bs-flex-wrap bs-gap-3"><button class="bs-btn bs-btn-primary">Primary</button><button class="bs-btn bs-btn-secondary">Secondary</button><span class="bs-badge bs-badge-primary">New</span></div>
+          <div class="bs-flex bs-flex-wrap bs-gap-3"><button class="bs-btn bs-btn-primary">Primary</button><button class="bs-btn bs-btn-secondary">Secondary</button><button class="bs-btn bs-btn-danger">Delete</button><span class="bs-badge bs-badge-primary">New</span><span class="bs-badge bs-badge-info">Info</span><span class="bs-badge bs-badge-success">Live</span><span class="bs-badge bs-badge-warning">Beta</span><span class="bs-badge bs-badge-danger">Down</span></div>
           <label class="bs-label" for="visual-input">Workspace</label><input class="bs-input" id="visual-input" value="Acme studio" />
+          <div class="bs-alert bs-alert-primary"><strong class="bs-alert-title">Heads up</strong> Primary alert content.</div>
+          <div class="bs-alert bs-alert-info"><strong class="bs-alert-title">Info</strong> Informational alert content.</div>
           <div class="bs-alert bs-alert-success"><strong class="bs-alert-title">Saved</strong> Changes are live.</div>
+          <div class="bs-alert bs-alert-warning"><strong class="bs-alert-title">Watch out</strong> Warning alert content.</div>
+          <div class="bs-alert bs-alert-danger"><strong class="bs-alert-title">Failed</strong> Danger alert content.</div>
         </div>
       </section>
       <section class="visual-region" data-visual="accordion" aria-label="Accordion">
@@ -35,6 +39,187 @@
       </section>
       <section class="visual-region" data-visual="loading" aria-label="Loading" aria-busy="true">
         <div class="bs-card" aria-hidden="true"><div class="bs-card-body bs-stack bs-gap-3"><span class="bs-skeleton bs-skeleton-circle" style="--bs-skeleton-width:3rem;--bs-skeleton-height:3rem"></span><span class="bs-skeleton bs-skeleton-lg" style="--bs-skeleton-width:60%"></span><span class="bs-skeleton bs-skeleton-text"></span><span class="bs-skeleton bs-skeleton-text" style="--bs-skeleton-width:78%"></span><span class="bs-skeleton bs-skeleton-media"></span></div></div>
+      </section>
+      <section class="visual-region" data-visual="native" aria-label="Native content elements">
+        <h2>Native content</h2>
+        <p>Visit the <a href="#native">component guide</a>, read a <a class="bs-link-muted" href="#native">muted link</a>, or press <kbd>⌘</kbd> <kbd>K</kbd>. This is <mark>highlighted</mark> and <abbr title="HyperText Markup Language">HTML</abbr> stays discoverable.</p>
+        <blockquote><p>Good defaults make semantic markup useful before composition begins.</p><cite>Boobstrap foundations</cite></blockquote>
+        <dl><dt>Baseline</dt><dd>Predictable native rendering.</dd><dt>Enhancement</dt><dd>Classes only when a pattern needs them.</dd></dl>
+        <details class="bs-details" open><summary>Implementation note</summary><p>Details and summary remain native and keyboard accessible.</p></details>
+        <fieldset><legend class="bs-label">Native inputs</legend><div class="bs-stack bs-gap-3"><input class="bs-file" type="file" aria-label="Choose file" /><input class="bs-range" type="range" value="65" aria-label="Volume" /><input class="bs-color" type="color" value="#d9468f" aria-label="Accent color" /></div></fieldset>
+      </section>
+      <section class="visual-region" data-visual="primitives" aria-label="Component primitives">
+        <div class="bs-avatar-group" aria-label="Project members"><span class="bs-avatar"><span class="bs-avatar-fallback">AR</span><span class="bs-avatar-status"></span></span><span class="bs-avatar"><span class="bs-avatar-fallback">MK</span></span><span class="bs-avatar bs-avatar-excess"><span class="bs-avatar-fallback">+3</span></span></div>
+        <ul class="bs-list-group bs-mt-4"><li class="bs-list-group-item"><span class="bs-avatar bs-avatar-sm"><span class="bs-avatar-fallback">A</span></span><span class="bs-list-group-content"><strong class="bs-list-group-title">Design system</strong><span class="bs-list-group-description">Updated two minutes ago</span></span><span class="bs-list-group-trailing">Ready</span></li><li class="bs-list-group-item" aria-current="true"><span class="bs-list-group-content"><strong class="bs-list-group-title">Documentation</strong><span class="bs-list-group-description">Current workspace</span></span></li></ul>
+        <div class="bs-empty bs-empty-compact"><span class="bs-empty-icon" aria-hidden="true">＋</span><h3 class="bs-empty-title">No saved views</h3><p class="bs-empty-description">Create a view to keep useful filters close.</p><div class="bs-empty-actions"><button class="bs-btn bs-btn-primary">Create view</button></div></div>
+        <div class="bs-flex bs-flex-wrap bs-gap-2 bs-mt-4"><span class="bs-badge bs-badge-info">Info</span><span class="bs-badge bs-badge-success">Success</span><span class="bs-badge bs-badge-warning">Warning</span><span class="bs-badge bs-badge-danger">Danger</span></div>
+        <div class="bs-dialog bs-alert-dialog bs-alert-dialog-danger bs-mt-4" style="display:flex;position:static;inline-size:100%"><header class="bs-dialog-header"><span class="bs-alert-dialog-icon" aria-hidden="true">!</span><h3 class="bs-dialog-title">Delete workspace?</h3><p class="bs-dialog-description">This action cannot be undone.</p></header><footer class="bs-dialog-footer"><button class="bs-btn bs-btn-secondary">Cancel</button><button class="bs-btn bs-btn-primary">Delete</button></footer></div>
+        <hr class="bs-separator bs-mt-4" />
+        <div class="bs-flex bs-items-center bs-gap-3 bs-mt-4"><span>Generic close:</span><button class="bs-close" type="button" aria-label="Close"></button><span>Vertical separator:</span><hr class="bs-separator" aria-orientation="vertical" style="block-size:1.5rem" /></div>
+        <div class="bs-dropdown bs-mt-4" data-bs-state="closed"><button class="bs-btn bs-btn-secondary" type="button" data-bs-toggle="dropdown" aria-controls="visual-composition-menu">Composition</button><div class="bs-dropdown-menu" id="visual-composition-menu" role="menu" data-bs-dropdown-menu hidden><div class="bs-dropdown-header">Recent</div><button class="bs-dropdown-item bs-dropdown-item-checked" type="button" role="menuitem">Edit<span class="bs-dropdown-item-secondary">Last opened 2 minutes ago</span></button><hr class="bs-dropdown-divider" /><button class="bs-dropdown-item" type="button" role="menuitem">Duplicate</button></div></div>
+      </section>
+      <section class="visual-region" data-visual="grid" aria-label="Grid">
+        <div class="bs-grid bs-gap-4">
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">col-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">col-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">col-4</div>
+        </div>
+        <div class="bs-grid bs-gap-4 bs-mt-4">
+          <div class="bs-col-md-6" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-6</div>
+          <div class="bs-col-md-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-3</div>
+          <div class="bs-col-md-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-3</div>
+        </div>
+        <div class="bs-grid bs-gap-4 bs-mt-4">
+          <div class="bs-col-xl-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">xl-3</div>
+          <div class="bs-col-xl-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">xl-3</div>
+          <div class="bs-col-xl-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">xl-3</div>
+          <div class="bs-col-xl-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">xl-3</div>
+        </div>
+        <div class="bs-grid bs-gap-4 bs-mt-4">
+          <div class="bs-col-start-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">start-3</div>
+        </div>
+        <div class="bs-grid bs-gap-4 bs-mt-4">
+          <div class="bs-col-md-start-2 bs-col-md-6" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-start-2</div>
+          <div class="bs-col-md-start-9 bs-col-md-3" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-start-9</div>
+        </div>
+        <div class="bs-grid bs-gap-4 bs-mt-4">
+          <div class="bs-col-md-offset-2 bs-col-md-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-offset-2</div>
+          <div class="bs-col-md-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">md-4</div>
+        </div>
+        <div class="bs-grid bs-gap-x-4 bs-gap-y-4 bs-mt-4">
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="spacing" aria-label="Spacing utilities">
+        <h2>Spacing</h2>
+        <div class="bs-stack bs-gap-3" data-spacing-mt>
+          <div class="bs-py-2 bs-px-3" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">bs-py-2 bs-px-3</div>
+          <div class="bs-py-2 bs-px-3 bs-mt-4" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">bs-mt-4</div>
+          <div class="bs-py-2 bs-px-3 bs-mt-8" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">bs-mt-8</div>
+        </div>
+        <div class="bs-mt-6" data-spacing-mx-auto>
+          <div class="bs-py-2 bs-px-3 bs-mx-auto" style="inline-size:60%;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">bs-mx-auto</div>
+        </div>
+        <div class="bs-mt-6 bs-py-4 bs-px-4" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)">
+          <span class="bs-badge bs-badge-primary">bs-py-4</span>
+          <span class="bs-badge bs-badge-primary bs-ms-2">bs-ms-2</span>
+        </div>
+        <div class="bs-grid bs-gap-x-4 bs-mt-6" data-spacing-gap-x>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+          <div class="bs-col-4" style="padding:var(--bs-space-3);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)">gap-x-4</div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="layout" aria-label="Layout utilities">
+        <h2>Layout</h2>
+        <div class="bs-flex bs-items-baseline bs-justify-between" data-layout-flex style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-3)">
+          <span class="bs-badge bs-badge-primary">items-baseline</span>
+          <span>justify-between</span>
+        </div>
+        <div class="bs-flex bs-gap-3 bs-mt-4" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-3)">
+          <span class="bs-shrink-0 bs-badge bs-badge-primary">shrink-0</span>
+          <span class="bs-grow bs-truncate" data-layout-truncate style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-2)">bs-grow with bs-truncate applied to an intentionally overlong sentence that must be clipped with an ellipsis</span>
+        </div>
+        <div class="bs-flex bs-gap-4 bs-mt-4">
+          <span class="bs-aspect-square bs-w-full" data-layout-aspect-square style="max-inline-size:96px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)"></span>
+          <span class="bs-aspect-video bs-w-full" data-layout-aspect-video style="max-inline-size:160px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);background:var(--bs-color-surface-raised)"></span>
+        </div>
+        <div class="bs-mt-4">
+          <svg class="bs-object-cover bs-aspect-square" data-layout-object-cover width="96" height="96" viewBox="0 0 40 20" preserveAspectRatio="none" role="img" aria-label="Object fit sample" style="inline-size:96px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm)"><rect width="40" height="20" fill="var(--bs-color-primary)"></rect></svg>
+        </div>
+        <p class="bs-break-words bs-mt-4" data-layout-break-words style="inline-size:180px;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-sm);padding:var(--bs-space-2)">Supercalifragilisticexpialidociousantidisestablishmentarianism</p>
+      </section>
+      <section class="visual-region" data-visual="form-validation" aria-label="Form validation states">
+        <h2>Form validation</h2>
+        <div class="bs-stack bs-gap-3">
+          <label class="bs-label" for="visual-validation-default">Default</label>
+          <input class="bs-input" id="visual-validation-default" type="text" value="Untouched" />
+          <label class="bs-label" for="visual-validation-aria-false">aria-invalid="false"</label>
+          <input class="bs-input" id="visual-validation-aria-false" type="text" value="No information" aria-invalid="false" />
+          <label class="bs-label" for="visual-validation-class-valid">.bs-is-valid</label>
+          <input class="bs-input bs-is-valid" id="visual-validation-class-valid" type="text" value="Validated" />
+          <label class="bs-label" for="visual-validation-aria-true">aria-invalid="true"</label>
+          <input class="bs-input" id="visual-validation-aria-true" type="text" value="Has error" aria-invalid="true" />
+          <label class="bs-label" for="visual-validation-class-invalid">.bs-is-invalid</label>
+          <input class="bs-input bs-is-invalid" id="visual-validation-class-invalid" type="text" value="Has error" />
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-navbar" aria-label="RTL navbar">
+        <header class="bs-navbar bs-container" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md);padding:var(--bs-space-3)">
+          <button class="bs-btn bs-btn-icon bs-btn-secondary" type="button" aria-label="القائمة"><svg class="bs-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+          <a class="bs-navbar-brand" href="#">شعار</a>
+          <nav aria-label="رئيسي"><a class="bs-navbar-link" href="#">الرئيسية</a><a class="bs-navbar-link" href="#">المكونات</a></nav>
+        </header>
+      </section>
+      <section class="visual-region" data-visual="rtl-sidebar" aria-label="RTL sidebar">
+        <div class="bs-sidebar-layout" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md);overflow:hidden;block-size:14rem">
+          <aside class="bs-sidebar bs-sidebar-start bs-sidebar-collapsible" data-bs-state="open" style="position:static;block-size:auto;flex-basis:11rem;inline-size:11rem">
+            <nav class="bs-sidebar-content" aria-label="القائمة الجانبية">
+              <a class="bs-nav-link" href="#" aria-current="page">الرئيسية</a>
+              <a class="bs-nav-link" href="#">الإعدادات</a>
+              <a class="bs-nav-link" href="#">الفواتير</a>
+              <span class="bs-sidebar-separator" role="separator"></span>
+              <a class="bs-nav-link bs-nav-link-subitem" href="#">الفريق</a>
+              <a class="bs-nav-link bs-nav-link-subitem" href="#">الملف الشخصي</a>
+            </nav>
+          </aside>
+          <main class="bs-sidebar-main" style="padding:var(--bs-space-4)"><div class="bs-card"><div class="bs-card-body"><strong>المحتوى الرئيسي</strong><p class="bs-card-text">المنطقة الرئيسية بجانب الشريط الجانبي.</p></div></div></main>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-dropdown" aria-label="RTL dropdown">
+        <div class="bs-dropdown" style="position:relative">
+          <button class="bs-btn bs-btn-secondary" type="button" aria-haspopup="menu" aria-expanded="true">القائمة</button>
+          <div class="bs-dropdown-menu" role="menu" style="position:static;display:block;margin-block-start:var(--bs-space-2)">
+            <button class="bs-dropdown-item" role="menuitem">جديد</button>
+            <button class="bs-dropdown-item" role="menuitem" aria-current="true">مفتوح</button>
+            <button class="bs-dropdown-item" role="menuitem">مؤرشف</button>
+            <button class="bs-dropdown-item" role="menuitem" aria-disabled="true">محذوف</button>
+          </div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-drawer" aria-label="RTL drawer">
+        <div class="bs-drawer bs-drawer-start" data-bs-state="open" style="position:static;display:flex;flex-direction:column;inline-size:18rem;block-size:14rem;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md)">
+          <header class="bs-drawer-header"><h3 class="bs-drawer-title">القائمة الجانبية</h3><button class="bs-drawer-close" type="button" aria-label="إغلاق">×</button></header>
+          <div class="bs-drawer-body" style="padding:var(--bs-space-4)">محتوى الدرج</div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-form" aria-label="RTL form">
+        <div class="bs-stack bs-gap-3">
+          <div class="bs-input-wrap" style="max-inline-size:18rem">
+            <svg class="bs-input-icon bs-input-icon-end" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle><path d="m21 21-4.35-4.35" fill="none" stroke="currentColor"></path></svg>
+            <input class="bs-input bs-input-has-icon-end" placeholder="بحث" />
+          </div>
+          <div class="bs-input-group" style="max-inline-size:18rem">
+            <span class="bs-input-group-text">المستخدم</span>
+            <input class="bs-input" placeholder="اسم المستخدم" />
+            <button class="bs-btn bs-btn-secondary" type="button">تحقق</button>
+          </div>
+          <ul class="bs-checklist"><li>تم التحقق من البريد الإلكتروني</li><li>تم تأكيد رقم الهاتف</li></ul>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-breadcrumb" aria-label="RTL breadcrumb and navigation">
+        <nav class="bs-breadcrumb" aria-label="مسار التنقل"><a href="#">الرئيسية</a><span aria-hidden="true">/</span><a href="#">المكونات</a><span aria-hidden="true">/</span><span>الأزرار</span></nav>
+        <nav class="bs-nav bs-mt-4" aria-label="التنقل الجانبي">
+          <span class="bs-nav-heading">القائمة</span>
+          <a class="bs-nav-link" href="#" aria-current="page">نشط</a>
+          <a class="bs-nav-link" href="#">فرعي</a>
+          <a class="bs-nav-link bs-nav-link-subitem" href="#">عميق</a>
+        </nav>
+      </section>
+      <section class="visual-region" data-visual="rtl-floating" aria-label="RTL floating UI">
+        <div class="bs-tooltip bs-tooltip-rtl" style="position:static;display:inline-block;margin:var(--bs-space-2)">تلميح</div>
+        <div class="bs-popover" style="position:static;display:flex;flex-direction:column;inline-size:14rem;margin-block-start:var(--bs-space-4);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md)">
+          <header class="bs-popover-header">عنوان منبثق</header>
+          <div class="bs-popover-body">محتوى النافذة المنبثقة مع نص توضيحي.</div>
+        </div>
+        <div class="bs-toast-region" style="position:static;display:grid;margin-block-start:var(--bs-space-4);inline-size:14rem">
+          <div class="bs-toast bs-toast-success" style="position:static">
+            <span><strong class="bs-toast-title">تم الحفظ</strong><span class="bs-toast-message">تم تحديث الإعدادات بنجاح.</span></span>
+            <button class="bs-toast-dismiss" type="button" aria-label="إغلاق">×</button>
+          </div>
+        </div>
       </section>
     </main>
   </body>

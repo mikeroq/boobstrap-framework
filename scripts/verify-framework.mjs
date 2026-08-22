@@ -4,6 +4,8 @@ import { parseTokenCss } from "./token-artifacts.mjs";
 
 const root = new URL("../", import.meta.url);
 const css = await readFile(new URL("dist/boobstrap.css", root), "utf8");
+const minifiedCss = await readFile(new URL("dist/boobstrap.min.css", root), "utf8");
+const minifiedMap = JSON.parse(await readFile(new URL("dist/boobstrap.min.css.map", root), "utf8"));
 const sourceEntry = await readFile(new URL("src/boobstrap.css", root), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
 const contract = JSON.parse(await readFile(new URL("tests/api-contract.json", root), "utf8"));
@@ -42,7 +44,7 @@ assert.deepEqual(tokenArtifact, parseTokenCss(tokenSource), "Generated token art
 const generatedTokenNames = Object.values(tokenArtifact.tokens).flatMap((group) => Object.values(group).filter((value) => value?.$extensions).map((value) => value.$extensions["org.boobstrap.css-variable"])).sort();
 assert.deepEqual(generatedTokenNames, actualTokens, "Token artifact must account for every public root token");
 for (const preset of ["rose", "violet", "blue", "teal", "amber"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-palette=\"${preset}\"`)), `Missing ${preset} mode`);
-for (const preset of ["rounded", "square"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-radius=\"${preset}\"`)), `Missing ${preset} radius mode`);
+for (const preset of ["small", "normal", "large", "rounded", "square"]) assert.ok(Object.keys(tokenArtifact.modes).some((selector) => selector.includes(`data-bs-radius=\"${preset}\"`)), `Missing ${preset} radius mode`);
 assert.equal(tokenArtifact.tokens.base.white.$value, "#ffffff", "Expected ungrouped CSS tokens under the DTCG-safe base group");
 assert.equal(tokenArtifact.modes['[data-bs-theme="light"]']["--bs-color-primary-contrast"], "{base.white}", "Expected root-token aliases to use a complete DTCG path");
 assert.ok(Object.keys(tokenArtifact.modes).every((selector) => !selector.includes("/*")), "Token mode selector keys must not contain CSS comments");
@@ -57,4 +59,16 @@ if (!css.startsWith(expectedBanner)) {
   throw new Error(`Distribution banner does not match package metadata. Expected: ${expectedBanner}`);
 }
 
-console.log(`Verified dist/boobstrap.css: ${actualClasses.length} classes, ${actualTokens.length} tokens, ${Buffer.byteLength(css)} bytes.`);
+const unminifiedSelectors = [...new Set(
+  [...css.matchAll(/\.([a-z][a-z0-9-]*)/gi)].map((match) => match[1]).filter((name) => name.startsWith("bs-")),
+)].sort();
+const minifiedSelectors = [...new Set(
+  [...minifiedCss.matchAll(/\.([a-z][a-z0-9-]*)/gi)].map((match) => match[1]).filter((name) => name.startsWith("bs-")),
+)].sort();
+assert.deepEqual(minifiedSelectors, unminifiedSelectors, "Minified CSS must expose the same public bs- selectors as the unminified bundle");
+
+assert.equal(minifiedMap.version, 3, "Source map must declare version 3");
+assert.ok(Array.isArray(minifiedMap.sources) && minifiedMap.sources.includes("boobstrap.css"), "Source map must reference the unminified bundle");
+assert.ok(typeof minifiedMap.sourcesContent?.[0] === "string" && minifiedMap.sourcesContent[0].length > 0, "Source map must embed the unminified source for debugger support");
+
+console.log(`Verified dist/boobstrap.css: ${actualClasses.length} classes, ${actualTokens.length} tokens, ${Buffer.byteLength(css)} bytes; dist/boobstrap.min.css: ${Buffer.byteLength(minifiedCss)} bytes.`);

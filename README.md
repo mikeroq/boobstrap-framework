@@ -8,7 +8,7 @@ Boobstrap is a lightweight, class-based CSS framework for polished interfaces wi
 
 ## Starter template
 
-Start from the responsive [Vite starter](examples/starter), which imports Boobstrap from npm and includes theme customization, components, forms, inline SVG icons, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs#starter).
+Start from the responsive [Vite starter](examples/starter), which imports Boobstrap and the recommended Lucide icon set from npm and includes theme customization, components, forms, and a production validation command. Download the packaged template from the [Boobstrap documentation](https://boobstrap.org/docs#starter).
 
 ## Install
 
@@ -35,29 +35,27 @@ import "@boobstrap/boobstrap/dist/boobstrap.css";
 
 You can also copy `dist/boobstrap.css` from the package into your own assets and link it normally.
 
-## Icons (optional)
+## Icons
 
-Boobstrap does not bundle an icon library or JavaScript runtime. Add the sizing utilities to any inline SVG from your preferred library:
-
-```html
-<svg class="bs-icon bs-icon-lg" viewBox="0 0 24 24" aria-hidden="true">
-  <path d="M12 3v18m9-9H3" />
-</svg>
-```
-
-For a ready-made icon set, install [Lucide](https://lucide.dev/), then initialize only the icons your application uses:
+Use [Lucide](https://lucide.dev/) as the default icon set for Boobstrap projects. Boobstrap remains CSS-only, so Lucide is an opt-in application dependency:
 
 ```bash
 npm install lucide
 ```
 
-```js
-import { createIcons, icons } from "lucide";
+Import only the icons the page uses, then apply Boobstrap's sizing classes to the markers Lucide replaces:
 
-createIcons({ icons });
+```html
+<i data-lucide="plus" class="bs-icon bs-icon-lg" aria-hidden="true"></i>
 ```
 
-Lucide remains an opt-in application dependency; Boobstrap stays CSS-only and can be used with any SVG icon source.
+```js
+import { Plus, createIcons } from "lucide";
+
+createIcons({ icons: { Plus } });
+```
+
+Other SVG icon sources remain compatible when a project needs them, but Boobstrap documentation and starters use Lucide consistently.
 
 ## Optional JavaScript
 
@@ -70,7 +68,7 @@ import { initBoobstrap } from "@boobstrap/boobstrap/js";
 const boobstrap = initBoobstrap();
 ```
 
-Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, OTP, password, popover, composable sidebar, tabs, toast, and tooltip controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every public controller has a component-level `/js/<name>` import.
+Boobstrap JS provides loading button, collapse, searchable combobox, dialog/drawer, dropdown, input-mask, responsive navbar, OTP, password, popover, composable sidebar, tabs, toast, and tooltip controllers with synchronized ARIA state, cancelable lifecycle events, keyboard behavior where applicable, and explicit cleanup. Every public controller has a component-level `/js/<name>` import.
 
 Applications can continue bringing their own behavior. The official Alpine adapter implements the same [interaction contract](docs/INTERACTIONS.md) without attaching Boobstrap JS:
 
@@ -149,10 +147,10 @@ const details = useCollapse({ id: "details" });
 
 ## What ships
 
-- Composable dark/light modes, five color palettes, and rounded/square radius presets
+- Composable dark/light modes, five color palettes, small/normal/large radius scales, and square corners
 - Reset and typography foundations
 - Fluid containers and a mobile-first 12-column CSS Grid
-- Buttons, cards, badges, comprehensive form controls, alerts, and code windows
+- Buttons, cards with optional separated regions, badges, comprehensive form controls, alerts, and code windows with pill or underline tabs
 - Input groups and icons, native selects and date/time pickers, sizes, validation, checks, radios, switches, masks, password reveal, and six-digit OTP
 - Button groups, toolbars, split dropdowns, icon buttons, state variants, and loading buttons
 - A composable sidebar shell with groups, nested menus, badges, loading states, mobile drawers, and desktop collapse modes
@@ -161,10 +159,10 @@ const details = useCollapse({ id: "details" });
 - Numbered pagination with current, disabled, ellipsis, responsive, and size variants, alongside separate previous/next page navigation
 - A scoped DataTables 3 adapter for generated search, page-length, information, sorting, overflow, processing, and pagination controls
 - Determinate, striped, animated, and indeterminate progress indicators with semantic variants and reduced-motion behavior
-- Toast regions, anchored tooltips, and accessible popovers with optional controllers
+- Toast regions, anchored tooltips, and accessible popovers that dismiss on outside interaction, page scroll, or `Escape`
 - Optional loading button, collapse, searchable combobox, dialog/drawer, dropdown, form-helper, sidebar, tabs, toast, tooltip, and popover controllers
 - Official Alpine, React, and Vue adapters with framework-owned state
-- Display, flex, sizing, positioning, spacing, typography, and responsive breakpoint utilities
+- Display, flex, sizing, positioning, spacing, typography, responsive breakpoint, and theme-aware scrollbars
 - A standalone `dist/boobstrap.css` bundle with no runtime dependencies
 
 The complete component, class, and design-token reference lives in the [framework documentation](https://boobstrap.org/docs). The reference is derived from the compiled package used by the site.
@@ -177,15 +175,16 @@ Dark mode, the rose palette, and rounded corners are the defaults. Mode, palette
 <html
   data-bs-theme="light"
   data-bs-palette="blue"
-  data-bs-radius="square"
+  data-bs-radius="small"
 >
 ```
 
 - `data-bs-theme`: `dark` or `light`
 - `data-bs-palette`: `rose`, `violet`, `blue`, `teal`, or `amber`
-- `data-bs-radius`: `rounded` or `square`
+- `data-bs-radius`: `small`, `normal`, `large`, `rounded` (an alias for `normal`), or `square`
+- `data-bs-scrollbars`: component and element scroll regions are themed by default, while the document's own scrollbar stays platform-native so page layout and viewport overlays (dialogs, drawers) are never displaced. Set `native` on a subtree to opt out, use `.bs-scrollbar` to opt one scroll container back in, and set `themed` on `<html>` to opt the document scrollbar in explicitly.
 
-Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. The radius presets remap the complete `--bs-radius-*` scale while leaving intrinsic circles such as radio controls and status dots circular.
+Each palette remaps semantic surfaces, text, primary states, borders, controls, focus, gradients, and shadows. Radius presets remap the complete `--bs-radius-*` scale, including scrollbar thumb corners, so `data-bs-radius="square"` also produces square scrollbar thumbs. The default scrollbar treatment consumes the theme-aware `--bs-scrollbar-*` tokens. The existing `data-bs-scrollbars="themed"` value remains compatible, but is no longer required.
 
 Preset attributes are optional. Override semantic tokens after importing Boobstrap when a product needs a custom system:
 
@@ -196,6 +195,7 @@ Preset attributes are optional. Override semantic tokens after importing Boobstr
   --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(109 74 255 / 30%);
   --bs-radius-md: 0.5rem;
+  --bs-scrollbar-thumb: rgb(109 74 255 / 55%);
 }
 ```
 
@@ -208,9 +208,7 @@ import tokenJson from "@boobstrap/boobstrap/tokens.json" with { type: "json" };
 
 `dist/tokens.json` follows the DTCG `$value` and alias shape. Exact CSS `var()` aliases become token references; CSS-native expressions such as `clamp()`, gradients, shadows, and font stacks remain lossless strings without a misleading `$type`. CSS custom properties remain the runtime styling API; these generated artifacts are interoperability data and must not be edited directly.
 
-## Browser support
-
-### Loading skeletons
+## Loading skeletons
 
 Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with `.bs-skeleton-text`, `.bs-skeleton-circle`, `.bs-skeleton-media`, size modifiers, and either `.bs-skeleton-pulse` or `.bs-skeleton-wave`. Set widths with `--bs-skeleton-width` or existing layout utilities. Mark the placeholder group `aria-hidden="true"`, put `aria-busy="true"` on the containing content region, and update that region when real content replaces it; skeletons are not progress bars. Both animations become static under reduced motion.
 
@@ -219,6 +217,12 @@ Skeletons are CSS-only, content-shaped placeholders. Compose `.bs-skeleton` with
 The release test matrix covers current Chromium, Firefox, and WebKit engines at mobile and desktop viewport sizes. Browser contracts exercise both themes, responsive grid behavior, visible focus treatment, reduced-motion behavior, optional controller interactions, keyboard navigation, and automated Axe accessibility checks.
 
 Legacy browsers are not a target. Boobstrap uses modern CSS features including custom properties, Grid, `clamp()`, and modern color syntax.
+
+Forced colors (Windows High Contrast) are exercised by the browser test matrix. Components that override native chrome opt into `forced-color-adjust: auto` so users keep a recognizable OS shape and high-contrast palette.
+
+## What's new in v0.6
+
+v0.6 completes the responsive grid, spacing, and layout utility surfaces, adds five new component controllers (banner, input-mask, otp, password, sidebar) with matching Alpine, React, and Vue adapters, and ships minified CSS and component-local customization hooks. It also fixes `aria-invalid="false"` so it no longer applies success styling. See [docs/MIGRATING.md](docs/MIGRATING.md) for the migration notes, including the one deliberate breaking change, and [CHANGELOG.md](CHANGELOG.md) for the complete list.
 
 ## Development
 
@@ -283,6 +287,18 @@ When changing the public API intentionally, update `tests/api-contract.json` in 
 - Machine-readable design token exports
 - Accordion and loading skeleton primitives
 - Adapter conformance and visual regression contracts
+
+### v0.6 — Responsive surface, component breadth, and resilience
+
+- Completed responsive 12-column grid with breakpoint tokens (`--bs-breakpoint-*`)
+- Completed spacing utility grammar (margin, padding, gap) with responsive variants
+- Added display, position, flex, sizing, text overflow, and media fit utilities
+- Added full semantic variants for alert, badge, button, and banner
+- Added compositional primitives (`.bs-separator`, `.bs-close`, dropdown helpers)
+- Added five controllers (banner, input-mask, otp, password, sidebar) with matching Alpine, React, and Vue adapters
+- Added structural tokens (`--bs-z-*`, `--bs-control-size-*`, `--bs-btn-size-*`, `--bs-overlay-backdrop`) and component-local hooks (`--bs-btn-*`, `--bs-card-*`, `--bs-dialog-*`, `--bs-control-*`, `--bs-banner-*`, `--bs-toast-*`, `--bs-sidebar-*`)
+- Shipped minified CSS at `@boobstrap/boobstrap/min.css` with size budgets
+- Fixed `aria-invalid="false"` so it no longer applies success styling (migration required)
 
 ### Future
 

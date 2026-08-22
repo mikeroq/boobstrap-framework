@@ -70,6 +70,19 @@ export interface DialogResult {
 
 export function useDialog(options?: DialogOptions): DialogResult;
 
+export interface NavbarResult {
+  open: boolean;
+  menuId: string;
+  show: (reason?: string, sourceEvent?: Event) => boolean;
+  hide: (reason?: string, sourceEvent?: Event) => boolean;
+  toggle: (reason?: string, sourceEvent?: Event) => boolean;
+  getTriggerProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+  getMenuProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getDismissProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+}
+
+export function useNavbar(options?: CollapseOptions): NavbarResult;
+
 export interface ComboboxOption {
   value: string;
   label: string;
@@ -214,3 +227,87 @@ export interface PopoverResult {
 }
 
 export function usePopover(options?: FloatingOptions): PopoverResult;
+
+export interface BannerOptions {
+  visible?: boolean;
+  defaultVisible?: boolean;
+  onVisibleChange?: (visible: boolean, detail: TransitionDetail) => void;
+}
+
+export interface BannerResult {
+  visible: boolean;
+  show: () => boolean;
+  dismiss: () => boolean;
+  getBannerProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getDismissProps: (props?: ButtonHTMLAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement>;
+}
+
+export function useBanner(options?: BannerOptions): BannerResult;
+
+export interface InputMaskResult {
+  format: (options?: { silent?: boolean }) => boolean;
+  getInputProps: (props?: InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>) => InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>;
+}
+
+export function useInputMask(mask: string): InputMaskResult;
+export function formatMask(value: string, mask: string): string;
+
+export interface OtpOptions {
+  pattern?: string;
+}
+
+export interface OtpResult {
+  clear: () => void;
+  sync: (options?: { silent?: boolean }) => void;
+  getRootProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getInputProps: (index: number, props?: InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>) => InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>;
+}
+
+export function useOtp(options?: OtpOptions): OtpResult;
+
+export interface PasswordOptions {
+  showLabel?: string;
+  hideLabel?: string;
+}
+
+export interface PasswordResult {
+  visible: boolean;
+  setVisible: (visible: boolean) => boolean;
+  toggle: () => boolean;
+  getRootProps: (props?: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) => HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>;
+  getInputProps: (props?: InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>) => InputHTMLAttributes<HTMLInputElement> & RefAttributes<HTMLInputElement>;
+  getToggleProps: (props?: ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>) => ButtonHTMLAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement>;
+  getLabelProps: (props?: HTMLAttributes<HTMLSpanElement> & RefAttributes<HTMLSpanElement>) => HTMLAttributes<HTMLSpanElement> & RefAttributes<HTMLSpanElement>;
+}
+
+export function usePassword(options?: PasswordOptions): PasswordResult;
+
+export interface ScrollspyResult {
+  getNavProps: (props?: HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>) => HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>;
+}
+
+export function useScrollspy(): ScrollspyResult;
+
+export interface SidebarTransitionOptions {
+  reason?: string;
+  sourceEvent?: Event;
+  restoreTarget?: EventTarget | null;
+  restoreFocus?: boolean;
+}
+
+export interface SidebarOptions extends CollapseOptions {
+  media?: string;
+  shortcut?: string;
+}
+
+export interface SidebarResult {
+  open: boolean;
+  show: (options?: SidebarTransitionOptions) => boolean;
+  hide: (options?: SidebarTransitionOptions) => boolean;
+  toggle: (options?: SidebarTransitionOptions) => boolean;
+  expand: (options?: SidebarTransitionOptions) => boolean;
+  collapse: (options?: SidebarTransitionOptions) => boolean;
+  getRootProps: (props?: HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>) => HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement>;
+}
+
+export function useSidebar(options?: SidebarOptions): SidebarResult;

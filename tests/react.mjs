@@ -52,6 +52,14 @@ try {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.reactReady === true);
 
+  const navbarToggle = page.locator("#react-navbar-toggle");
+  const navbarMenu = page.locator("#react-navbar");
+  await navbarToggle.click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "open") failures.push("navbar did not open");
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => document.querySelector("#react-navbar").dataset.bsState === "closed");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push("navbar did not close and restore focus");
+
   const loadingButton = page.locator("#react-loading-button");
   await loadingButton.click();
   await page.waitForFunction(() => document.querySelector("#react-loading-button").dataset.bsState === "loading");
@@ -143,11 +151,57 @@ try {
   if (await page.locator("#react-tooltip").isHidden() || !await page.locator("#react-tooltip-trigger").getAttribute("aria-describedby")) failures.push("tooltip did not show with its description");
   await page.locator("#react-popover-trigger").click();
   if (await page.locator("#react-popover").isHidden()) failures.push("popover did not show");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  await page.locator("#react-popover").waitFor({ state: "hidden" });
+  await page.locator("#react-popover-trigger").click();
   await page.locator("#react-heading").click();
   if (await page.locator("#react-popover").isVisible()) failures.push("popover did not dismiss outside");
 
+  const reactBanner = page.locator("#react-banner");
+  if (!await reactBanner.isVisible()) failures.push("banner did not initialize visible");
+  await page.locator("#react-banner-dismiss").click();
+  await page.waitForFunction(() => document.querySelector("#react-banner").hidden);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:banner:dismissed" && event.adapter === "react"));
+
+  const reactMaskInput = page.locator("#react-mask-input");
+  await reactMaskInput.click();
+  await reactMaskInput.fill("");
+  await reactMaskInput.type("5125551234");
+  const reactMaskValue = await reactMaskInput.inputValue();
+  if (reactMaskValue !== "(512) 555-1234") failures.push(`input mask did not format value (received ${reactMaskValue})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:mask:change" && event.adapter === "react"));
+
+  const reactOtpInputs = page.locator("[data-test-otp] .bs-otp-input");
+  await reactOtpInputs.nth(0).fill("1");
+  await page.waitForFunction(() => document.querySelectorAll("[data-test-otp] .bs-otp-input")[1] === document.activeElement);
+  await page.keyboard.type("23");
+  await reactOtpInputs.nth(3).fill("4");
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:otp:complete" && event.adapter === "react"));
+  const reactOtpValue = await page.locator("#react-otp-value").inputValue();
+  if (reactOtpValue !== "1234") failures.push(`otp value did not synchronize (received ${reactOtpValue})`);
+
+  const reactPasswordInput = page.locator("#react-password-input");
+  const reactPasswordToggle = page.locator("#react-password-toggle");
+  const reactInitialType = await reactPasswordInput.getAttribute("type");
+  await reactPasswordToggle.click();
+  await page.waitForFunction(() => document.querySelector("#react-password-input").type === "text");
+  const reactToggledType = await reactPasswordInput.getAttribute("type");
+  if (reactInitialType !== "password" || reactToggledType !== "text") failures.push(`password toggle did not flip input type (${reactInitialType} -> ${reactToggledType})`);
+  await page.waitForFunction(() => window.bsEvents.some((event) => event.name === "bs:password:toggled" && event.adapter === "react"));
+
+  const reactScrollspyNav = page.locator("#react-scrollspy");
+  if (await reactScrollspyNav.evaluate((nav) => !nav.querySelector('a[aria-current="true"]'))) failures.push("scrollspy did not set an initial active link");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#react-scrollspy-details").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => {
+    const link = document.querySelector("#react-scrollspy a[aria-current=\"true\"]");
+    return link?.getAttribute("href") === "#react-scrollspy-details";
+  });
+  if (await reactScrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== "#react-scrollspy-details") {
+    failures.push("scrollspy did not activate the details link");
+  }
+
   const events = await page.evaluate(() => window.bsEvents);
-  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const name of ["bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:navbar:shown", "bs:navbar:hidden", "bs:popover:shown", "bs:popover:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden", "bs:banner:dismissed", "bs:mask:change", "bs:otp:change", "bs:otp:complete", "bs:password:toggled", "bs:scrollspy:activate"]) {
     if (!events.some((event) => event.name === name && event.adapter === "react")) failures.push(`missing ${name}`);
   }
 

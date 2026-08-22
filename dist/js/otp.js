@@ -84,6 +84,7 @@ export class Otp {
     const characters = this.validCharacters(event.clipboardData?.getData("text"));
     if (!characters.length) return;
     event.preventDefault();
+    if (characters.length > this.inputs.length - index) return;
     for (let offset = 0; offset < characters.length && index + offset < this.inputs.length; offset += 1) {
       this.inputs[index + offset].value = characters[offset];
     }

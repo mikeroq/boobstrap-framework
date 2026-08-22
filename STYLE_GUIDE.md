@@ -31,7 +31,7 @@ Lowercase `boobstrap` may be used for package names, repositories, file names, a
 
 ```text
 boobstrap
-@boobstrap/core
+@boobstrap/boobstrap
 boobstrap.css
 ```
 
@@ -208,7 +208,7 @@ Use pink for emphasis rather than everywhere.
 
 Rose remains the Boobstrap brand default. Product interfaces may select an accessible preset with `data-bs-palette="rose|violet|blue|teal|amber"`. Palette presets remap semantic color, focus, gradient, and shadow tokens; components must consume those tokens rather than hard-coded brand colors.
 
-Color mode remains independent through `data-bs-theme="dark|light"`. Shape is independently selectable through `data-bs-radius="rounded|square"`; the square preset remaps the radius scale to zero but does not alter intrinsic circles such as radio controls, spinners, or status dots.
+Color mode remains independent through `data-bs-theme="dark|light"`. Shape is independently selectable through `data-bs-radius="small|normal|large|rounded|square"`; `rounded` remains an alias for the normal scale, while the square preset remaps the radius scale—including scrollbar thumbs—to zero. Theme-aware scrollbars are the default. Applications can restore browser-native scrollbars on the document or a subtree with `data-bs-scrollbars="native"`, then use `.bs-scrollbar` for an individual themed exception.
 
 ## 4. Typography
 
@@ -307,6 +307,44 @@ Boobstrap uses a four-pixel base spacing system.
 --bs-space-32: 8rem;
 ```
 
+### Spacing utilities
+
+The spacing scale maps directly to utility classes. Every utility resolves through the `--bs-space-*` tokens above and emits a logical CSS property so layouts are RTL-correct by construction.
+
+| Step set | Steps                                                                                       |
+|----------|---------------------------------------------------------------------------------------------|
+| Default  | `0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32`                                            |
+
+| Property          | Class prefix  | CSS property                |
+|-------------------|---------------|-----------------------------|
+| Margin            | `.bs-m-`      | `margin`                    |
+| Margin top        | `.bs-mt-`     | `margin-block-start`        |
+| Margin bottom     | `.bs-mb-`     | `margin-block-end`          |
+| Margin start      | `.bs-ms-`     | `margin-inline-start`       |
+| Margin end        | `.bs-me-`     | `margin-inline-end`         |
+| Margin x (inline) | `.bs-mx-`     | `margin-inline`             |
+| Margin y (block)  | `.bs-my-`     | `margin-block`              |
+| Padding           | `.bs-p-`      | `padding`                   |
+| Padding top       | `.bs-pt-`     | `padding-block-start`       |
+| Padding bottom    | `.bs-pb-`     | `padding-block-end`         |
+| Padding start     | `.bs-ps-`     | `padding-inline-start`      |
+| Padding end       | `.bs-pe-`     | `padding-inline-end`        |
+| Padding x (inline)| `.bs-px-`     | `padding-inline`            |
+| Padding y (block) | `.bs-py-`     | `padding-block`             |
+
+Auto is a separate class, not a step. `.bs-mx-auto`, `.bs-ms-auto`, and `.bs-me-auto` exist for cases that need `margin: auto` on one axis. Padding has no auto classes because `auto` is not a meaningful padding value.
+
+`gap` is a sibling utility family that lives alongside the spacing utilities:
+
+- `.bs-gap-{step}` — `gap` shorthand (steps `1, 2, 3, 4, 5, 6, 8, 10, 12`).
+- `.bs-gap-x-{step}` — `column-gap` only (same step set).
+- `.bs-gap-y-{step}` — `row-gap` only (same step set).
+
+#### Responsive variants
+
+Responsive spacing variants are emitted at `md` (48rem) and `lg` (64rem) for the high-traffic composition surface (`m`, `mt`, `mb`, `mx`, `my`, `p`, `px`, `py`) plus the three gap helpers. The pattern mirrors the breakpoint naming used elsewhere in the framework: `.bs-md-mt-4`, `.bs-lg-py-6`, `.bs-md-gap-x-2`. Responsive variants cover the smaller step set (steps `1–12`); the largest steps (`16, 20, 24, 32`) are intentionally omitted because 4rem–8rem spacing at md/lg is rarely useful and bloats the API surface. The underlying breakpoint scale comes from the `--bs-breakpoint-*` tokens described below.
+
+
 ## 6. Borders and Radius
 
 ```css
@@ -384,7 +422,36 @@ box-shadow:
 }
 ```
 
+### Document minimum width
+
+The reset sets `html { min-width: 20rem; }`. This is intentional and is part of the framework contract:
+
+- It places a hard floor at 320 CSS pixels so an external script (a developer-tools shrink, a mobile preview tool, a bookmarklet) cannot collapse the layout into an unsupported configuration where drawers, sidebar rails, and pagination controls would re-flow unpredictably.
+- It is one full "below-`sm`" interval below the smallest responsive breakpoint (`--bs-breakpoint-sm` = `40rem`), giving the layout room to behave consistently before the smallest breakpoint activates.
+- It is enforced and verified by `tests/rtl.mjs`, which renders the browser fixture at a 320px viewport and asserts `getComputedStyle(html).minWidth === '320px'`. Setting an inline override at 10rem or 30rem must round-trip to 160px and 480px respectively.
+- Consumers can override the floor with `html { min-width: <something larger>; }` if they want a wider minimum, but should not remove it; the floor exists to keep component layouts within their tested configuration.
+
+### Responsive scale
+
+Every breakpoint in the framework resolves through a single set of `--bs-breakpoint-*` tokens. Component media queries and responsive utilities (`bs-{sm,md,lg,xl,2xl}-*`) reference these tokens directly so the scale can be retargeted (or themed for a wider display) by reassigning one custom property. The `sm` step is the smallest breakpoint the responsive grid offers; below `sm` the layout is single-column.
+
+| Token | Value  | Use case                          |
+|-------|--------|-----------------------------------|
+| `--bs-breakpoint-sm`  | `40rem` | Phones in landscape, small tablets |
+| `--bs-breakpoint-md`  | `48rem` | Tablets, dense desktop forms       |
+| `--bs-breakpoint-lg`  | `64rem` | Standard desktops                  |
+| `--bs-breakpoint-xl`  | `76rem` | Wide desktops                      |
+| `--bs-breakpoint-2xl` | `90rem` | Ultra-wide displays                |
+
 ### Grid
+
+The 12-column grid is implemented with CSS Grid (`.bs-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }`). Span utilities compose across five breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`) using `--bs-breakpoint-*` tokens; each breakpoint also exposes `.bs-col-{bp}-auto` for content-sized columns. The grid is direction-neutral — `grid-column` and `grid-column-start` already work for both LTR and RTL contexts.
+
+Beyond spans, the grid offers:
+
+- `.bs-col-start-{1..12}` (and `.bs-col-start-{sm,md,lg,xl,2xl}-{1..12}`) — explicit `grid-column-start`.
+- `.bs-col-offset-{1..11}` (and `.bs-col-offset-{md,lg}-{1..11}`) — `grid-column-start: calc(<n> + 1)`, i.e. "skip N columns" before the span starts. Offsets are intentionally limited to `md` and `lg` to keep the responsive surface lean.
+- `.bs-gap-x-{step}` and `.bs-gap-y-{step}` — axis-specific gap helpers (steps 1, 2, 3, 4, 5, 6, 8, 10, 12). They live alongside `.bs-gap-*` in the spacing utilities.
 
 ```css
 .bs-grid {
@@ -401,9 +468,42 @@ Recommended arrangements:
 - Feature row: four equal columns
 - Mobile: one column
 
+### Layout utilities
+
+Layout utilities cover display, positioning, overflow, flex composition, sizing, text overflow, and media fit. They are single-purpose classes meant to compose with components rather than replace them.
+
+| Group | Classes |
+|-------|---------|
+| Display | `.bs-block`, `.bs-inline-block`, `.bs-flex`, `.bs-inline-flex`, `.bs-inline-grid`, `.bs-hidden`, `.bs-stack` |
+| Position | `.bs-static`, `.bs-relative`, `.bs-absolute`, `.bs-fixed`, `.bs-sticky` |
+| Overflow | `.bs-overflow-hidden`, `.bs-overflow-auto`, `.bs-overflow-x-auto`, `.bs-overflow-y-auto` |
+| Flex direction and wrap | `.bs-flex-row`, `.bs-flex-col`, `.bs-flex-wrap`, `.bs-flex-nowrap` |
+| Flex sizing | `.bs-flex-1`, `.bs-grow`, `.bs-grow-0`, `.bs-shrink`, `.bs-shrink-0` |
+| Align items | `.bs-items-start`, `.bs-items-center`, `.bs-items-end`, `.bs-items-baseline`, `.bs-items-stretch` |
+| Justify content | `.bs-justify-start`, `.bs-justify-center`, `.bs-justify-end`, `.bs-justify-between`, `.bs-justify-around`, `.bs-justify-evenly` |
+| Align self | `.bs-self-start`, `.bs-self-center`, `.bs-self-end`, `.bs-self-stretch` |
+| Order | `.bs-order-first`, `.bs-order-last` |
+| Sizing | `.bs-w-full`, `.bs-w-auto`, `.bs-max-w-full`, `.bs-min-w-0`, `.bs-h-full`, `.bs-h-auto`, `.bs-min-h-0`, `.bs-h-screen`, `.bs-min-h-screen` |
+| Text overflow | `.bs-truncate`, `.bs-whitespace-nowrap`, `.bs-break-words` |
+| Media | `.bs-aspect-square`, `.bs-aspect-video`, `.bs-object-cover`, `.bs-object-contain` |
+
+`.bs-h-screen` and `.bs-min-h-screen` declare `100vh` first and `100dvh` second. Browsers that understand the dynamic viewport unit use it so the height tracks a collapsing mobile URL bar; older browsers keep the `100vh` fallback.
+
+`.bs-min-w-0` and `.bs-min-h-0` exist for the common flex and grid overflow trap: a flex item defaults to `min-width: auto`, which prevents it from shrinking below its content. Pair `.bs-min-w-0` with `.bs-truncate` when the truncating element is a flex child.
+
+`.bs-break-words` uses `overflow-wrap: break-word`, which only breaks a word that cannot fit on its own line. It is the standard form; `word-break: break-word` is a legacy alias and is not emitted.
+
+#### Responsive layout variants
+
+Display, flex direction and wrap, align items, justify content, width, and order are available at `sm`, `md`, and `lg` as `.bs-{sm,md,lg}-{modifier}` — for example `.bs-md-flex`, `.bs-lg-justify-between`, `.bs-sm-w-full`. Each variant is a `min-width` media query, so it applies at the breakpoint and above.
+
+Position, overflow, sizing, text-overflow, aspect-ratio, and object-fit utilities are intentionally **not** responsive. These properties rarely need to change per breakpoint, and emitting variants for them would multiply the utility surface without improving layout composition.
+
 ## 9. Iconography
 
 Icons should be outlined, rounded, geometric, and simple enough to work at 16 pixels.
+
+Use Lucide as the recommended default icon set in Boobstrap documentation, examples, and starters. Import only the icons in use, mark decorative icons with `aria-hidden="true"`, and apply the `.bs-icon` sizing utilities to Lucide's generated SVG elements. Other SVG icon sources remain compatible with the CSS framework.
 
 ```css
 --bs-icon-sm: 1rem;
@@ -507,6 +607,20 @@ Icons should be outlined, rounded, geometric, and simple enough to work at 16 pi
 }
 ```
 
+### Validation contract
+
+Boobstrap distinguishes **explicit validation** from **implicit ARIA state**. The framework exposes two state-bearing classes that change border and focus-ring color, plus one ARIA attribute selector that mirrors the explicit invalid state for assistive technology:
+
+| Selector                          | Meaning                                            |
+|-----------------------------------|----------------------------------------------------|
+| `.bs-is-valid`                    | The application has positively validated the field. |
+| `.bs-is-invalid`                  | The application has negatively validated the field. |
+| `[aria-invalid="true"]` on `.bs-input`, `.bs-select`, or `.bs-textarea` | Mirrors `.bs-is-invalid` for ARIA-aware consumers. |
+
+`aria-invalid="false"` does **not** trigger any state styling. Many accessibility-first form libraries (React Hook Form, Final Form, and similar) set `aria-invalid="false"` on every input they manage as the default; treating that as "this control is valid" would render every untouched Boobstrap input with a green border, which is misleading. `aria-invalid="false"` is treated as "no information" — the field uses the same neutral border as an input without any ARIA attribute.
+
+The deliberate positive-validation API is the `.bs-is-valid` class; we intentionally do not ship a `data-bs-valid` attribute selector because it would duplicate the class API without adding selector capabilities CSS would need.
+
 ## 13. Alerts
 
 ```css
@@ -518,11 +632,76 @@ Icons should be outlined, rounded, geometric, and simple enough to work at 16 pi
   border-radius: var(--bs-radius-lg);
 }
 
-.bs-alert-primary {
-  background: rgb(216 60 135 / 9%);
-  border-color: rgb(216 60 135 / 28%);
+.bs-alert-primary,
+.bs-alert-info,
+.bs-alert-success,
+.bs-alert-warning,
+.bs-alert-danger {
+  background: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 24%, transparent);
 }
+
+.bs-alert-info { --bs-alert-accent: var(--bs-color-info); }
+.bs-alert-success { --bs-alert-accent: var(--bs-color-success); }
+.bs-alert-warning { --bs-alert-accent: var(--bs-color-warning); }
+.bs-alert-danger { --bs-alert-accent: var(--bs-color-danger); }
 ```
+
+### Semantic variant coverage
+
+- `.bs-alert`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-badge`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-btn`: `primary`, `secondary`, `ghost`, `danger`
+- `.bs-banner`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-toast`: `primary`, `info`, `success`, `warning`, `danger`
+- `.bs-progress`: `primary`, `info`, `success`, `warning`, `danger`
+
+The `--bs-alert-accent` and `--bs-badge-accent` component-local variables are
+public customization hooks. Override them on a parent element to retint a
+single alert or badge family without touching the base `--bs-color-*` tokens.
+
+### Component customization hooks
+
+Every component exposes a small, focused set of `--bs-<component>-*` custom
+properties. Override them on the component boundary (or any ancestor) to retint
+or resize one instance without touching the global `--bs-color-*` scale.
+
+| Component   | Public hooks                                                                       |
+|-------------|------------------------------------------------------------------------------------|
+| `bs-alert`  | `--bs-alert-accent`                                                                |
+| `bs-badge`  | `--bs-badge-accent`                                                                |
+| `bs-btn`    | `--bs-btn-block-size`, `--bs-btn-padding-inline`                                   |
+| `bs-card`   | `--bs-card-padding`                                                                |
+| `bs-control` (inputs, selects, textareas) | `--bs-control-bg`, `--bs-control-border`, `--bs-control-color`        |
+| `bs-dialog` | `--bs-dialog-width`, `--bs-dialog-max-height`, `--bs-drawer-width`                  |
+| `bs-banner` | `--bs-banner-bg`, `--bs-banner-border`, `--bs-banner-color`                        |
+| `bs-toast`  | `--bs-toast-bg`, `--bs-toast-border`, `--bs-toast-color`                           |
+| `bs-sidebar`| `--bs-sidebar-offset`, `--bs-sidebar-height`, `--bs-sidebar-width`, `--bs-sidebar-width-mobile`, `--bs-sidebar-width-collapsed`, `--bs-sidebar-skeleton-width` |
+
+Global structural tokens complete the customization surface and are resolved
+once at the document root:
+
+- `--bs-z-dropdown`, `--bs-z-sticky`, `--bs-z-fixed`, `--bs-z-navbar-backdrop`, `--bs-z-navbar`, `--bs-z-popover`, `--bs-z-tooltip`, `--bs-z-toast`, `--bs-z-dialog-backdrop`, `--bs-z-dialog` — explicit z-index layers for floating UI.
+- `--bs-control-size-sm`, `--bs-control-size-md`, `--bs-control-size-lg`, `--bs-control-size-xl` — form-control and input dimensions.
+- `--bs-btn-size-sm`, `--bs-btn-size-md`, `--bs-btn-size-lg` — button minimum heights (alias the control sizes for `sm`/`md`).
+- `--bs-overlay-backdrop` — modal, drawer, navbar, and sidebar backdrop tint.
+- `--bs-breakpoint-sm`, `--bs-breakpoint-md`, `--bs-breakpoint-lg`, `--bs-breakpoint-xl`, `--bs-breakpoint-2xl` — responsive grid and utility breakpoints.
+
+### Badge foreground color
+
+`.bs-badge-primary` keeps its `--bs-color-primary-hover` foreground so existing
+callers see no visual change. The new `.bs-badge-info`, `.bs-badge-success`,
+`.bs-badge-warning`, and `.bs-badge-danger` use `--bs-color-text` for the
+foreground, matching banner and toast — semantic tone comes from the tinted
+background and border, not from the text color.
+
+### Outline / subtle button treatment — rejected
+
+The framework deliberately ships `primary`, `secondary`, `ghost`, and `danger`
+buttons and nothing else. An outline or subtle button variant would visually
+duplicate `secondary` without adding semantic distinction, so adding one would
+inflate the API for no benefit. Do not introduce `.bs-btn-outline` or
+`.bs-btn-subtle`.
 
 ## 14. Code Blocks
 
@@ -619,6 +798,34 @@ Recommended body width:
 max-width: 68ch;
 ```
 
+Recommended minimum viewport floor:
+
+```css
+html { min-width: 20rem; }
+```
+
+Boobstrap is targeted at application shells, not embedded widgets. The
+20rem minimum (`320px`) on `html` keeps the layout from collapsing into
+illegibility on the very narrow viewports produced by some error
+states, modal embeds, and iframe contexts. It also gives the framework
+a deterministic floor to design against — every responsive breakpoint,
+modal sizing, and sidebar drawer assumes at least 20rem is available.
+If you need to embed Boobstrap inside a narrower surface, scope the
+override with a wrapper class rather than removing the global rule:
+
+```css
+.embed-narrow { min-width: 0; }
+.embed-narrow .bs-sidebar,
+.embed-narrow .bs-navbar { /* reset the responsive behaviors */ }
+```
+
+Forced colors (Windows High Contrast) are also exercised by the
+browser test matrix. Components that override native chrome — buttons,
+selects, checkboxes, switches, range thumbs, and alerts — opt into
+`forced-color-adjust: auto` so users keep a recognizable OS shape and
+high-contrast palette. Select chevrons, switch knobs, and alert borders
+remain visible against the system palette.
+
 ## 18. Illustration and Imagery
 
 Preferred imagery:
@@ -677,7 +884,57 @@ Recommended component page structure:
 7. Customization guidance
 8. Related components
 
-## 21. CSS Token Foundation
+## 21. Compositional Primitives
+
+Boobstrap ships small, single-purpose composition primitives that complement full components. They share tokens with the rest of the framework and never override application structure.
+
+### Separator
+
+`<hr class="bs-separator">` draws a themed horizontal rule by default. The element accepts `aria-orientation="vertical"` to switch to a vertical divider inside flex layouts:
+
+```html
+<hr class="bs-separator" />
+<hr class="bs-separator" aria-orientation="vertical" />
+```
+
+### Generic close button
+
+`.bs-close` is a square icon button with an `×` glyph that ships as a default `::before` pseudo-element so no asset is required. The dialog, drawer, banner, and toast close variants (`bs-dialog-close`, `bs-drawer-close`, `bs-banner-dismiss`, `bs-toast-dismiss`) extend the same base. Existing close selectors continue to work.
+
+```html
+<button type="button" class="bs-close" aria-label="Dismiss"></button>
+```
+
+### Dropdown composition
+
+Inside a `.bs-dropdown-menu`, the following helpers add common compositional patterns without overriding the controller contract:
+
+- `.bs-dropdown-header` — section heading (uppercase, subtle text, `--bs-color-text-subtle`).
+- `.bs-dropdown-divider` — separator between groups.
+- `.bs-dropdown-item-checked` — item with a leading `✓` glyph.
+- `.bs-dropdown-item-secondary` — muted descriptive text under an item label.
+
+```html
+<div class="bs-dropdown-header">Recent</div>
+<button class="bs-dropdown-item bs-dropdown-item-checked" role="menuitem">Edit<span class="bs-dropdown-item-secondary">2 minutes ago</span></button>
+<hr class="bs-dropdown-divider" />
+```
+
+The dropdown controller still owns keyboard navigation and selection; these classes are presentational only.
+
+### Adapter parity
+
+Every controller is exposed by Boobstrap JS, `@boobstrap/alpine`, `@boobstrap/react`, and `@boobstrap/vue`. There are no core-only controllers. The framework intentionally ships nothing that is framework-incompatible. The full controller parity table — including the five controllers added in v0.6 (`banner`, `input-mask`, `otp`, `password`, `sidebar`) — lives in [docs/INTERACTIONS.md](../docs/INTERACTIONS.md#universal-controllers).
+
+Adapter behavior contracts:
+
+- Adapters preserve the documented semantic structure, classes, state attributes, and keyboard behavior.
+- Adapters use the same event names (`bs:<component>:<action>`) when the host framework supports DOM events, while also exposing idiomatic framework callbacks.
+- Adapters support externally controlled state without attaching Boobstrap JS controllers to framework-owned DOM.
+- Adapters keep their framework runtime as a peer dependency.
+- Adapters document any deliberate difference from the base interaction contract.
+
+## 22. CSS Token Foundation
 
 ```css
 :root {
@@ -763,7 +1020,7 @@ Recommended component page structure:
 }
 ```
 
-## 22. Design Checklist
+## 23. Design Checklist
 
 Before shipping a Boobstrap-branded page or component, confirm that:
 

@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { promisify } from "node:util";
-import { useAccordion, useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useAccordion, useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useSidebar, useTabs, useToast, useTooltip } from "@boobstrap/react";
 
 const execFileAsync = promisify(execFile);
 const { stdout } = await execFileAsync("npm", ["pack", "--workspace", "@boobstrap/react", "--dry-run", "--json", "--ignore-scripts"]);
@@ -16,12 +16,19 @@ const requiredPaths = [
   "README.md",
   "package.json",
   "src/accordion.js",
+  "src/banner.js",
   "src/button.js",
   "src/collapse.js",
   "src/combobox.js",
   "src/dropdown.js",
   "src/dialog.js",
+  "src/input-mask.js",
+  "src/navbar.js",
+  "src/otp.js",
+  "src/password.js",
   "src/popover.js",
+  "src/scrollspy.js",
+  "src/sidebar.js",
   "src/index.d.ts",
   "src/index.js",
   "src/shared.js",
@@ -32,12 +39,19 @@ const requiredPaths = [
 
 assert.deepEqual(requiredPaths.filter((path) => !paths.includes(path)), [], "React package is missing required files");
 assert.equal(typeof useAccordion, "function");
+assert.equal(typeof useBanner, "function");
 assert.equal(typeof useButton, "function");
 assert.equal(typeof useCollapse, "function");
 assert.equal(typeof useCombobox, "function");
 assert.equal(typeof useDropdown, "function");
 assert.equal(typeof useDialog, "function");
+assert.equal(typeof useInputMask, "function");
+assert.equal(typeof useNavbar, "function");
+assert.equal(typeof useOtp, "function");
+assert.equal(typeof usePassword, "function");
 assert.equal(typeof usePopover, "function");
+assert.equal(typeof useScrollspy, "function");
+assert.equal(typeof useSidebar, "function");
 assert.equal(typeof useTabs, "function");
 assert.equal(typeof useToast, "function");
 assert.equal(typeof useTooltip, "function");
@@ -47,12 +61,17 @@ function ServerFixture() {
   const collapse = useCollapse({ id: "ssr-details" });
   const combobox = useCombobox({ id: "ssr-role", options: [{ value: "engineer", label: "Engineer" }] });
   const dialog = useDialog({ id: "ssr-dialog" });
+  const navbar = useNavbar({ id: "ssr-navbar" });
+  const scrollspy = useScrollspy();
   return createElement("section", null,
     createElement("button", button.getButtonProps(), "Save"),
     createElement("button", collapse.getTriggerProps(), "Details"),
     createElement("div", collapse.getPanelProps(), "Server-rendered details"),
     createElement("button", dialog.getTriggerProps(), "Open dialog"),
     createElement("dialog", dialog.getDialogProps(), "Server-rendered dialog"),
+    createElement("button", navbar.getTriggerProps(), "Navigation"),
+    createElement("div", navbar.getMenuProps(), "Server-rendered navigation"),
+    createElement("nav", scrollspy.getNavProps(), createElement("a", { href: "#ssr-section" }, "Section")),
     createElement("div", combobox.getRootProps(),
       createElement("input", combobox.getInputProps()),
       createElement("div", combobox.getListboxProps()),
@@ -69,6 +88,7 @@ assert.match(serverMarkup, /id="ssr-details"/);
 assert.match(serverMarkup, /hidden=""/);
 assert.match(serverMarkup, /role="combobox"/);
 assert.match(serverMarkup, /id="ssr-dialog"/);
+assert.match(serverMarkup, /id="ssr-navbar"/);
 assert.match(serverMarkup, /aria-controls="ssr-role"/);
 
-console.log(`Verified @boobstrap/react package contents, ten hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);
+console.log(`Verified @boobstrap/react package contents, seventeen hook exports, type declarations, and SSR-safe rendering (${pack.size} byte tarball).`);

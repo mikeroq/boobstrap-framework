@@ -39,14 +39,14 @@
 
 .bs-checklist > li {
   position: relative;
-  padding-left: 2rem;
+  padding-inline-start: 2rem;
   color: var(--bs-color-text-muted);
 }
 
 .bs-checklist > li::before {
   position: absolute;
-  top: 0.12rem;
-  left: 0;
+  inset-block-start: 0.12rem;
+  inset-inline-start: 0;
   display: grid;
   width: 1.25rem;
   height: 1.25rem;
@@ -58,6 +58,45 @@
   font-size: 0.68rem;
   font-weight: 750;
 }
+
+.bs-list-group {
+  display: grid;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--bs-color-surface);
+  border: 1px solid var(--bs-color-border);
+  border-radius: var(--bs-radius-lg);
+  list-style: none;
+}
+
+.bs-list-group-flush { border-inline: 0; border-radius: 0; }
+
+.bs-list-group-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--bs-space-3);
+  padding: var(--bs-space-4);
+  color: var(--bs-color-text);
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--bs-color-border);
+  text-align: start;
+  text-decoration: none;
+}
+
+.bs-list-group > .bs-list-group-item:last-child,
+.bs-list-group > :last-child > .bs-list-group-item { border-block-end: 0; }
+.bs-list-group-compact .bs-list-group-item { padding: var(--bs-space-3); }
+.bs-list-group-item-action:hover { color: var(--bs-color-text); background: var(--bs-color-surface-hover); }
+.bs-list-group-item:is([aria-current], [aria-selected="true"], [data-active="true"]) { background: color-mix(in srgb, var(--bs-color-primary) 10%, transparent); box-shadow: inset 3px 0 var(--bs-color-primary); }
+.bs-list-group-item:is(:disabled, [aria-disabled="true"]) { color: var(--bs-color-text-subtle); cursor: not-allowed; opacity: 0.6; pointer-events: none; }
+.bs-list-group-leading, .bs-list-group-trailing { flex: 0 0 auto; }
+.bs-list-group-content { min-width: 0; flex: 1 1 auto; }
+.bs-list-group-title { display: block; color: var(--bs-color-text); font-weight: 650; }
+.bs-list-group-description { display: block; margin-block-start: var(--bs-space-1); color: var(--bs-color-text-muted); font-size: var(--bs-font-size-sm); }
+.bs-list-group-trailing { margin-inline-start: auto; color: var(--bs-color-text-subtle); font-size: var(--bs-font-size-sm); }
 
 @media (max-width: 36rem) {
   .bs-reference-row { grid-template-columns: 1fr; }

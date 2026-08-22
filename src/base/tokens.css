@@ -23,7 +23,7 @@
   --bs-color-primary: var(--bs-brand-500);
   --bs-color-primary-hover: var(--bs-brand-400);
   --bs-color-primary-active: var(--bs-brand-600);
-  --bs-color-primary-contrast: var(--bs-plum-950);
+  --bs-color-primary-contrast: var(--bs-white);
   --bs-color-focus-ring: rgb(234 90 159 / 42%);
   --bs-color-success: #36b37e;
   --bs-color-warning: #e6a23c;
@@ -81,17 +81,51 @@
   --bs-shadow-brand: 0 10px 34px rgb(216 60 135 / 22%);
   --bs-gradient-brand: linear-gradient(135deg, var(--bs-brand-400), var(--bs-brand-500) 48%, var(--bs-brand-600));
 
+  --bs-scrollbar-size: 0.75rem;
+  --bs-scrollbar-track: transparent;
+  --bs-scrollbar-thumb: color-mix(in srgb, var(--bs-color-text-subtle) 58%, transparent);
+  --bs-scrollbar-thumb-hover: color-mix(in srgb, var(--bs-color-primary) 72%, var(--bs-color-text-subtle));
+
   --bs-container-sm: 40rem;
   --bs-container-md: 48rem;
   --bs-container-lg: 64rem;
   --bs-container-xl: 76rem;
   --bs-container-2xl: 90rem;
 
+  --bs-breakpoint-sm: 40rem;
+  --bs-breakpoint-md: 48rem;
+  --bs-breakpoint-lg: 64rem;
+  --bs-breakpoint-xl: 76rem;
+  --bs-breakpoint-2xl: 90rem;
+
   --bs-duration-fast: 120ms;
   --bs-duration-normal: 200ms;
   --bs-duration-slow: 360ms;
   --bs-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --bs-ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Structural scale — z-index layers, control dimensions, and overlay tint. */
+  --bs-z-dropdown: 1000;
+  --bs-z-sticky: 1020;
+  --bs-z-fixed: 1030;
+  --bs-z-navbar-backdrop: 1040;
+  --bs-z-navbar: 1050;
+  --bs-z-popover: 1060;
+  --bs-z-tooltip: 1070;
+  --bs-z-toast: 1080;
+  --bs-z-dialog-backdrop: 1090;
+  --bs-z-dialog: 1100;
+
+  --bs-control-size-sm: 2.25rem;
+  --bs-control-size-md: 2.75rem;
+  --bs-control-size-lg: 3.25rem;
+  --bs-control-size-xl: 3.5rem;
+
+  --bs-btn-size-sm: var(--bs-control-size-sm);
+  --bs-btn-size-md: var(--bs-control-size-md);
+  --bs-btn-size-lg: 3.35rem;
+
+  --bs-overlay-backdrop: rgb(5 2 6 / 68%);
 }
 
 [data-bs-theme="light"] {
@@ -134,7 +168,7 @@
   --bs-color-primary: #d83c87;
   --bs-color-primary-hover: #ea5a9f;
   --bs-color-primary-active: #b92f72;
-  --bs-color-primary-contrast: #140a15;
+  --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(234 90 159 / 42%);
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(216 60 135 / 38%);
@@ -163,7 +197,7 @@
   --bs-color-primary: #a78bfa;
   --bs-color-primary-hover: #c4b5fd;
   --bs-color-primary-active: #8b5cf6;
-  --bs-color-primary-contrast: #170f27;
+  --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(167 139 250 / 40%);
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(167 139 250 / 38%);
@@ -192,7 +226,7 @@
   --bs-color-primary: #60a5fa;
   --bs-color-primary-hover: #93c5fd;
   --bs-color-primary-active: #3b82f6;
-  --bs-color-primary-contrast: #071321;
+  --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(96 165 250 / 40%);
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(96 165 250 / 38%);
@@ -221,7 +255,7 @@
   --bs-color-primary: #2dd4bf;
   --bs-color-primary-hover: #5eead4;
   --bs-color-primary-active: #14b8a6;
-  --bs-color-primary-contrast: #061715;
+  --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(45 212 191 / 38%);
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(45 212 191 / 36%);
@@ -250,7 +284,7 @@
   --bs-color-primary: #fbbf24;
   --bs-color-primary-hover: #fcd34d;
   --bs-color-primary-active: #f59e0b;
-  --bs-color-primary-contrast: #1a1005;
+  --bs-color-primary-contrast: #ffffff;
   --bs-color-focus-ring: rgb(251 191 36 / 38%);
   --bs-color-border: rgb(255 255 255 / 10%);
   --bs-color-border-strong: rgb(251 191 36 / 36%);
@@ -382,14 +416,35 @@
   --bs-shadow-brand: 0 10px 34px rgb(180 83 9 / 19%);
 }
 
-/* Radius presets only remap shape tokens; intrinsic circles remain circular. */
-[data-bs-radius="rounded"] {
+/* Radius presets remap shape tokens without changing component markup. */
+[data-bs-radius="rounded"],
+[data-bs-radius="normal"] {
   --bs-radius-xs: 0.25rem;
   --bs-radius-sm: 0.5rem;
   --bs-radius-md: 0.75rem;
   --bs-radius-lg: 1rem;
   --bs-radius-xl: 1.5rem;
   --bs-radius-2xl: 2rem;
+  --bs-radius-pill: 9999px;
+}
+
+[data-bs-radius="small"] {
+  --bs-radius-xs: 0.125rem;
+  --bs-radius-sm: 0.25rem;
+  --bs-radius-md: 0.375rem;
+  --bs-radius-lg: 0.5rem;
+  --bs-radius-xl: 0.75rem;
+  --bs-radius-2xl: 1rem;
+  --bs-radius-pill: 9999px;
+}
+
+[data-bs-radius="large"] {
+  --bs-radius-xs: 0.375rem;
+  --bs-radius-sm: 0.75rem;
+  --bs-radius-md: 1rem;
+  --bs-radius-lg: 1.5rem;
+  --bs-radius-xl: 2rem;
+  --bs-radius-2xl: 2.5rem;
   --bs-radius-pill: 9999px;
 }
 

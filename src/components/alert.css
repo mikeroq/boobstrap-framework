@@ -16,12 +16,25 @@
   font-weight: 650;
 }
 
-.bs-alert-primary {
-  background: color-mix(in srgb, var(--bs-color-primary) 8%, transparent);
-  border-color: color-mix(in srgb, var(--bs-color-primary) 24%, transparent);
+.bs-alert-primary,
+.bs-alert-info,
+.bs-alert-success,
+.bs-alert-warning,
+.bs-alert-danger {
+  background: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bs-alert-accent, var(--bs-color-primary)) 24%, transparent);
 }
 
-.bs-alert-success {
-  background: rgb(54 179 126 / 8%);
-  border-color: rgb(54 179 126 / 25%);
+.bs-alert-info { --bs-alert-accent: var(--bs-color-info); }
+.bs-alert-success { --bs-alert-accent: var(--bs-color-success); }
+.bs-alert-warning { --bs-alert-accent: var(--bs-color-warning); }
+.bs-alert-danger { --bs-alert-accent: var(--bs-color-danger); }
+
+@media (forced-colors: active) {
+  .bs-alert,
+  .bs-alert-primary,
+  .bs-alert-info,
+  .bs-alert-success,
+  .bs-alert-warning,
+  .bs-alert-danger { forced-color-adjust: auto; border-color: CanvasText; }
 }

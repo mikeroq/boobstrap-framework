@@ -16,6 +16,16 @@ The contract in this document is also the compatibility target for official Alpi
 
 The CSS, Boobstrap JS, Alpine, React, and Vue layers are implemented and tested against the same public lifecycle contract.
 
+## Directional contract (RTL)
+
+Every component in this contract is direction-neutral by default. Boobstrap uses logical CSS properties (`margin-inline`, `padding-inline`, `inset-inline-start`, `border-inline-end`, etc.) so a `dir="rtl"` ancestor mirrors the layout without component-specific overrides. Adapters and JavaScript controllers must therefore:
+
+- Read and write logical coordinates. The floating UI controller exposes `data-bs-placement` values of `start` and `end` (not `left`/`right`); adapters translate these into `inset-inline-start`/`inset-inline-end` for the panel and arrow.
+- Honor a `[dir="rtl"]` ancestor when computing placement. When the document direction flips, `start` becomes the visual right and `end` becomes the visual left; controllers should re-evaluate placement on `directionchange` events or on each open.
+- Avoid physical `left:` / `right:` declarations on `transform` or animation offsets for persistent state. A one-shot keyframe animation may keep physical values (the `bs-drawer-start` / `bs-drawer-end` swap in `dialog.css` is the canonical example), but a persistent closed-state position must use logical properties or a `[dir="rtl"]` override.
+
+The framework's own behavior under RTL is verified by `tests/rtl.mjs`. Adapters that consume the contract inherit the same coverage if they delegate placement to the framework helpers and avoid re-implementing physical coordinates.
+
 ## Installation and initialization
 
 Importing the stylesheet remains unchanged:
@@ -48,7 +58,7 @@ Imports have no DOM side effects. Initialization is explicit, accepts a `Documen
 ## Shared state and event rules
 
 - Initial state must be understandable from semantic HTML before initialization.
-- Closed or inactive content uses the native `hidden` attribute.
+- Closed or inactive content uses the native `hidden` attribute when it leaves layout entirely. Responsive menus use `data-bs-state` plus mobile `inert` because the same content remains visible on desktop.
 - Controllers reflect public visual state through `data-bs-state`.
 - Triggers keep `aria-expanded` or `aria-selected` synchronized with visible state.
 - Before-events are cancelable. Calling `preventDefault()` prevents the state transition.
@@ -199,7 +209,7 @@ Dialogs and drawers share one native `<dialog>` behavior contract. Use `.bs-dial
 </dialog>
 ```
 
-The header, description, close button, and footer are optional. The body uses `overflow: auto`; constrained dialogs and full-height drawers keep their header and footer visible while only the body scrolls. Modal widths are `.bs-dialog-sm`, `.bs-dialog-lg`, and `.bs-dialog-xl`; heights are `.bs-dialog-height-sm`, `.bs-dialog-height-lg`, and `.bs-dialog-fullscreen`. Drawer widths are `.bs-drawer-sm`, `.bs-drawer-lg`, and `.bs-drawer-xl`. Override `--bs-dialog-width`, `--bs-dialog-max-height`, or `--bs-drawer-width` at the component boundary for a product-specific size.
+The header, description, close button, and footer are optional. Headers without a description collapse to one row rather than reserving description space. The body uses `overflow: auto`; constrained dialogs and full-height drawers keep their header and footer visible while only the body scrolls. Modal widths are `.bs-dialog-sm`, `.bs-dialog-lg`, and `.bs-dialog-xl`; heights are `.bs-dialog-height-sm`, `.bs-dialog-height-lg`, and `.bs-dialog-fullscreen`. Drawer widths are `.bs-drawer-sm`, `.bs-drawer-lg`, and `.bs-drawer-xl`. Override `--bs-dialog-width`, `--bs-dialog-max-height`, or `--bs-drawer-width` at the component boundary for a product-specific size.
 
 Backdrop clicks dismiss by default. Set `data-bs-dialog-close-on-backdrop="false"` when an outside pointer must not discard work. `Escape` remains available, and applications should always provide at least one explicit dismiss path. Native modal semantics contain focus and make background content inert; the controller synchronizes triggers, locks document scrolling, emits lifecycle events, and restores focus.
 
@@ -216,6 +226,41 @@ dialog.destroy();
 ```
 
 Events: cancelable `bs:dialog:show` and `bs:dialog:hide`; completed `bs:dialog:shown` and `bs:dialog:hidden`. The drawer API and events are intentionally identical because placement is a CSS presentation choice.
+
+Use `.bs-alert-dialog` with the same controller for short confirmations that interrupt a destructive or consequential action. Set `role="alertdialog"`, provide an accessible title and description, and set `data-bs-dialog-close-on-backdrop="false"` so an accidental outside click cannot confirm or discard the decision.
+
+## Responsive navbar
+
+The navbar controller turns `.bs-navbar-menu` into an off-canvas dialog at the mobile breakpoint while leaving the same content inline on larger screens. Put `data-bs-navbar` and a unique `id` on the menu, connect its toggle and backdrop with `aria-controls`, and add `data-bs-navbar-close` to navigation targets that should close the mobile menu after selection.
+
+```html
+<header class="bs-navbar">
+  <a class="bs-navbar-brand" href="/">Acme</a>
+  <button class="bs-navbar-toggle" type="button" data-bs-toggle="navbar" aria-controls="primary-nav" aria-label="Toggle navigation">☰</button>
+  <div class="bs-navbar-menu" id="primary-nav" data-bs-navbar data-bs-state="closed" aria-label="Primary navigation">
+    <nav class="bs-navbar-nav" aria-label="Primary">
+      <a class="bs-navbar-link" href="/products" data-bs-navbar-close>Products</a>
+      <a class="bs-navbar-link" href="/pricing" data-bs-navbar-close>Pricing</a>
+    </nav>
+    <div class="bs-navbar-actions"><a class="bs-btn bs-btn-primary" href="/signup">Get started</a></div>
+  </div>
+</header>
+<button class="bs-navbar-backdrop" type="button" data-bs-navbar-dismiss aria-controls="primary-nav" aria-label="Close navigation"></button>
+```
+
+Below `48rem` by default, the controller traps focus, closes on `Escape`, backdrop, explicit dismiss, or `data-bs-navbar-close`, restores focus, and locks background scrolling. Override the behavior breakpoint with `data-bs-navbar-media`. On desktop the menu returns to ordinary document flow and its temporary dialog attributes are removed.
+
+```js
+import { Navbar } from "@boobstrap/boobstrap/js/navbar";
+
+const navbar = Navbar.getOrCreateInstance(document.querySelector("[data-bs-navbar]"));
+navbar.show();
+navbar.hide();
+navbar.toggle();
+navbar.destroy();
+```
+
+Events: cancelable `bs:navbar:show` and `bs:navbar:hide`; completed `bs:navbar:shown` and `bs:navbar:hidden`.
 
 ## Sidebar
 
@@ -390,9 +435,19 @@ The optional JS bundle also initializes three small progressive-enhancement help
 
 - `data-bs-password` coordinates a password input and `data-bs-password-toggle`, preserving focus and selection while reflecting `data-bs-state="visible|hidden"`.
 - `data-bs-mask="(999) 999-9999"` formats input as the user types. Mask tokens are `9` for a digit, `A` for a letter, and `*` for either.
-- `data-bs-otp` coordinates `.bs-otp-input` controls, distributes pasted codes, supports arrow and Backspace movement, and synchronizes `data-bs-otp-value`.
+- `data-bs-otp` coordinates `.bs-otp-input` controls, distributes pasted codes, supports arrow and Backspace movement, and synchronizes `data-bs-otp-value`. Paste is strict and atomic: after characters are filtered by `data-bs-otp-pattern`, a paste with more valid characters than the remaining inputs is rejected without changing any input, value, or state.
 
 Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, and `/otp`. Their completed events are `bs:password:toggled`, `bs:mask:change`, `bs:otp:change`, and `bs:otp:complete`.
+
+### Validation contract
+
+Form state styling distinguishes **explicit validation** (set by the application when validation runs) from **implicit ARIA state** (announced by assistive technology). The selectors that change border and focus-ring color are:
+
+- `.bs-is-valid` — explicit positive validation.
+- `.bs-is-invalid` — explicit negative validation.
+- `[aria-invalid="true"]` on `.bs-input`, `.bs-select`, or `.bs-textarea` — mirrors `.bs-is-invalid` so the same visual signal is produced whether the application uses a class or an ARIA attribute to mark the field.
+
+`aria-invalid="false"` does not change border color. Many accessibility-first form libraries set `aria-invalid="false"` on every input they manage as the default, so styling on that attribute alone would render every untouched input with a green border. `aria-invalid="false"` is treated as "no information"; the field uses the same neutral border as an input without any ARIA attribute. Applications that want to mark a field positively validated should toggle the `.bs-is-valid` class explicitly.
 
 ## Tabs
 
@@ -410,7 +465,7 @@ Imports are available from `@boobstrap/boobstrap/js/password`, `/input-mask`, an
 <div class="bs-tab-panel" id="security-panel" role="tabpanel" aria-labelledby="security-tab" hidden>Security settings</div>
 ```
 
-Tabs use automatic activation. Horizontal tablists support Left/Right; vertical tablists support Up/Down. Both support `Home` and `End`, skip disabled tabs, maintain roving `tabindex`, and synchronize their panels.
+Tabs use automatic activation. Horizontal tablists support Left/Right; vertical tablists support Up/Down. Both support `Home` and `End`, skip disabled tabs, maintain roving `tabindex`, and synchronize their panels. The default underline spans each tab's full inline size, while horizontal overflow remains touch-scrollable without exposing an extra scrollbar.
 
 Public API: `activate(tab)` and `destroy()`.
 
@@ -442,9 +497,69 @@ Public API: `show()`, `hide()`, and `destroy()`. Events are cancelable `bs:toast
 <button class="bs-btn" type="button" data-bs-popover="Use one behavior layer per component." data-bs-title="Integration guidance">Guidance</button>
 ```
 
-Tooltips are brief, non-interactive descriptions shown by hover or focus and dismissed by pointer exit, blur, or `Escape`. Popovers are click-triggered non-modal dialogs that may contain a title and body; they dismiss on an outside pointer or `Escape`. Both support `top`, `bottom`, `start`, and `end`, automatically flip when the requested placement would leave the viewport, and synchronize accessible relationships.
+Tooltips are brief, non-interactive descriptions shown by hover or focus and dismissed by pointer exit, blur, or `Escape`. Popovers are click-triggered non-modal dialogs that may contain a title and body; they dismiss on an outside pointer, page scroll, or `Escape`. Both support `top`, `bottom`, `start`, and `end`, automatically flip when the requested placement would leave the viewport, and synchronize accessible relationships.
 
 Public APIs expose `show()`, `hide()`, and `destroy()`; popovers also expose `toggle()`. Lifecycle events use `bs:tooltip:*` and `bs:popover:*` with cancelable `show` / `hide` and completed `shown` / `hidden` actions.
+
+## Scrollspy
+
+Scrollspy marks the section link in a `<nav>` that matches the content the user is currently reading. It is scroll-only: clicks, taps, and keyboard activation do not change the active link, so the page remains the single source of truth. The framework already applies `scroll-behavior: smooth` to `html` in `base/reset.css`; no opt-in class is required.
+
+```html
+<nav class="bs-nav" data-bs-scrollspy aria-label="On this page">
+  <a class="bs-nav-link" href="#introduction">Introduction</a>
+  <a class="bs-nav-link" href="#details">Details</a>
+  <a class="bs-nav-link" href="#summary">Summary</a>
+</nav>
+
+<article>
+  <h2 id="introduction">Introduction</h2>
+  <p>…</p>
+  <h2 id="summary">Summary</h2>
+  <p>…</p>
+  <h2 id="details">Details</h2>
+  <p>…</p>
+</article>
+```
+
+Each link's `href` must point to a same-document fragment whose `id` exists. The controller observes those targets with `IntersectionObserver` and falls back to a throttled `scroll` listener. It sets `aria-current="true"` on the active link, removes it on the previous link, and dispatches `bs:scrollspy:activate` with the link and the matching section so applications can mirror selection state elsewhere. The observer is disconnected and the `aria-current` attribute is cleared on `destroy()`.
+
+Public API:
+
+```js
+import { Scrollspy } from "@boobstrap/boobstrap/js/scrollspy";
+
+const spy = Scrollspy.getOrCreateInstance(document.querySelector("[data-bs-scrollspy]"));
+spy.destroy();
+```
+
+Events: `bs:scrollspy:activate`. Detail includes the activated `link` and `section`.
+
+## Universal controllers
+
+Every Boobstrap controller is exposed by all behavior layers (core, Alpine, React, and Vue). There are no core-only controllers; the framework intentionally ships nothing that is framework-incompatible.
+
+| controller  | core    | alpine  | react        | vue        | notes |
+|-------------|---------|---------|--------------|------------|-------|
+| accordion   | `Accordion` | `accordion` | `useAccordion` | `useAccordion` | universal |
+| banner      | `Banner` | `banner` | `useBanner` | `useBanner` | universal |
+| button      | `Button` | `button` | `useButton` | `useButton` | universal |
+| collapse    | `Collapse` | `collapse` | `useCollapse` | `useCollapse` | universal |
+| combobox    | `Combobox` | `combobox` | `useCombobox` | `useCombobox` | universal |
+| dialog      | `Dialog` | `dialog` | `useDialog` | `useDialog` | universal |
+| dropdown    | `Dropdown` | `dropdown` | `useDropdown` | `useDropdown` | universal |
+| input-mask  | `InputMask` | `inputMask` | `useInputMask` | `useInputMask` | universal |
+| navbar      | `Navbar` | `navbar` | `useNavbar` | `useNavbar` | universal; responsive overlay |
+| otp         | `Otp` | `otp` | `useOtp` | `useOtp` | universal |
+| password    | `Password` | `password` | `usePassword` | `usePassword` | universal |
+| popover     | `Popover` | `popover` | `usePopover` | `usePopover` | universal |
+| scrollspy   | `Scrollspy` | `scrollspy` | `useScrollspy` | `useScrollspy` | universal; scroll-only |
+| sidebar     | `Sidebar` | `sidebar` | `useSidebar` | `useSidebar` | universal; responsive overlay + collapse |
+| tabs        | `Tabs` | `tabs` | `useTabs` | `useTabs` | universal |
+| toast       | `Toast` | `toast` | `useToast` | `useToast` | universal; autohide + pause |
+| tooltip     | `Tooltip` | `tooltip` | `useTooltip` | `useTooltip` | universal |
+
+The detailed lifecycle events for each controller live in their respective sections above; `src/js/interaction-contract.js` is the single source of truth for adapter mappings.
 
 ## Adapter requirements
 
@@ -476,7 +591,7 @@ Alpine.plugin(boobstrap);
 Alpine.start();
 ```
 
-The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
+The plugin must be registered before `Alpine.start()`. It provides `bsButton`, `bsCollapse`, `bsCombobox`, `bsDialog`, `bsDropdown`, `bsNavbar`, `bsPopover`, `bsTabs`, `bsToast`, and `bsTooltip` data providers. Reusable bind objects keep behavior out of inline expressions and work with the official `@alpinejs/csp` build.
 
 ### Alpine loading button
 
@@ -576,6 +691,16 @@ Use the same option markup as Boobstrap JS, replace `data-bs-combobox` with `x-d
 
 Do not initialize Boobstrap JS on the same component subtree. Alpine owns these instances' state and lifecycle while preserving the public Boobstrap events and `data-bs-state` values.
 
+### Alpine scrollspy
+
+```html
+<nav class="bs-nav" x-data="bsScrollspy" aria-label="On this page">
+  <a class="bs-nav-link" href="#introduction">Introduction</a>
+  <a class="bs-nav-link" href="#details">Details</a>
+  <a class="bs-nav-link" href="#summary">Summary</a>
+</nav>
+```
+
 ## React adapter
 
 Install the headless React hooks alongside React and the Boobstrap stylesheet:
@@ -586,7 +711,7 @@ npm install @boobstrap/boobstrap @boobstrap/react react
 
 ```js
 import "@boobstrap/boobstrap";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useButton, useCollapse, useCombobox, useDialog, useDropdown, useNavbar, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
 ```
 
 The hooks use React's server-safe ID and state primitives, attach no global behavior during import, and return prop getters for semantic consumer-owned markup. Pass `loading` / `onLoadingChange`, `open` / `onOpenChange`, or `selectedId` / `onSelectedChange` for controlled state; use the matching `default*` option for uncontrolled state.
@@ -668,6 +793,23 @@ function Account() {
 
 Do not initialize Boobstrap JS or an Alpine provider on a React-owned component subtree. React controls the DOM state while preserving Boobstrap lifecycle events and `data-bs-state` values.
 
+### React scrollspy
+
+```jsx
+import { useScrollspy } from "@boobstrap/react";
+
+function OnThisPage() {
+  const spy = useScrollspy();
+  return (
+    <nav className="bs-nav" aria-label="On this page" {...spy.getNavProps()}>
+      <a className="bs-nav-link" href="#introduction">Introduction</a>
+      <a className="bs-nav-link" href="#details">Details</a>
+      <a className="bs-nav-link" href="#summary">Summary</a>
+    </nav>
+  );
+}
+```
+
 ## Vue adapter
 
 Install the headless Vue composables with Vue 3.5 or newer:
@@ -679,7 +821,7 @@ npm install @boobstrap/boobstrap @boobstrap/vue vue
 ```vue
 <script setup>
 import "@boobstrap/boobstrap";
-import { useCollapse } from "@boobstrap/vue";
+import { useCollapse, useNavbar } from "@boobstrap/vue";
 
 const details = useCollapse({ id: "details" });
 </script>
@@ -690,4 +832,22 @@ const details = useCollapse({ id: "details" });
 </template>
 ```
 
-The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `usePopover`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
+The adapter exports `useButton`, `useCollapse`, `useCombobox`, `useDialog`, `useDropdown`, `useNavbar`, `usePopover`, `useScrollspy`, `useTabs`, `useToast`, and `useTooltip`. Controlled options accept Vue refs, enabling `v-model`-style ownership; default options provide internal state. Imports are SSR-safe, Vue remains a peer dependency, and no Boobstrap JS controller is attached to Vue-owned DOM.
+
+### Vue scrollspy
+
+```vue
+<script setup>
+import { useScrollspy } from "@boobstrap/vue";
+
+const spy = useScrollspy();
+</script>
+
+<template>
+  <nav class="bs-nav" v-bind="spy.getNavProps()" aria-label="On this page">
+    <a class="bs-nav-link" href="#introduction">Introduction</a>
+    <a class="bs-nav-link" href="#details">Details</a>
+    <a class="bs-nav-link" href="#summary">Summary</a>
+  </nav>
+</template>
+```

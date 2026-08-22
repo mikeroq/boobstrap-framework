@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useButton, useCollapse, useCombobox, useDialog, useDropdown, usePopover, useTabs, useToast, useTooltip } from "@boobstrap/react";
+import { useBanner, useButton, useCollapse, useCombobox, useDialog, useDropdown, useInputMask, useNavbar, useOtp, usePassword, usePopover, useScrollspy, useTabs, useToast, useTooltip } from "@boobstrap/react";
 import { interactionEvents } from "../src/js/interaction-contract.js";
 
 window.bsEvents = [];
@@ -17,6 +17,21 @@ function LoadingButtonExample() {
         <span className="bs-spinner bs-btn-spinner" aria-hidden="true" />
       </button>
     </section>
+  );
+}
+
+function NavbarExample() {
+  const navbar = useNavbar({ id: "react-navbar" });
+  return (
+    <header className="bs-navbar" aria-label="React navbar example">
+      <span className="bs-navbar-brand">Boobstrap</span>
+      <button id="react-navbar-toggle" className="bs-navbar-toggle" aria-label="Toggle React navigation" {...navbar.getTriggerProps()}>☰</button>
+      <div className="bs-navbar-menu" aria-label="React navigation" {...navbar.getMenuProps()}>
+        <nav className="bs-navbar-nav" aria-label="React primary"><a className="bs-navbar-link" href="#react-heading" data-bs-navbar-close>Components</a></nav>
+        <button className="bs-btn bs-btn-secondary" {...navbar.getDismissProps()}>Close navigation</button>
+      </div>
+      <button className="bs-navbar-backdrop" aria-label="Close React navigation" {...navbar.getDismissProps()} />
+    </header>
   );
 }
 
@@ -139,11 +154,87 @@ function FloatingFeedbackExample() {
   );
 }
 
+function BannerExample() {
+  const banner = useBanner({});
+  return (
+    <section aria-label="React banner example" data-test-banner>
+      <div id="react-banner" className="bs-banner" {...banner.getBannerProps()}>
+        <div className="bs-banner-inner">
+          <strong className="bs-banner-title">Preview</strong>
+          <span className="bs-banner-message">Hook-controlled dismiss.</span>
+          <button id="react-banner-dismiss" className="bs-banner-dismiss" type="button" data-bs-banner-dismiss aria-label="Dismiss banner" {...banner.getDismissProps()}>×</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InputMaskExample() {
+  const mask = useInputMask("(999) 999-9999");
+  return (
+    <section aria-label="React input mask example">
+      <label className="bs-label" htmlFor="react-mask-input">Phone</label>
+      <input id="react-mask-input" className="bs-input" {...mask.getInputProps({ defaultValue: "5125551234" })} />
+    </section>
+  );
+}
+
+function OtpExample() {
+  const otp = useOtp();
+  return (
+    <section aria-label="React OTP example" data-test-otp>
+      <span className="bs-label" id="react-otp-label">One-time code</span>
+      <div className="bs-otp" {...otp.getRootProps({ "aria-labelledby": "react-otp-label" })}>
+        <input id="react-otp-1" className="bs-otp-input" aria-label="Digit 1" {...otp.getInputProps(0)} />
+        <input id="react-otp-2" className="bs-otp-input" aria-label="Digit 2" {...otp.getInputProps(1)} />
+        <input id="react-otp-3" className="bs-otp-input" aria-label="Digit 3" {...otp.getInputProps(2)} />
+        <input id="react-otp-4" className="bs-otp-input" aria-label="Digit 4" {...otp.getInputProps(3)} />
+        <input id="react-otp-value" type="hidden" data-bs-otp-value />
+      </div>
+    </section>
+  );
+}
+
+function PasswordExample() {
+  const password = usePassword();
+  return (
+    <section aria-label="React password example" data-test-password>
+      <label className="bs-label" htmlFor="react-password-input">Password</label>
+      <div className="bs-input-group" {...password.getRootProps()}>
+        <input id="react-password-input" className="bs-input" type="password" {...password.getInputProps({ defaultValue: "hunter2" })} />
+        <button id="react-password-toggle" className="bs-btn bs-btn-secondary" type="button" {...password.getToggleProps()}>Toggle</button>
+      </div>
+    </section>
+  );
+}
+
+function ScrollspyExample() {
+  const spy = useScrollspy();
+  return (
+    <section aria-label="React scrollspy example" data-test-scrollspy>
+      <nav id="react-scrollspy" className="bs-nav" aria-label="React section navigation" {...spy.getNavProps()}>
+        <a className="bs-nav-link" href="#react-scrollspy-intro">Introduction</a>
+        <a className="bs-nav-link" href="#react-scrollspy-details">Details</a>
+        <a className="bs-nav-link" href="#react-scrollspy-summary">Summary</a>
+      </nav>
+      <article>
+        <h2 id="react-scrollspy-intro">Introduction</h2>
+        <p style={{ minBlockSize: "80vh" }}>Long introductory content.</p>
+        <h2 id="react-scrollspy-summary">Summary</h2>
+        <p style={{ minBlockSize: "80vh" }}>Intermediate anchor so the active link can change.</p>
+        <h2 id="react-scrollspy-details">Details</h2>
+        <p style={{ minBlockSize: "80vh" }}>Detailed content so the final link can become active.</p>
+      </article>
+    </section>
+  );
+}
+
 function App() {
   useEffect(() => { window.reactReady = true; }, []);
   return (
     <>
       <LoadingButtonExample />
+      <NavbarExample />
       <CollapseExample />
       <ControlledCollapseExample />
       <DialogExample />
@@ -151,6 +242,11 @@ function App() {
       <ComboboxExample />
       <TabsExample />
       <FloatingFeedbackExample />
+      <BannerExample />
+      <InputMaskExample />
+      <OtpExample />
+      <PasswordExample />
+      <ScrollspyExample />
     </>
   );
 }

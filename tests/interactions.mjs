@@ -22,9 +22,11 @@ const assets = new Map([
   ["/dist/js/input-mask.js", await readFile(new URL("../dist/js/input-mask.js", import.meta.url))],
   ["/dist/js/index.js", await readFile(new URL("../dist/js/index.js", import.meta.url))],
   ["/dist/js/interaction-contract.js", await readFile(new URL("../dist/js/interaction-contract.js", import.meta.url))],
+  ["/dist/js/navbar.js", await readFile(new URL("../dist/js/navbar.js", import.meta.url))],
   ["/dist/js/otp.js", await readFile(new URL("../dist/js/otp.js", import.meta.url))],
   ["/dist/js/password.js", await readFile(new URL("../dist/js/password.js", import.meta.url))],
   ["/dist/js/popover.js", await readFile(new URL("../dist/js/popover.js", import.meta.url))],
+  ["/dist/js/scrollspy.js", await readFile(new URL("../dist/js/scrollspy.js", import.meta.url))],
   ["/dist/js/sidebar.js", await readFile(new URL("../dist/js/sidebar.js", import.meta.url))],
   ["/dist/js/shared.js", await readFile(new URL("../dist/js/shared.js", import.meta.url))],
   ["/dist/js/tabs.js", await readFile(new URL("../dist/js/tabs.js", import.meta.url))],
@@ -194,6 +196,23 @@ try {
   await sidebarBackdrop.click({ position: { x: 380, y: 100 } });
   if (await sidebar.getAttribute("data-bs-state") !== "closed") failures.push("Sidebar backdrop did not dismiss the drawer");
 
+  const navbarToggle = page.locator("#navbar-toggle");
+  const navbarMenu = page.locator("#primary-navbar");
+  const navbarBackdrop = page.locator(".bs-navbar-backdrop");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || await navbarMenu.getAttribute("aria-hidden") !== "true") failures.push("Navbar did not initialize as a closed mobile menu");
+  await navbarToggle.click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "open" || await navbarToggle.getAttribute("aria-expanded") !== "true" || !await navbarBackdrop.isVisible()) failures.push("Navbar did not open with its backdrop");
+  if (!await page.locator("body").evaluate((element) => element.classList.contains("bs-navbar-open"))) failures.push("Navbar did not lock document scrolling");
+  if (!await navbarMenu.getByRole("link", { name: "Components" }).evaluate((element) => element === document.activeElement)) failures.push("Navbar did not move focus inside the menu");
+  await page.keyboard.press("Escape");
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed" || !await navbarToggle.evaluate((element) => element === document.activeElement)) failures.push("Navbar Escape behavior did not close and restore focus");
+  await navbarToggle.click();
+  await navbarBackdrop.click({ position: { x: 10, y: 100 } });
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed") failures.push("Navbar backdrop did not dismiss the menu");
+  await navbarToggle.click();
+  await navbarMenu.getByRole("link", { name: "Patterns" }).click();
+  if (await navbarMenu.getAttribute("data-bs-state") !== "closed") failures.push("Navbar did not close after navigation selection");
+
   const dropdownToggle = page.locator("#actions-toggle");
   const dropdownMenu = page.locator("#actions-menu");
   await dropdownToggle.focus();
@@ -218,8 +237,16 @@ try {
     display: getComputedStyle(element).display,
     firstEnd: element.children[0].getBoundingClientRect().right,
     secondStart: element.children[1].getBoundingClientRect().left,
+    triggerEndRadius: [
+      getComputedStyle(element.children[1]).borderStartEndRadius,
+      getComputedStyle(element.children[1]).borderEndEndRadius,
+    ].map(Number.parseFloat),
+    menuEnd: element.children[2].getBoundingClientRect().right,
+    groupEnd: element.getBoundingClientRect().right,
   }));
   if (splitMetrics.display !== "inline-flex" || Math.abs(splitMetrics.firstEnd - splitMetrics.secondStart) > 2) failures.push("Split dropdown buttons are not attached");
+  if (splitMetrics.triggerEndRadius.some((radius) => radius <= 0)) failures.push(`Split dropdown trigger is missing its end radius (${JSON.stringify(splitMetrics.triggerEndRadius)})`);
+  if (Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd) > 1) failures.push(`End-aligned split dropdown menu is offset by ${Math.abs(splitMetrics.menuEnd - splitMetrics.groupEnd)}px`);
 
   const profileTab = page.locator("#profile-tab");
   const securityTab = page.locator("#security-tab");
@@ -253,8 +280,27 @@ try {
   if (await phoneInput.inputValue() !== "(415) 555-0123") failures.push(`Input mask produced ${await phoneInput.inputValue()}`);
 
   const otpInputs = page.locator("[data-bs-otp-input]");
-  for (let index = 0; index < 6; index += 1) await otpInputs.nth(index).fill(String(index + 1));
-  if (await page.locator("[data-bs-otp-value]").inputValue() !== "123456" || await page.locator("[data-bs-otp]").getAttribute("data-bs-state") !== "complete") failures.push("OTP did not synchronize its six-digit value");
+  const pasteOtp = (value) => otpInputs.first().evaluate((input, pastedValue) => {
+    const pasteEvent = new Event("paste", { bubbles: true, cancelable: true });
+    Object.defineProperty(pasteEvent, "clipboardData", {
+      value: { getData: () => pastedValue },
+    });
+    input.dispatchEvent(pasteEvent);
+  }, value);
+  await pasteOtp("1234567");
+  const rejectedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (rejectedOtp.inputs.some(Boolean) || rejectedOtp.value !== "" || rejectedOtp.state !== "empty") failures.push(`OTP overlength paste was not rejected atomically (${JSON.stringify(rejectedOtp)})`);
+  await pasteOtp("123456");
+  const acceptedOtp = await page.locator("[data-bs-otp]").evaluate((element) => ({
+    inputs: [...element.querySelectorAll("[data-bs-otp-input]")].map((input) => input.value),
+    value: element.querySelector("[data-bs-otp-value]").value,
+    state: element.dataset.bsState,
+  }));
+  if (acceptedOtp.inputs.join("") !== "123456" || acceptedOtp.value !== "123456" || acceptedOtp.state !== "complete") failures.push(`OTP did not accept and synchronize its exact six-digit paste (${JSON.stringify(acceptedOtp)})`);
 
   const toast = page.locator("#save-toast");
   await page.locator("#toast-toggle").click();
@@ -274,13 +320,36 @@ try {
   await popoverTrigger.click();
   const popover = page.locator(".bs-popover");
   if (!await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "true" || await popover.getAttribute("role") !== "dialog") failures.push("Popover did not show with synchronized accessible state");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  if (await popover.isVisible() || await popoverTrigger.getAttribute("aria-expanded") !== "false") failures.push("Popover did not dismiss on page scroll");
+  await popoverTrigger.click();
   await page.locator("h1").click();
   if (await popover.isVisible()) failures.push("Popover did not dismiss outside");
 
   const eventLog = await page.evaluate(() => window.bsEvents);
-  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
+  for (const eventName of ["bs:banner:dismissed", "bs:banner:shown", "bs:button:started", "bs:button:stopped", "bs:collapse:shown", "bs:collapse:hidden", "bs:combobox:shown", "bs:combobox:change", "bs:combobox:hidden", "bs:dialog:shown", "bs:dialog:hidden", "bs:dropdown:shown", "bs:dropdown:hidden", "bs:mask:change", "bs:navbar:shown", "bs:navbar:hidden", "bs:otp:complete", "bs:password:toggled", "bs:popover:shown", "bs:popover:hidden", "bs:scrollspy:activate", "bs:sidebar:shown", "bs:sidebar:hidden", "bs:tabs:changed", "bs:toast:shown", "bs:toast:hidden", "bs:tooltip:shown", "bs:tooltip:hidden"]) {
     if (!eventLog.includes(eventName)) failures.push(`Missing public event: ${eventName}`);
   }
+
+  const scrollspyNav = page.locator("[data-bs-scrollspy]");
+  const scrollspyLinks = scrollspyNav.locator("a");
+  const initialActive = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (!initialActive) failures.push("Scrollspy did not set an initial active link");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-details").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-details");
+  const activateDetail = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (activateDetail !== "#scrollspy-details") failures.push(`Scrollspy did not activate the details link (got ${activateDetail})`);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-intro");
+  const scrolledBack = await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href"));
+  if (scrolledBack !== "#scrollspy-intro") failures.push(`Scrollspy did not reactivate the intro link after scrolling back (got ${scrolledBack})`);
+  await scrollspyLinks.first().focus();
+  await scrollspyLinks.first().press("Enter");
+  if (await scrollspyNav.evaluate((nav) => nav.querySelector('a[aria-current="true"]')?.getAttribute("href")) !== initialActive) {
+    failures.push("Scrollspy responded to keyboard activation, which violates its scroll-only contract");
+  }
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-summary").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  await page.waitForFunction(() => document.querySelector("[data-bs-scrollspy] a[aria-current=\"true\"]")?.getAttribute("href") === "#scrollspy-summary");
 
   const dimensions = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -292,12 +361,16 @@ try {
   if (accessibility.violations.length) {
     failures.push(`Axe violations: ${accessibility.violations.map((violation) => `${violation.id} (${violation.nodes.map((node) => node.target.join(" ")).join(", ")})`).join("; ")}`);
   }
-  if (await page.evaluate(() => window.bs.controllers.length) !== 19) failures.push("Initializer did not return all component controllers");
+  if (await page.evaluate(() => window.bs.controllers.length) !== 21) failures.push("Initializer did not return all component controllers");
   await page.evaluate(() => window.bs.destroy());
   await banner.locator("[data-bs-banner-dismiss]").click();
   if (await banner.isHidden()) failures.push("Destroy did not remove banner listeners");
   await collapseToggle.click();
   if (!await collapsePanel.isHidden()) failures.push("Destroy did not remove component listeners");
+  await page.evaluate(() => window.scrollTo({ top: document.querySelector("#scrollspy-summary").getBoundingClientRect().top + window.scrollY - 100, behavior: "instant" }));
+  if (await scrollspyNav.evaluate((nav) => Boolean(nav.querySelector('a[aria-current="true"]')?.getAttribute("href") === "#scrollspy-summary"))) {
+    failures.push("Destroy did not remove scrollspy observers");
+  }
   if (consoleErrors.length) failures.push(`Console errors: ${consoleErrors.join("; ")}`);
   await context.close();
 
@@ -306,6 +379,11 @@ try {
   await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
   const desktopSidebar = desktopPage.locator("#navigation-sidebar");
   const desktopToggle = desktopPage.locator("#sidebar-toggle");
+  const desktopNavbar = desktopPage.locator("#primary-navbar");
+  const desktopNavbarToggle = desktopPage.locator("#navbar-toggle");
+  if (await desktopNavbar.getAttribute("data-bs-state") !== "open" || await desktopNavbar.getAttribute("role") !== null || await desktopNavbarToggle.getAttribute("aria-expanded") !== "true") {
+    failures.push("Navbar did not initialize as inline desktop navigation");
+  }
   if (await desktopSidebar.getAttribute("data-bs-state") !== "expanded" || await desktopToggle.getAttribute("aria-expanded") !== "true") {
     failures.push("Sidebar did not initialize expanded on desktop");
   }

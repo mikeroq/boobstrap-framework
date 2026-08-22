@@ -1,26 +1,41 @@
 .bs-btn {
+  --bs-btn-block-size: var(--bs-btn-size-md);
+  --bs-btn-padding-inline: 1.25rem;
+  --bs-btn-radius: var(--bs-radius-md);
+
   position: relative;
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: var(--bs-btn-block-size);
   align-items: center;
   justify-content: center;
   gap: var(--bs-space-2);
-  padding: 0.7rem 1.25rem;
+  padding: 0.7rem var(--bs-btn-padding-inline);
   color: var(--bs-color-text);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--bs-radius-md);
+  border-radius: var(--bs-btn-radius);
   appearance: none;
   font-weight: 650;
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
-  transition: color var(--bs-duration-normal) var(--bs-ease-standard), background var(--bs-duration-normal) var(--bs-ease-standard), border-color var(--bs-duration-normal) var(--bs-ease-standard), box-shadow var(--bs-duration-normal) var(--bs-ease-standard), transform var(--bs-duration-fast) var(--bs-ease-standard);
+  transition: color var(--bs-duration-normal) var(--bs-ease-standard), background-color var(--bs-duration-normal) var(--bs-ease-standard), border-color var(--bs-duration-normal) var(--bs-ease-standard), box-shadow var(--bs-duration-normal) var(--bs-ease-standard), filter var(--bs-duration-normal) var(--bs-ease-standard);
 }
 
-.bs-btn:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover { transform: translateY(-2px); }
-.bs-btn:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active { transform: translateY(0); }
+@media (forced-colors: active) {
+  .bs-btn,
+  .bs-btn-primary,
+  .bs-btn-secondary,
+  .bs-btn-ghost { forced-color-adjust: auto; }
+  .bs-btn-primary { background-image: none; border-color: ButtonText; }
+  .bs-btn-secondary { background: ButtonFace; border-color: ButtonText; color: ButtonText; }
+}
+
+.bs-btn > .bs-icon {
+  display: block;
+  flex: 0 0 auto;
+}
 
 .bs-btn:disabled,
 .bs-btn[aria-disabled="true"],
@@ -32,20 +47,27 @@
 
 .bs-btn-primary {
   color: var(--bs-color-primary-contrast);
-  background: var(--bs-gradient-brand);
+  background-color: var(--bs-color-primary);
+  background-image: var(--bs-gradient-brand);
   border-color: rgb(255 255 255 / 8%);
-  box-shadow: var(--bs-shadow-brand), inset 0 1px rgb(255 255 255 / 20%);
+  box-shadow: none;
+  filter: none;
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
-  box-shadow: 0 14px 38px color-mix(in srgb, var(--bs-color-primary) 32%, transparent), inset 0 1px rgb(255 255 255 / 22%);
+  background-color: var(--bs-color-primary-hover);
+  background-image: var(--bs-gradient-brand);
+  box-shadow: none;
+  filter: brightness(1.08) saturate(1.04);
 }
 
 .bs-btn-primary:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
 .bs-btn-primary.bs-btn-active,
 .bs-btn-primary[aria-pressed="true"] {
-  background: var(--bs-color-primary-active);
-  box-shadow: var(--bs-shadow-sm), inset 0 2px 5px rgb(20 10 21 / 22%);
+  background-color: var(--bs-color-primary-active);
+  background-image: var(--bs-gradient-brand);
+  box-shadow: none;
+  filter: brightness(0.94);
 }
 
 .bs-btn-secondary {
@@ -86,25 +108,54 @@
   background: color-mix(in srgb, var(--bs-color-primary) 12%, transparent);
 }
 
+.bs-btn-danger {
+  color: var(--bs-color-primary-contrast);
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  border-color: rgb(255 255 255 / 8%);
+  box-shadow: none;
+  filter: none;
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(1.08) saturate(1.04);
+}
+
+.bs-btn-danger:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):active,
+.bs-btn-danger.bs-btn-active,
+.bs-btn-danger[aria-pressed="true"] {
+  background-color: var(--bs-color-danger);
+  background-image: linear-gradient(135deg, var(--bs-color-danger), var(--bs-color-danger) 60%, color-mix(in srgb, var(--bs-color-danger) 70%, #000));
+  box-shadow: none;
+  filter: brightness(0.94);
+}
+
 .bs-btn-icon {
-  width: 2.75rem;
+  width: var(--bs-control-size-md);
   padding-inline: 0;
 }
 
 .bs-btn-lg {
-  min-height: 3.35rem;
-  padding-inline: 1.65rem;
+  --bs-btn-block-size: var(--bs-btn-size-lg);
+  --bs-btn-padding-inline: 1.65rem;
+
   font-size: var(--bs-font-size-lg);
 }
 
 .bs-btn-sm {
-  min-height: 2.25rem;
-  padding: 0.5rem 0.9rem;
+  --bs-btn-block-size: var(--bs-btn-size-sm);
+  --bs-btn-padding-inline: 0.9rem;
+  --bs-btn-radius: var(--bs-radius-sm);
+
+  padding-block: 0.5rem;
   font-size: var(--bs-font-size-sm);
 }
 
-.bs-btn-icon.bs-btn-sm { width: 2.25rem; padding-inline: 0; }
-.bs-btn-icon.bs-btn-lg { width: 3.35rem; padding-inline: 0; }
+.bs-btn-icon.bs-btn-sm { width: var(--bs-control-size-sm); padding-inline: 0; }
+.bs-btn-icon.bs-btn-lg { width: var(--bs-btn-size-lg); padding-inline: 0; }
 .bs-btn-block { display: flex; width: 100%; }
 
 .bs-btn-toolbar {
@@ -128,29 +179,34 @@
 .bs-btn-group > .bs-btn + .bs-btn { margin-inline-start: -1px; }
 .bs-btn-group > .bs-btn:first-child { border-start-start-radius: var(--bs-radius-md); border-end-start-radius: var(--bs-radius-md); }
 .bs-btn-group > .bs-btn:last-child { border-start-end-radius: var(--bs-radius-md); border-end-end-radius: var(--bs-radius-md); }
+.bs-btn-group > .bs-btn-split { border-start-end-radius: var(--bs-radius-md); border-end-end-radius: var(--bs-radius-md); }
 .bs-btn-group > .bs-btn:focus-visible,
 .bs-btn-group > .bs-btn:hover { z-index: 1; }
 .bs-btn-group > .bs-btn:not(:disabled):not([aria-disabled="true"]):not(.bs-btn-disabled):hover { transform: none; }
 
 .bs-btn-group-sm > .bs-btn {
-  min-height: 2.25rem;
-  padding: 0.5rem 0.9rem;
+  --bs-btn-block-size: var(--bs-btn-size-sm);
+  --bs-btn-padding-inline: 0.9rem;
+  --bs-btn-radius: var(--bs-radius-sm);
+
+  padding-block: 0.5rem;
   font-size: var(--bs-font-size-sm);
 }
 
 .bs-btn-group-lg > .bs-btn {
-  min-height: 3.35rem;
-  padding-inline: 1.65rem;
+  --bs-btn-block-size: var(--bs-btn-size-lg);
+  --bs-btn-padding-inline: 1.65rem;
+
   font-size: var(--bs-font-size-lg);
 }
 
 .bs-btn-split {
-  width: 2.75rem;
+  width: var(--bs-control-size-md);
   padding-inline: 0;
 }
 
-.bs-btn-group-sm > .bs-btn-split { width: 2.25rem; padding-inline: 0; }
-.bs-btn-group-lg > .bs-btn-split { width: 3.35rem; padding-inline: 0; }
+.bs-btn-group-sm > .bs-btn-split { width: var(--bs-control-size-sm); padding-inline: 0; }
+.bs-btn-group-lg > .bs-btn-split { width: var(--bs-btn-size-lg); padding-inline: 0; }
 
 .bs-btn-caret::after {
   width: 0.45em;

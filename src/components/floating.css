@@ -1,6 +1,6 @@
 .bs-toast-region {
   position: fixed;
-  z-index: 1100;
+  z-index: var(--bs-z-toast);
   inset-block-start: var(--bs-space-4);
   inset-inline-end: var(--bs-space-4);
   display: grid;
@@ -19,16 +19,18 @@
 
 .bs-toast {
   --bs-toast-accent: var(--bs-color-primary);
+  --bs-toast-padding: var(--bs-space-4);
+  --bs-toast-radius: var(--bs-radius-lg);
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--bs-space-3);
   align-items: start;
-  padding: var(--bs-space-4);
+  padding: var(--bs-toast-padding);
   color: var(--bs-color-text);
   background: color-mix(in srgb, var(--bs-toast-accent) 8%, var(--bs-color-surface-raised));
   border: 1px solid color-mix(in srgb, var(--bs-toast-accent) 34%, var(--bs-color-border));
-  border-radius: var(--bs-radius-lg);
+  border-radius: var(--bs-toast-radius);
   box-shadow: var(--bs-shadow-lg);
   pointer-events: auto;
   transition: opacity var(--bs-duration-normal) var(--bs-ease-standard), transform var(--bs-duration-normal) var(--bs-ease-emphasized);
@@ -55,13 +57,7 @@
   display: inline-grid;
   width: 2rem;
   height: 2rem;
-  padding: 0;
-  place-items: center;
-  color: var(--bs-color-text-muted);
-  background: transparent;
-  border: 0;
   border-radius: var(--bs-radius-sm);
-  cursor: pointer;
 }
 
 .bs-toast-dismiss:hover { color: var(--bs-color-text); background: var(--bs-color-surface-hover); }
@@ -72,7 +68,7 @@
   --bs-floating-arrow-size: 0.55rem;
 
   position: fixed;
-  z-index: 1200;
+  z-index: var(--bs-z-tooltip);
   max-width: min(20rem, calc(100vw - var(--bs-space-4)));
   margin: 0;
   pointer-events: none;

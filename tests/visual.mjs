@@ -71,8 +71,8 @@ async function capture(name, options = {}) {
 
 try {
   for (const theme of ["dark", "light"]) {
-    for (const region of ["controls", "accordion", "data", "loading"]) {
-      const regionGroup = ["controls", "accordion"].includes(region) ? "components" : "content";
+    for (const region of ["controls", "accordion", "data", "loading", "native", "primitives", "grid", "spacing", "layout", "form-validation"]) {
+      const regionGroup = ["controls", "accordion", "primitives", "form-validation"].includes(region) ? "components" : "content";
       if (visualGroup === "all" || visualGroup === `${theme}-${regionGroup}`) {
         await capture(`${theme}-${region}`, { theme, selector: `[data-visual="${region}"]` });
         await capture(`${theme}-mobile-${region}`, { theme, viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
@@ -81,6 +81,10 @@ try {
   }
   if (visualGroup === "all" || visualGroup === "variants") {
     await capture("rtl-accordion", { direction: "rtl", selector: '[data-visual="accordion"]' });
+    for (const region of ["rtl-navbar", "rtl-sidebar", "rtl-dropdown", "rtl-drawer", "rtl-form", "rtl-breadcrumb", "rtl-floating"]) {
+      await capture(`${region}`, { direction: "rtl", selector: `[data-visual="${region}"]` });
+      await capture(`${region}-mobile`, { direction: "rtl", viewport: { width: 390, height: 900 }, selector: `[data-visual="${region}"]` });
+    }
     await capture("square-controls", { radius: "square", selector: '[data-visual="controls"]' });
     await capture("reduced-loading", { reducedMotion: "reduce", selector: '[data-visual="loading"]' });
   }

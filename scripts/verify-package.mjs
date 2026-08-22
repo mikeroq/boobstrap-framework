@@ -1,4 +1,7 @@
 import { execFile } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
@@ -16,6 +19,8 @@ const requiredPaths = [
   "docs/MIGRATING.md",
   "docs/VERSIONING.md",
   "dist/boobstrap.css",
+  "dist/boobstrap.min.css",
+  "dist/boobstrap.min.css.map",
   "dist/boobstrap.js",
   "dist/boobstrap.d.ts",
   "dist/js/banner.js",
@@ -29,6 +34,7 @@ const requiredPaths = [
   "dist/js/otp.js",
   "dist/js/password.js",
   "dist/js/popover.js",
+  "dist/js/scrollspy.js",
   "dist/js/sidebar.js",
   "dist/js/tabs.js",
   "dist/js/toast.js",
@@ -53,4 +59,12 @@ if (missing.length || leaked.length) {
   ].filter(Boolean).join("\n"));
 }
 
-console.log(`Verified npm package contents: ${paths.length} files, ${pack.size} byte tarball.`);
+const packageJson = JSON.parse(await readFile(resolve(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"));
+const exportsMap = packageJson.exports ?? {};
+const minCssExport = exportsMap["./min.css"];
+if (!minCssExport) throw new Error("./min.css is not exported from package.json");
+const filesField = packageJson.files ?? [];
+if (!filesField.includes("dist/boobstrap.min.css")) throw new Error("dist/boobstrap.min.css is not listed in the package.json files array");
+if (!filesField.includes("dist/boobstrap.min.css.map")) throw new Error("dist/boobstrap.min.css.map is not listed in the package.json files array");
+
+console.log(`Verified npm package contents: ${paths.length} files, ${pack.size} byte tarball, ./min.css export registered.`);

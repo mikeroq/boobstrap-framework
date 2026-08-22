@@ -13,6 +13,16 @@
   </head>
   <body>
     <main>
+      <section class="bs-navbar" x-data="bsNavbar" aria-label="Alpine navbar example">
+        <span class="bs-navbar-brand">Boobstrap</span>
+        <button class="bs-navbar-toggle" id="alpine-navbar-toggle" type="button" x-bind="trigger" aria-controls="alpine-navbar" aria-label="Toggle Alpine navigation">☰</button>
+        <div class="bs-navbar-menu" id="alpine-navbar" x-ref="navbar" x-bind="menu" aria-label="Alpine navigation">
+          <nav class="bs-navbar-nav" aria-label="Alpine primary"><a class="bs-navbar-link" href="#alpine-heading" data-bs-navbar-close>Components</a></nav>
+          <button class="bs-btn bs-btn-secondary" type="button" x-bind="dismiss">Close navigation</button>
+        </div>
+        <button class="bs-navbar-backdrop" type="button" x-bind="dismiss" aria-label="Close Alpine navigation"></button>
+      </section>
+
       <section aria-label="Alpine loading button example">
         <button
           class="bs-btn bs-btn-primary"
@@ -121,6 +131,56 @@
           <button class="bs-btn bs-btn-secondary" id="alpine-popover-trigger" type="button" x-ref="trigger" x-bind="trigger">Popover trigger</button>
           <div class="bs-popover" id="alpine-popover" x-ref="popover" x-bind="panel" aria-label="Integration guidance" hidden><div class="bs-popover-body">Popover details</div><span class="bs-floating-arrow" aria-hidden="true"></span></div>
         </div>
+      </section>
+
+      <section aria-label="Alpine banner example" data-test-banner>
+        <div class="bs-banner" x-data="bsBanner" x-ref="banner" x-bind="root" data-bs-state="visible">
+          <div class="bs-banner-inner">
+            <strong class="bs-banner-title">Preview</strong>
+            <span class="bs-banner-message">Adapter-controlled dismiss.</span>
+            <button class="bs-banner-dismiss" id="alpine-banner-dismiss" type="button" x-bind="dismissButton" data-bs-banner-dismiss aria-label="Dismiss banner">×</button>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Alpine input mask example">
+        <label class="bs-label" for="alpine-mask-input">Phone</label>
+        <input class="bs-input" id="alpine-mask-input" x-data="bsInputMask('(999) 999-9999')" x-bind="root" />
+      </section>
+
+      <section aria-label="Alpine OTP example" data-test-otp>
+        <span class="bs-label" id="alpine-otp-label">One-time code</span>
+        <div class="bs-otp" x-data="bsOtp" x-bind="root" aria-labelledby="alpine-otp-label">
+          <input class="bs-otp-input" id="alpine-otp-1" data-bs-otp-input aria-label="Digit 1" />
+          <input class="bs-otp-input" id="alpine-otp-2" data-bs-otp-input aria-label="Digit 2" />
+          <input class="bs-otp-input" id="alpine-otp-3" data-bs-otp-input aria-label="Digit 3" />
+          <input class="bs-otp-input" id="alpine-otp-4" data-bs-otp-input aria-label="Digit 4" />
+          <input type="hidden" data-bs-otp-value />
+        </div>
+      </section>
+
+      <section aria-label="Alpine password example" data-test-password>
+        <label class="bs-label" for="alpine-password">Password</label>
+        <div class="bs-input-group" x-data="bsPassword" x-ref="root">
+          <input class="bs-input" id="alpine-password" type="password" x-ref="input" data-bs-password-input value="hunter2" />
+          <button class="bs-btn bs-btn-secondary" type="button" x-bind="toggleButton" data-bs-password-toggle>Toggle</button>
+        </div>
+      </section>
+
+      <section aria-label="Alpine scrollspy example" data-test-scrollspy>
+        <nav class="bs-nav" id="alpine-scrollspy" x-data="bsScrollspy" aria-label="Alpine section navigation">
+          <a class="bs-nav-link" href="#alpine-scrollspy-intro">Introduction</a>
+          <a class="bs-nav-link" href="#alpine-scrollspy-details">Details</a>
+          <a class="bs-nav-link" href="#alpine-scrollspy-summary">Summary</a>
+        </nav>
+        <article>
+          <h2 id="alpine-scrollspy-intro">Introduction</h2>
+          <p style="min-block-size: 80vh">Long introductory content.</p>
+          <h2 id="alpine-scrollspy-summary">Summary</h2>
+          <p style="min-block-size: 80vh">Intermediate anchor so the active link can change.</p>
+          <h2 id="alpine-scrollspy-details">Details</h2>
+          <p style="min-block-size: 80vh">Detailed content so the final link can become active.</p>
+        </article>
       </section>
     </main>
   </body>
