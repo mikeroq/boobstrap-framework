@@ -143,6 +143,81 @@
           <input class="bs-input bs-is-invalid" id="visual-validation-class-invalid" type="text" value="Has error" />
         </div>
       </section>
+      <section class="visual-region" data-visual="rtl-navbar" aria-label="RTL navbar">
+        <header class="bs-navbar bs-container" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md);padding:var(--bs-space-3)">
+          <button class="bs-btn bs-btn-icon bs-btn-secondary" type="button" aria-label="القائمة"><svg class="bs-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+          <a class="bs-navbar-brand" href="#">شعار</a>
+          <nav aria-label="رئيسي"><a class="bs-navbar-link" href="#">الرئيسية</a><a class="bs-navbar-link" href="#">المكونات</a></nav>
+        </header>
+      </section>
+      <section class="visual-region" data-visual="rtl-sidebar" aria-label="RTL sidebar">
+        <div class="bs-sidebar-layout" style="border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md);overflow:hidden;block-size:14rem">
+          <aside class="bs-sidebar bs-sidebar-start bs-sidebar-collapsible" data-bs-state="open" style="position:static;block-size:auto;flex-basis:11rem;inline-size:11rem">
+            <nav class="bs-sidebar-content" aria-label="القائمة الجانبية">
+              <a class="bs-nav-link" href="#" aria-current="page">الرئيسية</a>
+              <a class="bs-nav-link" href="#">الإعدادات</a>
+              <a class="bs-nav-link" href="#">الفواتير</a>
+              <span class="bs-sidebar-separator" role="separator"></span>
+              <a class="bs-nav-link bs-nav-link-subitem" href="#">الفريق</a>
+              <a class="bs-nav-link bs-nav-link-subitem" href="#">الملف الشخصي</a>
+            </nav>
+          </aside>
+          <main class="bs-sidebar-main" style="padding:var(--bs-space-4)"><div class="bs-card"><div class="bs-card-body"><strong>المحتوى الرئيسي</strong><p class="bs-card-text">المنطقة الرئيسية بجانب الشريط الجانبي.</p></div></div></main>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-dropdown" aria-label="RTL dropdown">
+        <div class="bs-dropdown" style="position:relative">
+          <button class="bs-btn bs-btn-secondary" type="button" aria-haspopup="menu" aria-expanded="true">القائمة</button>
+          <div class="bs-dropdown-menu" role="menu" style="position:static;display:block;margin-block-start:var(--bs-space-2)">
+            <button class="bs-dropdown-item" role="menuitem">جديد</button>
+            <button class="bs-dropdown-item" role="menuitem" aria-current="true">مفتوح</button>
+            <button class="bs-dropdown-item" role="menuitem">مؤرشف</button>
+            <button class="bs-dropdown-item" role="menuitem" aria-disabled="true">محذوف</button>
+          </div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-drawer" aria-label="RTL drawer">
+        <div class="bs-drawer bs-drawer-start" data-bs-state="open" style="position:static;display:flex;flex-direction:column;inline-size:18rem;block-size:14rem;border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md)">
+          <header class="bs-drawer-header"><h3 class="bs-drawer-title">القائمة الجانبية</h3><button class="bs-drawer-close" type="button" aria-label="إغلاق">×</button></header>
+          <div class="bs-drawer-body" style="padding:var(--bs-space-4)">محتوى الدرج</div>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-form" aria-label="RTL form">
+        <div class="bs-stack bs-gap-3">
+          <div class="bs-input-wrap" style="max-inline-size:18rem">
+            <svg class="bs-input-icon bs-input-icon-end" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor"></circle><path d="m21 21-4.35-4.35" fill="none" stroke="currentColor"></path></svg>
+            <input class="bs-input bs-input-has-icon-end" placeholder="بحث" />
+          </div>
+          <div class="bs-input-group" style="max-inline-size:18rem">
+            <span class="bs-input-group-text">المستخدم</span>
+            <input class="bs-input" placeholder="اسم المستخدم" />
+            <button class="bs-btn bs-btn-secondary" type="button">تحقق</button>
+          </div>
+          <ul class="bs-checklist"><li>تم التحقق من البريد الإلكتروني</li><li>تم تأكيد رقم الهاتف</li></ul>
+        </div>
+      </section>
+      <section class="visual-region" data-visual="rtl-breadcrumb" aria-label="RTL breadcrumb and navigation">
+        <nav class="bs-breadcrumb" aria-label="مسار التنقل"><a href="#">الرئيسية</a><span aria-hidden="true">/</span><a href="#">المكونات</a><span aria-hidden="true">/</span><span>الأزرار</span></nav>
+        <nav class="bs-nav bs-mt-4" aria-label="التنقل الجانبي">
+          <span class="bs-nav-heading">القائمة</span>
+          <a class="bs-nav-link" href="#" aria-current="page">نشط</a>
+          <a class="bs-nav-link" href="#">فرعي</a>
+          <a class="bs-nav-link bs-nav-link-subitem" href="#">عميق</a>
+        </nav>
+      </section>
+      <section class="visual-region" data-visual="rtl-floating" aria-label="RTL floating UI">
+        <div class="bs-tooltip bs-tooltip-rtl" style="position:static;display:inline-block;margin:var(--bs-space-2)">تلميح</div>
+        <div class="bs-popover" style="position:static;display:flex;flex-direction:column;inline-size:14rem;margin-block-start:var(--bs-space-4);border:1px solid var(--bs-color-border);border-radius:var(--bs-radius-md)">
+          <header class="bs-popover-header">عنوان منبثق</header>
+          <div class="bs-popover-body">محتوى النافذة المنبثقة مع نص توضيحي.</div>
+        </div>
+        <div class="bs-toast-region" style="position:static;display:grid;margin-block-start:var(--bs-space-4);inline-size:14rem">
+          <div class="bs-toast bs-toast-success" style="position:static">
+            <span><strong class="bs-toast-title">تم الحفظ</strong><span class="bs-toast-message">تم تحديث الإعدادات بنجاح.</span></span>
+            <button class="bs-toast-dismiss" type="button" aria-label="إغلاق">×</button>
+          </div>
+        </div>
+      </section>
     </main>
   </body>
 </html>

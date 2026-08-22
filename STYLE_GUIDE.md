@@ -422,6 +422,15 @@ box-shadow:
 }
 ```
 
+### Document minimum width
+
+The reset sets `html { min-width: 20rem; }`. This is intentional and is part of the framework contract:
+
+- It places a hard floor at 320 CSS pixels so an external script (a developer-tools shrink, a mobile preview tool, a bookmarklet) cannot collapse the layout into an unsupported configuration where drawers, sidebar rails, and pagination controls would re-flow unpredictably.
+- It is one full "below-`sm`" interval below the smallest responsive breakpoint (`--bs-breakpoint-sm` = `40rem`), giving the layout room to behave consistently before the smallest breakpoint activates.
+- It is enforced and verified by `tests/rtl.mjs`, which renders the browser fixture at a 320px viewport and asserts `getComputedStyle(html).minWidth === '320px'`. Setting an inline override at 10rem or 30rem must round-trip to 160px and 480px respectively.
+- Consumers can override the floor with `html { min-width: <something larger>; }` if they want a wider minimum, but should not remove it; the floor exists to keep component layouts within their tested configuration.
+
 ### Responsive scale
 
 Every breakpoint in the framework resolves through a single set of `--bs-breakpoint-*` tokens. Component media queries and responsive utilities (`bs-{sm,md,lg,xl,2xl}-*`) reference these tokens directly so the scale can be retargeted (or themed for a wider display) by reassigning one custom property. The `sm` step is the smallest breakpoint the responsive grid offers; below `sm` the layout is single-column.

@@ -2,6 +2,8 @@
 .bs-drawer {
   --bs-dialog-width: 36rem;
   --bs-dialog-max-height: calc(100dvh - var(--bs-space-8));
+  --bs-dialog-radius: var(--bs-radius-xl);
+  --bs-dialog-padding-inline: var(--bs-space-5);
   inline-size: min(calc(100% - var(--bs-space-8)), var(--bs-dialog-width));
   max-inline-size: none;
   max-block-size: var(--bs-dialog-max-height);
@@ -10,7 +12,7 @@
   color: var(--bs-color-text);
   background: var(--bs-color-surface-raised);
   border: 1px solid var(--bs-color-border-strong);
-  border-radius: var(--bs-radius-xl);
+  border-radius: var(--bs-dialog-radius);
   box-shadow: var(--bs-shadow-lg);
   overflow: hidden;
 }
@@ -23,7 +25,7 @@
 
 .bs-dialog::backdrop,
 .bs-drawer::backdrop {
-  background: rgb(5 2 6 / 68%);
+  background: var(--bs-overlay-backdrop);
   backdrop-filter: blur(2px);
 }
 
@@ -57,7 +59,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--bs-space-1) var(--bs-space-4);
   align-items: start;
-  padding: var(--bs-space-4) var(--bs-space-5) var(--bs-space-3);
+  padding: var(--bs-space-4) var(--bs-dialog-padding-inline) var(--bs-space-3);
   border-block-end: 1px solid var(--bs-color-border);
 }
 
@@ -122,7 +124,7 @@
 .bs-drawer-body {
   min-block-size: 0;
   flex: 1 1 auto;
-  padding: var(--bs-space-4) var(--bs-space-5);
+  padding: var(--bs-space-4) var(--bs-dialog-padding-inline);
   overflow: auto;
   overscroll-behavior: contain;
 }
@@ -135,7 +137,7 @@
   gap: var(--bs-space-3);
   align-items: center;
   justify-content: flex-end;
-  padding: var(--bs-space-4) var(--bs-space-5);
+  padding: var(--bs-space-4) var(--bs-dialog-padding-inline);
   background: var(--bs-color-surface-raised);
   border-block-start: 1px solid var(--bs-color-border);
 }

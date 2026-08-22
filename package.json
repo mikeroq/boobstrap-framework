@@ -55,7 +55,7 @@
     "test:conformance": "node scripts/verify-interaction-contract.mjs",
     "test:docs": "node scripts/verify-docs.mjs",
     "test:css": "csstree-validator dist/boobstrap.css",
-    "test:browser": "node tests/browser.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
+    "test:browser": "node tests/browser.mjs && node tests/rtl.mjs && node tests/interactions.mjs && node tests/alpine.mjs && node tests/react.mjs && node tests/vue.mjs",
     "test:visual": "node tests/visual.mjs",
     "test:visual:update": "UPDATE_VISUAL=1 node tests/visual.mjs",
     "test:package": "node scripts/verify-package.mjs && node scripts/verify-alpine-package.mjs && node scripts/verify-react-package.mjs && node scripts/verify-vue-package.mjs && npm run test:types",
