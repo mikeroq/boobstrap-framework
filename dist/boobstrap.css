@@ -1512,6 +1512,54 @@ abbr[title] {
   transform: translateY(-2px);
 }
 
+.bs-card-header-input {
+  grid-area: title;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: var(--bs-font-size-lg);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--bs-color-text);
+  background: transparent;
+  border: 0;
+  border-radius: var(--bs-radius-xs);
+  outline: 0;
+  box-shadow: none;
+}
+
+.bs-card-header-input::placeholder {
+  color: var(--bs-color-text-subtle);
+}
+
+.bs-card-header-input:focus-visible {
+  outline: 2px solid var(--bs-color-focus-ring);
+  outline-offset: 4px;
+}
+
+.bs-card-header-flush {
+  padding-block: var(--bs-space-2);
+}
+
+.bs-card-title-input {
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--bs-radius-xs);
+  outline: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.bs-card-title-input:focus-visible {
+  outline: 2px solid var(--bs-color-focus-ring);
+  outline-offset: 4px;
+}
+
   .bs-dialog,
 .bs-drawer {
   --bs-dialog-width: 36rem;
@@ -2089,6 +2137,32 @@ body.bs-dialog-open { overflow: hidden; }
   padding-block: 0.85rem;
   font-size: var(--bs-font-size-lg);
   border-radius: var(--bs-control-radius);
+}
+
+.bs-input-flush,
+.bs-input-borderless {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding-inline: 0;
+}
+
+.bs-input-flush:hover,
+.bs-input-borderless:hover {
+  border-color: transparent;
+}
+
+.bs-input-flush:focus,
+.bs-input-borderless:focus {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.bs-input-flush:focus-visible,
+.bs-input-borderless:focus-visible {
+  outline: 2px solid var(--bs-color-focus-ring);
+  outline-offset: 2px;
 }
 
 .bs-textarea {

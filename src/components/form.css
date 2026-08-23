@@ -123,6 +123,32 @@
   border-radius: var(--bs-control-radius);
 }
 
+.bs-input-flush,
+.bs-input-borderless {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding-inline: 0;
+}
+
+.bs-input-flush:hover,
+.bs-input-borderless:hover {
+  border-color: transparent;
+}
+
+.bs-input-flush:focus,
+.bs-input-borderless:focus {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.bs-input-flush:focus-visible,
+.bs-input-borderless:focus-visible {
+  outline: 2px solid var(--bs-color-focus-ring);
+  outline-offset: 2px;
+}
+
 .bs-textarea {
   min-height: 7rem;
   resize: vertical;

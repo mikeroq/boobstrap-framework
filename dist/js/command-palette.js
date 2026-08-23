@@ -1,6 +1,7 @@
 import { emit, queryRoots, requireElement, setState } from "./shared.js";
 
 const instances = new WeakMap();
+const controlledSelector = (id) => `[data-bs-toggle="command-palette"][aria-controls="${CSS.escape(id)}"], [data-bs-toggle="command-palette"][data-bs-target="#${CSS.escape(id)}"], [data-bs-toggle="dialog"][aria-controls="${CSS.escape(id)}"], [data-bs-toggle="dialog"][data-bs-target="#${CSS.escape(id)}"]`;
 
 export class CommandPalette {
   constructor(element, options = {}) {
@@ -13,6 +14,12 @@ export class CommandPalette {
     this.shortcut = options.shortcut ?? element.dataset.bsShortcut ?? "k";
     this.restoreTarget = null;
     this.activeIndex = -1;
+    this.triggers = element.id ? [...this.document.querySelectorAll(controlledSelector(element.id))] : [];
+
+    this.onTrigger = (event) => {
+      event.preventDefault();
+      this.toggle({ reason: "trigger", sourceEvent: event, restoreTarget: event.currentTarget });
+    };
 
     this.onGlobalKeydown = (event) => {
       const isCmdOrCtrl = event.metaKey || event.ctrlKey;
@@ -70,6 +77,7 @@ export class CommandPalette {
 
     const windowObj = this.document.defaultView || window;
     windowObj.addEventListener("keydown", this.onGlobalKeydown);
+    this.triggers.forEach((trigger) => trigger.addEventListener("click", this.onTrigger));
     this.input?.addEventListener("keydown", this.onInputKeydown);
     this.input?.addEventListener("input", this.onInput);
     this.list?.addEventListener("click", this.onListClick);
@@ -77,6 +85,7 @@ export class CommandPalette {
     this.element.addEventListener("cancel", this.onCancel);
 
     setState(this.element, this.element.open ? "open" : "closed");
+    this.triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", String(Boolean(this.element.open))));
     instances.set(element, this);
   }
 
@@ -184,6 +193,7 @@ export class CommandPalette {
       this.setActiveIndex(0);
     }
 
+    this.triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", "true"));
     emit(this.element, "bs:command:shown", detail);
     return true;
   }
@@ -201,6 +211,7 @@ export class CommandPalette {
 
     this.document.body.classList.remove("bs-dialog-open");
     setState(this.element, "closed");
+    this.triggers.forEach((trigger) => trigger.setAttribute("aria-expanded", "false"));
 
     const restoreTarget = options.restoreTarget ?? this.restoreTarget;
     if (options.restoreFocus !== false && restoreTarget && typeof restoreTarget.focus === "function") {
@@ -219,6 +230,7 @@ export class CommandPalette {
     this.hide({ reason: "destroy", restoreFocus: false });
     const windowObj = this.document.defaultView || window;
     windowObj.removeEventListener("keydown", this.onGlobalKeydown);
+    this.triggers.forEach((trigger) => trigger.removeEventListener("click", this.onTrigger));
     this.input?.removeEventListener("keydown", this.onInputKeydown);
     this.input?.removeEventListener("input", this.onInput);
     this.list?.removeEventListener("click", this.onListClick);
