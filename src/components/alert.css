@@ -12,7 +12,7 @@
 .bs-alert > .bs-icon,
 .bs-alert > svg {
   flex-shrink: 0;
-  margin-block-start: 0.1875rem;
+  margin-block-start: calc((var(--bs-line-height-body, 1.6) * 1em - 1em) / 2);
 }
 
 .bs-alert-title {
