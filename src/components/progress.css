@@ -75,3 +75,35 @@
     opacity: 0.65;
   }
 }
+
+.bs-reading-progress {
+  position: fixed;
+  z-index: var(--bs-z-fixed, 1030);
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  overflow: hidden;
+  appearance: none;
+  background: transparent;
+  border: 0;
+}
+
+.bs-reading-progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.bs-reading-progress::-webkit-progress-value {
+  background: var(--bs-color-primary);
+}
+
+.bs-reading-progress::-moz-progress-bar {
+  background: var(--bs-color-primary);
+}
+
+.bs-reading-progress-brand::-webkit-progress-value {
+  background: var(--bs-gradient-brand);
+}
+
+.bs-reading-progress-brand::-moz-progress-bar {
+  background: var(--bs-gradient-brand);
+}

@@ -34,6 +34,39 @@
   text-decoration: none;
 }
 
+.bs-navbar-progress {
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  overflow: hidden;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  z-index: 10;
+}
+
+.bs-navbar-progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.bs-navbar-progress::-webkit-progress-value {
+  background: var(--bs-color-primary);
+}
+
+.bs-navbar-progress::-moz-progress-bar {
+  background: var(--bs-color-primary);
+}
+
+.bs-navbar-progress-brand::-webkit-progress-value {
+  background: var(--bs-gradient-brand);
+}
+
+.bs-navbar-progress-brand::-moz-progress-bar {
+  background: var(--bs-gradient-brand);
+}
+
 .bs-navbar-link {
   padding: 0.45rem 0.65rem;
   color: var(--bs-color-text-muted);

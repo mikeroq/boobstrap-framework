@@ -38,11 +38,23 @@ export class Navbar {
     this.onKeydown = (event) => this.handleKeydown(event);
     this.onMediaChange = () => this.sync();
 
+    this.progressBar = this.element.querySelector(".bs-navbar-progress, [data-bs-scroll-progress], .bs-reading-progress");
+    this.onWindowScroll = () => {
+      if (!this.progressBar) return;
+      const win = this.document.defaultView || window;
+      const maxScroll = this.document.documentElement.scrollHeight - win.innerHeight;
+      this.progressBar.value = maxScroll > 0 ? (win.scrollY / maxScroll) * 100 : 0;
+    };
+
     this.triggers.forEach((trigger) => trigger.addEventListener("click", this.onTrigger));
     this.dismissers.forEach((dismiss) => dismiss.addEventListener("click", this.onDismiss));
     element.addEventListener("click", this.onElementClick);
     this.document.addEventListener("keydown", this.onKeydown);
     this.media.addEventListener("change", this.onMediaChange);
+    if (this.progressBar) {
+      this.document.addEventListener("scroll", this.onWindowScroll, { passive: true });
+      this.onWindowScroll();
+    }
     this.sync();
     instances.set(element, this);
   }
@@ -148,6 +160,9 @@ export class Navbar {
     this.element.removeEventListener("click", this.onElementClick);
     this.document.removeEventListener("keydown", this.onKeydown);
     this.media.removeEventListener("change", this.onMediaChange);
+    if (this.progressBar) {
+      this.document.removeEventListener("scroll", this.onWindowScroll);
+    }
     this.element.inert = false;
     delete this.element.dataset.bsOverlay;
     if (this.originalRole === null) this.element.removeAttribute("role");

@@ -2951,6 +2951,38 @@ body.bs-dialog-open { overflow: hidden; }
   }
 }
 
+.bs-reading-progress {
+  position: fixed;
+  z-index: var(--bs-z-fixed, 1030);
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  overflow: hidden;
+  appearance: none;
+  background: transparent;
+  border: 0;
+}
+
+.bs-reading-progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.bs-reading-progress::-webkit-progress-value {
+  background: var(--bs-color-primary);
+}
+
+.bs-reading-progress::-moz-progress-bar {
+  background: var(--bs-color-primary);
+}
+
+.bs-reading-progress-brand::-webkit-progress-value {
+  background: var(--bs-gradient-brand);
+}
+
+.bs-reading-progress-brand::-moz-progress-bar {
+  background: var(--bs-gradient-brand);
+}
+
   .bs-skeleton {
   --bs-skeleton-width: 100%;
   --bs-skeleton-height: 1em;
@@ -3019,6 +3051,39 @@ body.bs-dialog-open { overflow: hidden; }
   font-weight: 750;
   letter-spacing: -0.03em;
   text-decoration: none;
+}
+
+.bs-navbar-progress {
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  overflow: hidden;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  z-index: 10;
+}
+
+.bs-navbar-progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.bs-navbar-progress::-webkit-progress-value {
+  background: var(--bs-color-primary);
+}
+
+.bs-navbar-progress::-moz-progress-bar {
+  background: var(--bs-color-primary);
+}
+
+.bs-navbar-progress-brand::-webkit-progress-value {
+  background: var(--bs-gradient-brand);
+}
+
+.bs-navbar-progress-brand::-moz-progress-bar {
+  background: var(--bs-gradient-brand);
 }
 
 .bs-navbar-link {
