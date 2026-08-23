@@ -846,6 +846,8 @@
     "bs-navbar-actions",
     "bs-navbar-backdrop",
     "bs-navbar-brand",
+    "bs-navbar-brand-context",
+    "bs-navbar-brand-divider",
     "bs-navbar-link",
     "bs-navbar-menu",
     "bs-navbar-nav",

@@ -34,6 +34,17 @@
   text-decoration: none;
 }
 
+.bs-navbar-brand-divider {
+  color: var(--bs-color-border-strong);
+  font-weight: 400;
+}
+
+.bs-navbar-brand-context {
+  color: var(--bs-color-text-muted);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .bs-navbar-progress {
   position: absolute;
   inset-block-end: -1px;
