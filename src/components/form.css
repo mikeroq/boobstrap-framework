@@ -329,9 +329,12 @@
 .bs-is-invalid,
 .bs-input[aria-invalid="true"],
 .bs-select[aria-invalid="true"],
-.bs-textarea[aria-invalid="true"] { border-color: var(--bs-color-danger); }
+.bs-textarea[aria-invalid="true"],
+.bs-check-input[aria-invalid="true"],
+.bs-check-input.bs-is-invalid { border-color: var(--bs-color-danger); }
 
-.bs-is-valid { border-color: var(--bs-color-success); }
+.bs-is-valid,
+.bs-check-input.bs-is-valid { border-color: var(--bs-color-success); }
 
 .bs-is-invalid:focus,
 .bs-input[aria-invalid="true"]:focus,
@@ -340,9 +343,16 @@
 
 .bs-is-valid:focus { box-shadow: 0 0 0 3px rgb(54 179 126 / 20%); }
 
+.bs-check-input[aria-invalid="true"]:focus-visible,
+.bs-check-input.bs-is-invalid:focus-visible { outline-color: var(--bs-color-danger); }
+.bs-check-input.bs-is-valid:focus-visible { outline-color: var(--bs-color-success); }
+
 .bs-form-group:has(.bs-is-valid) .bs-form-feedback-valid,
 .bs-form-group:has(.bs-is-invalid) .bs-form-feedback-invalid,
-.bs-form-group:has([aria-invalid="true"]) .bs-form-feedback-invalid { display: block; }
+.bs-form-group:has([aria-invalid="true"]) .bs-form-feedback-invalid,
+.bs-check-group:has(.bs-is-valid) .bs-form-feedback-valid,
+.bs-check-group:has(.bs-is-invalid) .bs-form-feedback-invalid,
+.bs-check-group:has([aria-invalid="true"]) .bs-form-feedback-invalid { display: block; }
 
 .bs-check-group {
   display: grid;
