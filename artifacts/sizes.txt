@@ -1,5 +1,5 @@
 Boobstrap distribution size report
-Generated: 2026-08-23T16:59:33.039Z
+Generated: 2026-08-23T18:48:12.349Z
 
 artifact             raw          gzip         brotli       raw budget    gzip budget   brotli budget
 dist/boobstrap.css   172.5 KB    24.7 KB     19.0 KB      200.0 KB      30.0 KB      25.0 KB
