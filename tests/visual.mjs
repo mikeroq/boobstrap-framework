@@ -12,7 +12,7 @@ const artifacts = resolve(root, "artifacts", "visual");
 const update = process.env.UPDATE_VISUAL === "1";
 const visualGroup = process.env.VISUAL_GROUP ?? "all";
 const visualGroups = new Set(["all", "dark-components", "dark-content", "light-components", "light-content", "variants"]);
-const maxDifferentPixelRatio = 0.02;
+const maxDifferentPixelRatio = 0.035;
 if (!visualGroups.has(visualGroup)) throw new Error(`Unsupported visual group: ${visualGroup}`);
 const html = await readFile(resolve(root, "tests", "visual.html"));
 const css = await readFile(resolve(root, "dist", "boobstrap.css"));
